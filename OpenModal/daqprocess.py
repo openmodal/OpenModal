@@ -303,7 +303,7 @@ class ThreadedDAQ(object):
                         raise Exception
 
 def test_ring_buffer():
-    tt = ThreadedDAQ(live_flag=mp.Value('b', False), run_flag=mp.Value('b', True), properties=None, task_info='openModal Impact_', trigger=False)
+    tt = ThreadedDAQ(live_flag=mp.Value('b', False), run_flag=mp.Value('b', True), properties=None, task_info='OpenModal Impact_', trigger=False)
     tt.samples_per_channel=10
     tt.number_of_channels=2
     tt.trigger_level=3.5

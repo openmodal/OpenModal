@@ -18,7 +18,7 @@ Info:
 """
 
 import numpy as np
-import openModal.fft_tools as fft_tools
+import OpenModal.fft_tools as fft_tools
 
 _EXC_TYPES = ['f', 'a', 'v', 'd', 'e']  # force for EMA and kinematics for OMA
 _RESP_TYPES = ['a', 'v', 'd', 'e']  # acceleration, velocity, displacement, strain

@@ -5,9 +5,9 @@ from PyQt4 import QtGui, QtCore, QtWebKit
 
 import qtawesome as qta
 
-import openModal.gui.widgets.prototype as prototype
+import OpenModal.gui.widgets.prototype as prototype
 
-import openModal.gui.templates as templ
+import OpenModal.gui.templates as templ
 
 
 class WelcomeWidget(prototype.SubWidget):

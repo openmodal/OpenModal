@@ -23,8 +23,8 @@ History:- april 2014: added convert_frf to ewins, reconstruction,
 """
 import numpy as np
 
-from openModal.analysis.get_frf_peaks import get_frf_peaks
-from openModal.fft_tools import convert_frf
+from OpenModal.analysis.get_frf_peaks import get_frf_peaks
+from OpenModal.fft_tools import convert_frf
 
 
 def ewins(freq, H, nf='None', residues=False, type='d', o_fr=0):
@@ -192,7 +192,7 @@ def reconstruction(freq, nfreq, A, d, damping='hysteretic', type='a', residues=F
 
 def test_ewins():
     import matplotlib.pyplot as plt
-    from openModal.analysis.get_simulated_sample import get_simulated_receptance
+    from OpenModal.analysis.get_simulated_sample import get_simulated_receptance
     
     residues = True
     

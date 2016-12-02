@@ -25,9 +25,9 @@ from preferences import DEFAULTS
 
 from frf import _WINDOWS, _EXC_TYPES, _RESP_TYPES, _WGH_TYPES
 
-from openModal.gui.templates import COLOR_PALETTE
+from OpenModal.gui.templates import COLOR_PALETTE
 
-import openModal.gui.tooltips as tt
+import OpenModal.gui.tooltips as tt
 
 MAX_WINDOW_LENGTH = 1e9
 

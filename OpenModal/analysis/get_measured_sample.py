@@ -10,7 +10,7 @@ import numpy as np
 import matplotlib.pyplot as plt
 import pyuff
 
-from openModal.fft_tools import convert_frf
+from OpenModal.fft_tools import convert_frf
 
 
 def get_measured_accelerance(show=False):

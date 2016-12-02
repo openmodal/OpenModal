@@ -1,5 +1,5 @@
 import numpy as np
-from openModal.analysis.utility_functions import prime_factors
+from OpenModal.analysis.utility_functions import prime_factors
 
 
 def lsce(frf, f, low_lim, nmax, dt, input_frf_type ='d', additional_timepoints=0,
@@ -112,10 +112,10 @@ def lsce(frf, f, low_lim, nmax, dt, input_frf_type ='d', additional_timepoints=0
 
 
 def test_lsce():
-    from openModal.analysis.utility_functions import complex_freq_to_freq_and_damp
+    from OpenModal.analysis.utility_functions import complex_freq_to_freq_and_damp
 
     """    Test of the Least-Squares Complex Exponential Method    """
-    from openModal.analysis.get_simulated_sample import get_simulated_receptance
+    from OpenModal.analysis.get_simulated_sample import get_simulated_receptance
     import matplotlib.pyplot as plt
     
     f, frf, modal_sim, eta_sim, f0_sim = get_simulated_receptance(df_Hz=1,

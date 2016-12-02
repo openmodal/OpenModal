@@ -1,20 +1,20 @@
 from PyQt4 import QtGui, QtCore
 import pandas as pd
-from openModal.analysis.stabilisation import *
-from openModal.analysis import lsce, lscf, lsfd
-from openModal.keys import keys as kkeys
+from OpenModal.analysis.stabilisation import *
+from OpenModal.analysis import lsce, lscf, lsfd
+from OpenModal.keys import keys as kkeys
 
-from openModal.analysis.add_reconstruction_to_mdd import add_reconstruction_to_mdd
-from openModal.analysis.add_reconstruction_to_mdd import save_analysis_settings
-from openModal.analysis.add_reconstruction_to_mdd import save_stabilisation_spots
-from openModal.analysis.utility_functions import complex_freq_to_freq_and_damp
-from openModal.analysis.utility_functions import prime_factors
-from openModal.analysis.utility_functions import get_analysis_id
-from openModal.fft_tools import convert_frf
-from openModal.utils import get_frf_from_mdd
-from openModal.utils import get_frf_type
+from OpenModal.analysis.add_reconstruction_to_mdd import add_reconstruction_to_mdd
+from OpenModal.analysis.add_reconstruction_to_mdd import save_analysis_settings
+from OpenModal.analysis.add_reconstruction_to_mdd import save_stabilisation_spots
+from OpenModal.analysis.utility_functions import complex_freq_to_freq_and_damp
+from OpenModal.analysis.utility_functions import prime_factors
+from OpenModal.analysis.utility_functions import get_analysis_id
+from OpenModal.fft_tools import convert_frf
+from OpenModal.utils import get_frf_from_mdd
+from OpenModal.utils import get_frf_type
 
-from openModal.gui.templates import COLOR_PALETTE
+from OpenModal.gui.templates import COLOR_PALETTE
 
 from string import Template
 
@@ -22,7 +22,7 @@ import pyqtgraph as pg
 import numpy as np
 import qtawesome as qta
 
-import openModal.gui.widgets.prototype as prot
+import OpenModal.gui.widgets.prototype as prot
 
 QVariant = lambda value=None: value
 

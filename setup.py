@@ -47,7 +47,7 @@ shortcut_table = [
      None,                     # Arguments
      None,                     # Description
      None,                     # Hotkey
-     r'openModal/gui/icons/limes_logo.ico',                     # Icon
+     r'OpenModal/gui/icons/limes_logo.ico',                     # Icon
      None,                     # IconIndex
      None,                     # ShowCmd
      'TARGETDIR'               # WkDir
@@ -81,19 +81,19 @@ options = {
         'packages': ['traceback','numpy','matplotlib','qtawesome','six','tkinter','pandas','bisect',
                      'multiprocessing'],
         'includes': ['PyQt4'],
-        'path': sys.path + ['openModal'],
+        'path': sys.path + ['OpenModal'],
         'zip_includes': zip_includes,
         'include_files' : [('C:\\Users\\Matjaz\\Anaconda3\\Lib\\site-packages\\scipy\\special\\_ufuncs.cp35-win_amd64.pyd','_ufuncs.cp35-win_amd64.pyd'),
                            ('C:\\Users\\Matjaz\\Anaconda3\\Lib\\bisect.py','bisect.py'),
                            ('C:\\Users\\Matjaz\\Anaconda3\\Lib\\site-packages\\scipy\\special\\_ufuncs_cxx.cp35-win_amd64.pyd','_ufuncs_cxx.cp35-win_amd64.pyd'),
                            'C:\\Users\\Matjaz\\Anaconda3\\Lib\\site-packages\\qtawesome',
-                           #'C:\\_MPirnat\\Python\\pycharm\\OpenModalAlpha_freeze_v3\\openModal\\gui',
+                           #'C:\\_MPirnat\\Python\\pycharm\\OpenModalAlpha_freeze_v3\\OpenModal\\gui',
                            ('C:\\Users\\Matjaz\\Anaconda3\\Lib\\site-packages\\numpy\\core\\mkl_intel_thread.dll','mkl_intel_thread.dll'),
                            ('C:\\Users\\Matjaz\\Anaconda3\\Lib\\site-packages\\numpy\\core\\mkl_core.dll','mkl_core.dll'),
                            ('C:\\Users\\Matjaz\\Anaconda3\\Lib\\site-packages\\numpy\\core\\mkl_avx.dll','mkl_avx.dll'),
                            ('C:\\Users\\Matjaz\\Anaconda3\\Lib\\site-packages\\numpy\\core\\libiomp5md.dll','libiomp5md.dll'),
-                           (r'openModal/gui/styles', r'gui/styles'),
-                           (r'openModal/gui/icons', r'gui/icons')]
+                           (r'OpenModal/gui/styles', r'gui/styles'),
+                           (r'OpenModal/gui/icons', r'gui/icons')]
     },
     'bdist_msi': bdist_msi_options
 
@@ -103,9 +103,9 @@ options = {
 
 
 executables = [
-    Executable('openModal\openmodal.py', base=base)
+    Executable('OpenModal\openmodal.py', base=base)
                # shortcutName="OpenModal", shortcutDir="DesktopFolder",
-               # icon=r'openModal/gui/icons/limes_logo.ico')
+               # icon=r'OpenModal/gui/icons/limes_logo.ico')
 ]
 
 setup(name='OpenModal',

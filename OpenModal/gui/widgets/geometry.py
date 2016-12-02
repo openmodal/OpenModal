@@ -1,4 +1,4 @@
-from openModal.gui.widgets.animation import TableModel,Model
+from OpenModal.gui.widgets.animation import TableModel,Model
 
 from PyQt4 import QtCore as pqc
 
@@ -16,11 +16,11 @@ import pandas as pd
 
 from pyqtgraph.parametertree import Parameter, ParameterTree
 
-from openModal.anim_tools import AnimWidgBase
+from OpenModal.anim_tools import AnimWidgBase
 
 import os
 
-from openModal.keys import keys
+from OpenModal.keys import keys
 
 import qtawesome as qta
 
@@ -28,7 +28,7 @@ from OpenGL.GL import *
 
 from functools import partial
 
-from openModal.gui.templates import COLOR_PALETTE, LIST_FONT_FAMILY, LIST_FONT_SIZE, MENUBAR_WIDTH
+from OpenModal.gui.templates import COLOR_PALETTE, LIST_FONT_FAMILY, LIST_FONT_SIZE, MENUBAR_WIDTH
 
 from string import Template
 

@@ -8,28 +8,28 @@ from PyQt4 import QtGui, QtCore
 
 import qtawesome as qta
 
-from openModal.gui.widgets.welcome import WelcomeWidget
-from openModal.gui.widgets.geometry import GeometryWidget
-from openModal.gui.widgets.measurement import MeasurementWidget
-from openModal.gui.widgets.animation import AnimationWidget
-from openModal.gui.widgets.analysis import IdentificationWidget
+from OpenModal.gui.widgets.welcome import WelcomeWidget
+from OpenModal.gui.widgets.geometry import GeometryWidget
+from OpenModal.gui.widgets.measurement import MeasurementWidget
+from OpenModal.gui.widgets.animation import AnimationWidget
+from OpenModal.gui.widgets.analysis import IdentificationWidget
 
 
 # dodal miha ---------
-from openModal.gui.widgets.languages import LANG_DICT
+from OpenModal.gui.widgets.languages import LANG_DICT
 import locale
 
 import pyqtgraph
 # -------------------
-import openModal.modaldata as modaldata
+import OpenModal.modaldata as modaldata
 
-from openModal.preferences import DEFAULTS
+from OpenModal.preferences import DEFAULTS
 
-import openModal.gui.preferences_window as cf
+import OpenModal.gui.preferences_window as cf
 
-import openModal.gui.export_window as ew
+import OpenModal.gui.export_window as ew
 
-from openModal.gui.templates import COLOR_PALETTE, LIST_FONT_FAMILY, LIST_FONT_SIZE, MENUBAR_WIDTH
+from OpenModal.gui.templates import COLOR_PALETTE, LIST_FONT_FAMILY, LIST_FONT_SIZE, MENUBAR_WIDTH
 
 # TODO: Sort out file loading/saving and widget management!
 

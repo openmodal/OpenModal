@@ -21,7 +21,7 @@ import pyqtgraph as pg
 import numpy as np
 
 
-from openModal.gui.templates import COLOR_PALETTE
+from OpenModal.gui.templates import COLOR_PALETTE
 
 
 MAX_WINDOW_LENGTH = 1e9

@@ -15,7 +15,7 @@ import sys, traceback
 
 import pandas as pd
 
-import openModal.gui.widgets.prototype as prot
+import OpenModal.gui.widgets.prototype as prot
 
 COLORS = ['b', 'g', 'r', 'c', 'm', 'y', 'w']
 CUBE = np.array([[[-1.0, -1.0, -1.0],

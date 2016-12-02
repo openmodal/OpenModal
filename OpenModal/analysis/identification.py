@@ -36,13 +36,13 @@
          -2012: ewins, tadej.kranjc@ladisk.si.  
 """
 
-from openModal.analysis.ce import test_ce
-from openModal.analysis.lsce import test_lsce
-from openModal.analysis.ewins import test_ewins
-from openModal.analysis.circle_fit import test_circle_fit_visc
-from openModal.analysis.circle_fit import test_circle_fit_hist
-from openModal.analysis.rfp import test_rfp
-from openModal.analysis.stabilisation import test_ce_stabilisation
+from OpenModal.analysis.ce import test_ce
+from OpenModal.analysis.lsce import test_lsce
+from OpenModal.analysis.ewins import test_ewins
+from OpenModal.analysis.circle_fit import test_circle_fit_visc
+from OpenModal.analysis.circle_fit import test_circle_fit_hist
+from OpenModal.analysis.rfp import test_rfp
+from OpenModal.analysis.stabilisation import test_ce_stabilisation
 
 if __name__ == '__main__':
     test_ewins()

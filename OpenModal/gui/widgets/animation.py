@@ -14,18 +14,18 @@ import numpy as np
 
 from pyqtgraph.parametertree import Parameter
 
-from openModal.anim_tools import CUBE,COLORS,CustomGLMeshItem,AnimWidgBase
+from OpenModal.anim_tools import CUBE,COLORS,CustomGLMeshItem,AnimWidgBase
 
 from OpenGL.GL import *
 
 import qtawesome as qta
 
-from openModal.keys import keys
+from OpenModal.keys import keys
 
 if __name__ == '__main__':
-    from openModal.languages import LANG_DICT
+    from OpenModal.languages import LANG_DICT
 else:
-    from openModal.gui.widgets.languages import LANG_DICT
+    from OpenModal.gui.widgets.languages import LANG_DICT
 
 from functools import partial
 
@@ -2095,7 +2095,7 @@ class Model():
 if __name__ == '__main__':
     import sys
 
-    import openModal.modaldata as md
+    import OpenModal.modaldata as md
 
     obj = md.ModalData()
     app = pqg.QApplication(sys.argv)

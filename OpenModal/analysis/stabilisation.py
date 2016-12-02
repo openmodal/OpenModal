@@ -12,8 +12,8 @@ import numpy as np
 import matplotlib.pyplot as plt
 import pyqtgraph as pg
 
-from openModal.analysis.get_simulated_sample import get_simulated_receptance
-from openModal.analysis.utility_functions import complex_freq_to_freq_and_damp
+from OpenModal.analysis.get_simulated_sample import get_simulated_receptance
+from OpenModal.analysis.utility_functions import complex_freq_to_freq_and_damp
 
 
 
@@ -237,8 +237,8 @@ Input:
 
 
 def test_stabilisation():
-    from openModal.analysis.lscf import lscf
-    from openModal.analysis.utility_functions import prime_factors
+    from OpenModal.analysis.lscf import lscf
+    from OpenModal.analysis.utility_functions import prime_factors
 
     """    Test of the Complex Exponential Method and stabilisation   """
     f, frf, modal_sim, eta_sim, f0_sim = get_simulated_receptance(

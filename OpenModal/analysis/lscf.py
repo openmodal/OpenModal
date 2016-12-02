@@ -1,7 +1,7 @@
 import numpy as np
-from openModal.analysis.get_simulated_sample import get_simulated_receptance
-from openModal.fft_tools import irfft_adjusted_lower_limit
-from openModal.analysis.utility_functions import toeplitz, prime_factors, complex_freq_to_freq_and_damp
+from OpenModal.analysis.get_simulated_sample import get_simulated_receptance
+from OpenModal.fft_tools import irfft_adjusted_lower_limit
+from OpenModal.analysis.utility_functions import toeplitz, prime_factors, complex_freq_to_freq_and_damp
 
 
 def lscf(frf, low_lim, n, dt, weighing_type='Unity', reconstruction='LSFD'):

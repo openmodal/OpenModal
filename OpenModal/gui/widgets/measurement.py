@@ -12,26 +12,26 @@ import numpy as np
 
 
 #import modal_testing as mt
-import openModal.gui.widgets.prototype as prototype
-import openModal.keys as kkeys
+import OpenModal.gui.widgets.prototype as prototype
+import OpenModal.keys as kkeys
 
 
 try:
-    import openModal.DAQTask as dq
+    import OpenModal.DAQTask as dq
     import daqprocess as dp
 except NotImplementedError as nie:
     dp = None
     dq = None
-import openModal.frf as frf
-import openModal.gui.templates as temp
-from openModal.meas_check import overload_check, double_hit_check
+import OpenModal.frf as frf
+import OpenModal.gui.templates as temp
+from OpenModal.meas_check import overload_check, double_hit_check
 
 FONT_TABLE_FAMILY = 'Consolas'
 FONT_TABLE_SIZE = 13
 ACTIVE_FIELDS = ['rsp_node', 'rsp_dir', 'ref_node', 'ref_dir']
 
 
-from openModal.preferences import DEFAULTS
+from OpenModal.preferences import DEFAULTS
 
 
 # Monkey patch for accessing dock tab label css.

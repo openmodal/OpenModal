@@ -1,6 +1,6 @@
 import numpy as np
 
-from openModal.analysis.utility_functions import myfunc
+from OpenModal.analysis.utility_functions import myfunc
 
 
 def frfmax(H1, freq, threshold=10):

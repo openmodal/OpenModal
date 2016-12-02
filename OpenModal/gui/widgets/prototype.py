@@ -2,7 +2,7 @@ __author__ = 'Matjaz'
 
 from PyQt4 import QtGui
 
-import openModal.preferences as preferences_
+import OpenModal.preferences as preferences_
 
 class SubWidget(QtGui.QWidget):
     """Widget stub."""

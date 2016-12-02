@@ -23,11 +23,11 @@ import pandas as pd
 
 from pandas import ExcelWriter
 
-from openModal.anim_tools import zyx_euler_to_rotation_matrix
+from OpenModal.anim_tools import zyx_euler_to_rotation_matrix
 
 import numpy as np
 import pyuff
-import openModal.utils as ut
+import OpenModal.utils as ut
 
 # import _transformations as tr
 
