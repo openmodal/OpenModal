@@ -6,7 +6,6 @@
 
 """
 import numpy as np
-import matplotlib.pyplot as plt
 
 def get_simulated_receptance(df_Hz=1, f_start=0, f_end=2000, measured_points=8, show=False, real_mode=False):
     '''Returns simulated receptance of 3DOF system.
@@ -65,4 +64,5 @@ def get_simulated_receptance(df_Hz=1, f_start=0, f_end=2000, measured_points=8, 
     return f, alpha, modal_constants, eta, f0
 
 if __name__ == '__main__':
+    import matplotlib.pyplot as plt
     get_simulated_receptance(show=True)

@@ -9,7 +9,7 @@ History: - may 2014: stabilisation, stabilisation_plot,
 """
 
 import numpy as np
-import matplotlib.pyplot as plt
+#import matplotlib.pyplot as plt
 import pyqtgraph as pg
 
 from OpenModal.analysis.get_simulated_sample import get_simulated_receptance
@@ -180,6 +180,7 @@ def stabilisation_plot(test_fn, test_xi, fn_temp, xi_temp, Nmax, f, FRF):
     c=np.argwhere((test_fn==0) & (test_xi==0)) # unstable eigenfrequencues, unstable damping ratios
     d=np.argwhere((test_fn==0) & (test_xi>0)) # unstable eigenfrequencues, stable damping ratios
 
+    #import matplotlib.pyplot as plt
     plt.figure()
     for i in range(0,len(a)):
         p1=plt.scatter(fn_temp[a[i,0], a[i,1]], 1+a[i,1], s=80, c='b', marker='x')
