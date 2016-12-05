@@ -96,7 +96,7 @@ class ExcitationConfig(QtGui.QWidget):
         self.setContentsMargins(25, 0, 25, 25)
 
         with open('gui/styles/style_template.css', 'rb') as fh:
-            src = Template(fh.read().decode("utf-8"))
+            src = Template(fh.read().decode('utf-8'))
             src = src.substitute(COLOR_PALETTE)
             self.setStyleSheet(src)
 
