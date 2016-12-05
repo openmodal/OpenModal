@@ -192,8 +192,8 @@ Team: Matjaž Mršnik, Blaž Starc, Miha Pirnat, Janko Slavič'''
         self.setGeometry(200, 150, 500, 700)
         self.setContentsMargins(25, 0, 25, 25)
 
-        with open('gui/styles/style_template.css', 'rb') as fh:
-            src = Template(fh.read().decode("utf-8"))
+        with open('gui/styles/style_template.css', 'r', encoding='utf-8') as fh:
+            src = Template(fh.read())
             src = src.substitute(COLOR_PALETTE)
             self.setStyleSheet(src)
 
@@ -302,8 +302,8 @@ class FramelesContainer(QtGui.QMainWindow):
 
         self.setCentralWidget(self.main_app)
 
-        with open('gui/styles/style_template.css', 'rb') as fh:
-            src = Template(fh.read().decode("utf-8"))
+        with open('gui/styles/style_template.css', 'r', encoding='utf-8') as fh:
+            src = Template(fh.read())
             src = src.substitute(COLOR_PALETTE)
             self.setStyleSheet(src)
 
@@ -474,8 +474,8 @@ class MainMenuDrop(QtGui.QFrame):
 
         self.q_menu = QtGui.QMenu()
 
-        with open('gui/styles/style_template.css', 'rb') as fh:
-            src = Template(fh.read().decode("utf-8"))
+        with open('gui/styles/style_template.css', 'r', encoding='utf-8') as fh:
+            src = Template(fh.read())
             src = src.substitute(COLOR_PALETTE)
             # print (src)
             self.q_menu.setStyleSheet(src)
@@ -506,8 +506,8 @@ class MainMenu(QtGui.QWidget):
 
         self.q_menu = QtGui.QMenu()
 
-        with open('gui/styles/style_template.css', 'rb') as fh:
-            src = Template(fh.read().decode("utf-8"))
+        with open('gui/styles/style_template.css', 'r', encoding='utf-8') as fh:
+            src = Template(fh.read())
             src = src.substitute(COLOR_PALETTE)
             self.q_menu.setStyleSheet(src)
 
