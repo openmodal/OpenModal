@@ -45,9 +45,14 @@ class SubWidget(QtGui.QWidget):
         self.setContentsMargins(0, 0, 0, 0)
 
     def reload(self, *args, **kwargs):
+        """The method is called when new data is loaded into
+        OpenModal, for example when a saved project is opened."""
         raise NotImplementedError
 
     def refresh(self):
+        """The method is called when the widget is opened. When,
+        for example, someone switches from Geometry to Measurement,
+        refresh() is called on MeasurementWidget object."""
         self.reload()
 
     def closeEvent(self, *args, **kwargs):

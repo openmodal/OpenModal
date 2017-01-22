@@ -132,12 +132,6 @@ class ExcitationConfig(QtGui.QWidget):
         title_layout.addWidget(title_label)
         title_layout.addStretch()
 
-        # p = self.palette()
-        # p.setColor(title_label.backgroundRole(), QtCore.Qt.white)
-        # title_label.setPalette(p)
-        # # title_label.setBackgroundRole(p)
-        # title_label.setAutoFillBackground(True)
-
         vbox = QtGui.QVBoxLayout()
         vbox.addLayout(title_layout)
         vbox.setContentsMargins(0, 1, 0, 0)
@@ -205,36 +199,6 @@ class ExcitationConfig(QtGui.QWidget):
                 self.close()
 
             self.mouse_drag_position = event.globalPos() - self.frameGeometry().topLeft()
-
-    def create_left_menu(self):
-        """Configuration menu."""
-        # menu = QtGui.QListWidget()
-        # menu.setObjectName('settings')
-        #
-        # menu.addItem('Channels')
-        # menu.addItem('Acq. Settings')
-        #
-        # menu.setCurrentRow(0)
-        #
-        # menu.setMaximumWidth(150)
-        #
-        # menu.itemClicked.connect(self._change_settings_area)
-        #
-        # # with open('gui/styles/settings_list_menu.qss', 'r') as fh:
-        # #     menu.setStyleSheet(fh.read())
-        #
-        # menu.setSelectionRectVisible(False)
-        # menu.setFocusPolicy(QtCore.Qt.FocusPolicy(0))
-        #
-        # return menu
-        pass
-
-
-    def _change_settings_area(self):
-        """Change menus by clicking the menu on the right."""
-        # key = self.left_menu.currentRow()
-        # self.settings_area.setCurrentIndex(key)
-        pass
 
     def _save(self):
         """Save configuration."""
