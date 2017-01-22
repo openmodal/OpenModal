@@ -39,7 +39,7 @@ import pyqtgraph as pg
 import numpy as np
 
 
-from preferences import DEFAULTS
+from preferences import DEFAULTS, EXCITATION_DEFAULTS
 
 from frf import _WINDOWS, _EXC_TYPES, _RESP_TYPES, _WGH_TYPES
 
@@ -49,11 +49,20 @@ import OpenModal.gui.tooltips as tt
 
 MAX_WINDOW_LENGTH = 1e9
 
-# TODO: App freezes while NIMAX is open.
-# TODO: Tasklist is not refreshed when NIMAX is closed.
 # TODO: Do a short measurement and then check sampling_rate again (does not work for me --Matjaz).
 # TODO: Initialize impulse/random in the begining if it is set already.
 # TODO: Disable delay for excitation channel in GUI!
+
+
+def set_combo_box_index(combo_box, key):
+    """Sets dropdown to an index that corresponds with
+    the given key."""
+    # -- Get all items.
+    all_items = [combo_box.itemText(i) for i in range(combo_box.count())]
+
+    # -- Set to index, where key=key.
+    return combo_box.setCurrentIndex([i for i, option in enumerate(all_items) if option in key][0])
+
 
 class ExcitationConfig(QtGui.QWidget):
     """Measurement configuration window.
@@ -800,8 +809,6 @@ class ExcitationConfig(QtGui.QWidget):
     def set_impulse_type(self, enabled):
 
         if enabled:
-            # print('impulse set', enabled)
-
             # Enable impulse only options.
             self.trigger_level.setEnabled(True)
             self.pre_trigger.setEnabled(True)
@@ -809,11 +816,18 @@ class ExcitationConfig(QtGui.QWidget):
             # Disable random only options.
             # ... ?
 
-            # Set recommended options.
+
+            # Set recommended values.
             if self.settings['excitation_type'] != 'impulse':
-                self.avg_type.setCurrentIndex(0)
-                self.exc_win.setCurrentIndex(3)
-                self.resp_win.setCurrentIndex(4)
+                set_combo_box_index(self.avg_type, EXCITATION_DEFAULTS['impulse']['weighting'])
+                set_combo_box_index(self.exc_win, EXCITATION_DEFAULTS['impulse']['exc_window'])
+                set_combo_box_index(self.resp_win, EXCITATION_DEFAULTS['impulse']['resp_window'])
+            else:
+                # If random is already setup in memory,
+                # populate with preset values.
+                set_combo_box_index(self.avg_type, self.settings['weighting'])
+                set_combo_box_index(self.exc_win, self.settings['exc_window'])
+                set_combo_box_index(self.resp_win, self.settings['resp_window'])
 
             self.fields['excitation_type'] = lambda: 'impulse'
 
@@ -823,8 +837,6 @@ class ExcitationConfig(QtGui.QWidget):
     def set_random_type(self, enabled):
 
         if enabled:
-            # print('random set', enabled)
-
             # Enable random only options.
             # ...
 
@@ -834,9 +846,15 @@ class ExcitationConfig(QtGui.QWidget):
 
             # Set recommended values.
             if self.settings['excitation_type'] != 'random':
-                self.avg_type.setCurrentIndex(1)
-                self.exc_win.setCurrentIndex(1)
-                self.resp_win.setCurrentIndex(1)
+                set_combo_box_index(self.avg_type, EXCITATION_DEFAULTS['random']['weighting'])
+                set_combo_box_index(self.exc_win, EXCITATION_DEFAULTS['random']['exc_window'])
+                set_combo_box_index(self.resp_win, EXCITATION_DEFAULTS['random']['resp_window'])
+            else:
+                # If random is already setup in memory,
+                # populate with preset values.
+                set_combo_box_index(self.avg_type, self.settings['weighting'])
+                set_combo_box_index(self.exc_win, self.settings['exc_window'])
+                set_combo_box_index(self.resp_win, self.settings['resp_window'])
 
             self.fields['excitation_type'] = lambda: 'random'
 
@@ -846,8 +864,6 @@ class ExcitationConfig(QtGui.QWidget):
     def set_oma_type(self, enabled):
 
         if enabled:
-            # print('random set', enabled)
-
             # Enable random only options.
             # ...
 
@@ -857,9 +873,15 @@ class ExcitationConfig(QtGui.QWidget):
 
             # Set recommended values.
             if self.settings['excitation_type'] != 'oma':
-                self.avg_type.setCurrentIndex(1)
-                self.exc_win.setCurrentIndex(1)
-                self.resp_win.setCurrentIndex(1)
+                set_combo_box_index(self.avg_type, EXCITATION_DEFAULTS['oma']['weighting'])
+                set_combo_box_index(self.exc_win, EXCITATION_DEFAULTS['oma']['exc_window'])
+                set_combo_box_index(self.resp_win, EXCITATION_DEFAULTS['oma']['resp_window'])
+            else:
+                # If oma is already setup in memory,
+                # populate with preset values.
+                set_combo_box_index(self.avg_type, self.settings['weighting'])
+                set_combo_box_index(self.exc_win, self.settings['exc_window'])
+                set_combo_box_index(self.resp_win, self.settings['resp_window'])
 
             self.fields['excitation_type'] = lambda: 'oma'
 

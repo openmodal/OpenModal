@@ -17,6 +17,34 @@
 
 
 __author__ = 'Matjaz'
+
+# These values are used when user switches to different
+# type of excitation. The fields are automatically populated
+# with recommended values.
+EXCITATION_DEFAULTS = dict()
+EXCITATION_DEFAULTS['impulse'] = dict()
+EXCITATION_DEFAULTS['random'] = dict()
+EXCITATION_DEFAULTS['oma'] = dict()
+
+# Impulse excitation recommended settings
+EXCITATION_DEFAULTS['impulse']['exc_window'] = 'Force:0.01'
+EXCITATION_DEFAULTS['impulse']['resp_window'] = 'Exponential:0.01'
+EXCITATION_DEFAULTS['impulse']['weighting'] = 'None'
+EXCITATION_DEFAULTS['impulse']['n_averages'] = 10
+
+# Random excitation recommended settings.
+EXCITATION_DEFAULTS['random']['exc_window'] = 'Hann:0.01'
+EXCITATION_DEFAULTS['random']['resp_window'] = 'Hann:0.01'
+EXCITATION_DEFAULTS['random']['weighting'] = 'Linear'
+EXCITATION_DEFAULTS['random']['n_averages'] = 10
+
+# OMA excitation recommended settings.
+EXCITATION_DEFAULTS['oma']['exc_window'] = 'Hann:0.01'
+EXCITATION_DEFAULTS['oma']['resp_window'] = 'Hann:0.01'
+EXCITATION_DEFAULTS['oma']['weighting'] = 'Linear'
+EXCITATION_DEFAULTS['oma']['n_averages'] = 10
+
+# These are application-wide defaults.
 DEFAULTS = dict()
 DEFAULTS['excitation_type'] = 'impulse'
 DEFAULTS['channel_types'] = ['f'] + ['a']*13
@@ -28,11 +56,14 @@ DEFAULTS['trigger_level'] = 5
 DEFAULTS['pre_trigger_samples'] = 30
 DEFAULTS['exc_channel'] = 0
 DEFAULTS['resp_channels'] = [1]*13
-DEFAULTS['exc_window'] = 'Force:0.01'
-DEFAULTS['resp_window'] = 'Exponential:0.01'
 DEFAULTS['channel_delay'] = [0.]*14
-DEFAULTS['weighting'] = 'None'
-DEFAULTS['n_averages'] = 10
+
+# Impulse excitation is the default choice.
+DEFAULTS['exc_window'] = EXCITATION_DEFAULTS['impulse']['exc_window']
+DEFAULTS['resp_window'] = EXCITATION_DEFAULTS['impulse']['resp_window']
+DEFAULTS['weighting'] = EXCITATION_DEFAULTS['impulse']['weighting']
+DEFAULTS['n_averages'] = EXCITATION_DEFAULTS['impulse']['n_averages']
+
 DEFAULTS['fft_len'] = 'auto'
 DEFAULTS['pre_trigger_samples'] = 30
 DEFAULTS['zero_padding'] = 0
