@@ -49,6 +49,8 @@ else:
 
 #sys.stderr = Logger('log/{0:.0f}_log.txt'.format(time.time()))
 
+sys.path.append('../')
+
 if __name__ == '__main__':
     app = QtGui.QApplication(sys.argv)
     app.addLibraryPath('c:/Anaconda3/Lib/site-packages/PyQt4/plugins/')
