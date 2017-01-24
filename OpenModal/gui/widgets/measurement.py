@@ -1082,7 +1082,7 @@ class MeasurementWidget(prototype.SubWidget):
         self.n_averages_done += 1
         self.frq_axis = f
 
-        zoom = np.floor(self.settings['samples_per_channel']*0.1)
+        zoom = int(np.floor(self.settings['samples_per_channel']*0.1))
         self.fig_exc_zoom_pen.setData(self.x_axis[:zoom], excitation[:zoom])
         # impulse_fft = np.fft.fft(excitation)
         # f_impulse = np.fft.fftfreq(self.x_axis.size)
