@@ -64,7 +64,7 @@ class WelcomeWidget(prototype.SubWidget):
 
         self.button_open_help = QtGui.QPushButton(qta.icon('fa.life-saver', color='#d35400'), 'Help')
         self.button_open_help.setObjectName('linkbutton')
-        self.button_open_help.clicked.connect(lambda: view.load(QtCore.QUrl("http://openmodal.com/draft/help_404.html")))
+        self.button_open_help.clicked.connect(lambda: view.load(QtCore.QUrl("http://openmodal.com/draft/first_steps.html")))
         # self.button_open_project.setMinimumHeight(40)
         # self.button_open_project.setMaximumHeight(40)
         choices_layout.addWidget(self.button_start)
