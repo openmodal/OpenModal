@@ -723,7 +723,8 @@ class ModalDataUff(object):
             dlist_['uffid'] = mnum
             dlist_['measurement_id'] = mnum
             dlist_['model_id'] = model_id
-            
+
+            # TODO: Optimize here!
             dlist = pd.concat([dlist, dlist_], ignore_index=True)
 
         if 'measurement_index' in self.tables:
@@ -907,25 +908,34 @@ class ModalDataUff(object):
 
         # TODO: Implement the handling of missing fields. For now, both must be present. Which makes sense in a way.
         if (len(mnums_151) == 0) or (len(mnums_164) == 0):
-            # self.info = None
-            return False
-        
-        mlist = []
-        #
-        # self.tables['info'] = pd.DataFrame(columns=['model_id', 'model_name', 'units_code', 'length',
-        #                                             'force', 'temp', 'temp_offset'])
+            # -- If no info table is present, generate a default entry,
+            #  similar to what ModalData.new_model(...) does. See above.
+            fields = {'db_app': 'ModalData', 'time_db_created': time.strftime("%d-%b-%y %H:%M:%S"),
+                      'time_db_saved': time.strftime("%d-%b-%y %H:%M:%S"), 'program': 'OpenModal',
+                      'model_name': 'Model-{}'.format(int(model_id)), 'description': 'DefaultDecription', 'units_code': 9,
+                      'temp': 1, 'temp_mode': 1, 'temp_offset': 1, 'length': 1, 'force': 1,
+                      'units_description': 'User unit system'}
 
-        for mnum_151, mnum_164 in zip(mnums_151, mnums_164):
-            sdata_151 = self.uff_object.read_sets(mnum_151)
-            sdata_164 = self.uff_object.read_sets(mnum_164)
-            # Join the data and create one new line for info table.
-            mlist.append([model_id, sdata_151['model_name'], sdata_151['description'], sdata_164['units_code'],
-                          sdata_164['length'], sdata_164['force'],  sdata_164['temp'],  sdata_164['temp_offset']])
+            mlist = [[model_id, fields['model_name'], fields['description'], fields['units_code'], fields['length'],
+                     fields['force'], fields['temp'], fields['temp_offset']]]
 
-        # for mnum in mnums:
-        #     sdata = self.uff_object.read_sets(mnum)
-        #     for key, val in sdata.items():
-        #         mlist.append([model_id, mnum, key, val])
+        else:
+            mlist = []
+            #
+            # self.tables['info'] = pd.DataFrame(columns=['model_id', 'model_name', 'units_code', 'length',
+            #                                             'force', 'temp', 'temp_offset'])
+
+            for mnum_151, mnum_164 in zip(mnums_151, mnums_164):
+                sdata_151 = self.uff_object.read_sets(mnum_151)
+                sdata_164 = self.uff_object.read_sets(mnum_164)
+                # Join the data and create one new line for info table.
+                mlist.append([model_id, sdata_151['model_name'], sdata_151['description'], sdata_164['units_code'],
+                              sdata_164['length'], sdata_164['force'],  sdata_164['temp'],  sdata_164['temp_offset']])
+
+            # for mnum in mnums:
+            #     sdata = self.uff_object.read_sets(mnum)
+            #     for key, val in sdata.items():
+            #         mlist.append([model_id, mnum, key, val])
 
 
         if 'info' in self.tables:
