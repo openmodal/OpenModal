@@ -810,8 +810,8 @@ class MainWindow(QtWidgets.QFrame):
             self.status_bar.setBusy('root')
 
             class Worker(QtCore.QThread):
-                finished = QtCore.Signal()
-                dataout = QtCore.Signal(object)
+                finished = QtCore.pyqtSignal()
+                dataout = QtCore.pyqtSignal(object)
 
                 def __init__(self, filename):
                     super().__init__()

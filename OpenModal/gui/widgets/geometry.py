@@ -134,7 +134,6 @@ class CustomQTableView(QtWidgets.QTableView):
 class GeometryWidget(AnimWidgBase):
 
     # def __init__(self, modaldata_object,status_bar,language, preferences=dict(), desktop_widget=None, parent=None):
-    layoutChanged = QtCore.pyqtSignal()
 
     def __init__(self, *args, **kwargs):
 
@@ -940,7 +939,7 @@ class GeometryWidget(AnimWidgBase):
         xe=float(line_data['xe']) # e = end point
         ye=float(line_data['ye'])
         ze=float(line_data['ze'])
-        num_of_points=float(line_data['num_of_points'])
+        num_of_points=int(line_data['num_of_points'])
         start_num=float(line_data['start_num'])
 
         s_point=np.array((xs,ys,zs))
@@ -964,7 +963,7 @@ class GeometryWidget(AnimWidgBase):
             #get node index corresponding with existing geomtry table
             model_mask=self.modaldata.tables['geometry'].ix[:,'model_id']==model_id
             node_mask=self.modaldata.tables['geometry'].ix[:,'node_nums'].isin(node_nums)
-            final_mask=model_mask*node_mask
+            final_mask=model_mask & node_mask
             node_index=self.modaldata.tables['geometry'].ix[final_mask].index
 
             if len(node_nums)>len(node_index):
@@ -2183,7 +2182,7 @@ class dialog_new_model(QtWidgets.QDialog):
         super(dialog_new_model, self).__init__(parent)
         self.setWindowTitle('Create new model')
 
-        with open('gui/styles/style_template.css', 'r', encoding='utf8') as fh:
+        with open('gui/styles/style_template.css', 'r', encoding='utf-8') as fh:
             src = Template(fh.read())
             src = src.substitute(COLOR_PALETTE)
             self.setStyleSheet(src)
@@ -2222,7 +2221,7 @@ class dialog_rename_model(QtWidgets.QDialog):
         super(dialog_new_model, self).__init__(parent)
         self.setWindowTitle('Rename model')
 
-        with open('gui/styles/style_template.css', 'r', encoding='utf8') as fh:
+        with open('gui/styles/style_template.css', 'r', encoding='utf-8') as fh:
             src = Template(fh.read())
             src = src.substitute(COLOR_PALETTE)
             self.setStyleSheet(src)
@@ -2261,7 +2260,7 @@ class dialog_delete_model(QtWidgets.QDialog):
     def __init__(self, parent=None):
         super(dialog_delete_model, self).__init__(parent)
         self.setWindowTitle('Delete model')
-        with open('gui/styles/style_template.css', 'r', encoding='utf8') as fh:
+        with open('gui/styles/style_template.css', 'r', encoding='utf-8') as fh:
             src = Template(fh.read())
             src = src.substitute(COLOR_PALETTE)
             self.setStyleSheet(src)
@@ -2318,7 +2317,7 @@ class dialog_geom_primitives(QtWidgets.QDialog):
         self.Stack.addWidget(self.stack3)
         self.Stack.addWidget(self.stack4)
 
-        with open('gui/styles/style_template.css', 'r', encoding='utf8') as fh:
+        with open('gui/styles/style_template.css', 'r', encoding='utf-8') as fh:
             src = Template(fh.read())
             src = src.substitute(COLOR_PALETTE)
             self.setStyleSheet(src)

@@ -79,7 +79,7 @@ DRAW_EDGES_LCS=False
 
 class CustomPlotCurveItem(pg.PlotCurveItem):
 
-    pltClicked = QtCore.Signal()
+    pltClicked = QtCore.pyqtSignal()
 
     def __init__(self, parent = None, *args, **kwargs):
         super(CustomPlotCurveItem, self).__init__(parent, *args, **kwargs)
@@ -92,9 +92,6 @@ class CustomPlotCurveItem(pg.PlotCurveItem):
 class TableModel(QtCore.QAbstractTableModel):
     '''Table model that suits all tables (for now). It specifies
     access to data and some other stuff.'''
-    layoutAboutToBeChanged = QtCore.pyqtSignal()
-    layoutChanged = QtCore.pyqtSignal()
-    dataChanged = QtCore.pyqtSignal()
 
     def __init__(self, parent, *args):
         super(TableModel, self).__init__(parent, *args)
@@ -127,7 +124,7 @@ class TableModel(QtCore.QAbstractTableModel):
         col = self.datatable.columns[index.column()]
         if hasattr(value, 'toPyObject'):
             # Only for PyQt4? (QVariant)
-            value = value
+            value = value.toPyObject()
         else:
             # Only for PySide? (Unicode)
             dtype = self.datatable[col].dtype
@@ -165,9 +162,9 @@ class TableModel(QtCore.QAbstractTableModel):
         """sort table by given column number col"""
         self.layoutAboutToBeChanged.emit()
         if order == QtCore.Qt.DescendingOrder:
-            self.datatable = self.datatable.sort(self.datatable.columns[col], ascending=0)
+            self.datatable = self.datatable.sort_values(by=self.datatable.columns[col], ascending=0)
         else:
-            self.datatable = self.datatable.sort(self.datatable.columns[col])
+            self.datatable = self.datatable.sort_values(by=self.datatable.columns[col])
         self.layoutChanged.emit()
 
     def flags(self, index):
@@ -1192,7 +1189,7 @@ class Model():
         elem_disp_df=pd.merge(elem,final_node_data.reset_index(),how='left',left_on='node_id',right_on='node_nums')
 
         # Use same node order as when the meshitem was generated
-        elem_disp_df.sort(['element_id','node_pos'],inplace=True)
+        elem_disp_df.sort_values(by=['element_id','node_pos'],inplace=True)
 
 
         elem_disp=np.array(
@@ -1514,7 +1511,7 @@ class Model():
 
         #get element ids
         new=pd.merge(elem,modal_data.tables['geometry'][combined_mask2],how='left',left_on='node_id',right_on='node_nums')
-        new.sort(['element_id','node_pos'],inplace=True)
+        new.sort_values(['element_id','node_pos'],inplace=True)
 
         #get nodes from element ids
         xyz = new[['x','y','z']].values

@@ -344,7 +344,7 @@ def get_gcs_meshitem(gcs_meshitem, scale, alpha=0):
 
 class ClickedSignal(QtCore.QObject):
 
-    clicked = QtCore.Signal()
+    clicked = QtCore.pyqtSignal()
 
 class GLView(gl.GLViewWidget):
     '''
@@ -1151,8 +1151,8 @@ class AnimWidgBase(prot.SubWidget):
     #     items=self.plot_area.items
     #     for item in items:
     #         if isinstance(item,pg.PlotCurveItem):
-    #             #self.connect(item, QtCore.SIGNAL("pltClicked()"), functools.partial(self.plot_item_clicked, item))
-    #             #self.connect(item, QtCore.SIGNAL("sigClicked()"), functools.partial(self.plot_item_clicked, item))
+    #             #self.connect(item, QtCore.pyqtSignal("pltClicked()"), functools.partial(self.plot_item_clicked, item))
+    #             #self.connect(item, QtCore.pyqtSignal("sigClicked()"), functools.partial(self.plot_item_clicked, item))
     #             item.sigClicked.connect(self.plot_item_clicked)
     #
     #

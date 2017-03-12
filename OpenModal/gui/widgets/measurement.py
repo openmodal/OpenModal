@@ -217,7 +217,7 @@ class MeasurementWidget(prototype.SubWidget):
 
         # buttons
         # Check if any models exist.
-        self.modaldata.tables['info'].sort('model_id', inplace=True)
+        self.modaldata.tables['info'].sort_values(by='model_id', inplace=True)
         models = self.modaldata.tables['info'].model_name
 
         ICON_SIZE = 24
@@ -646,7 +646,7 @@ class MeasurementWidget(prototype.SubWidget):
                 del self.settings['task_name']
 
         # Update models list.
-        self.modaldata.tables['info'].sort('model_id', inplace=True)
+        self.modaldata.tables['info'].sort_values(by='model_id', inplace=True)
         models = self.modaldata.tables['info'].model_name
         # old_model_index = self.button_model.currentIndex()
         self.button_model.clear()
@@ -1257,8 +1257,6 @@ class TableModel(QtCore.QAbstractTableModel):
     '''Table model that suits all tables (for now). It specifies
     access to data and some other stuff.'''
     # TODO: x -> 1 ...
-    layoutAboutToBeChanged = QtCore.pyqtSignal()
-    layoutChanged = QtCore.pyqtSignal()
 
     def __init__(self, parent, *args):
         super(TableModel, self).__init__(parent, *args)
@@ -1292,7 +1290,7 @@ class TableModel(QtCore.QAbstractTableModel):
         col = self.datatable.columns[index.column()]
         if hasattr(value, 'toPyObject'):
             # Only for PyQt4? (QVariant)
-            value = value
+            value = value.toPyObject()
         # else:
         #     # Only for PyQt4? (Unicode)
         #     dtype = self.datatable[col].dtype
@@ -1311,7 +1309,7 @@ class TableModel(QtCore.QAbstractTableModel):
                 pass
         # self.maintable[ACTIVE_FIELDS] = self.datatable
 
-        # self.emit(QtCore.SIGNAL("dataChanged()"))
+        # self.emit(QtCore.pyqtSignal("dataChanged()"))
 
         except (TypeError, KeyError) as e:
             # Wrong data type.
@@ -1340,9 +1338,9 @@ class TableModel(QtCore.QAbstractTableModel):
         """sort table by given column number col"""
         self.layoutAboutToBeChanged.emit()
         if order == QtCore.Qt.DescendingOrder:
-            self.datatable = self.datatable.sort(self.datatable.columns[col], ascending=0)
+            self.datatable = self.datatable.sort_values(by=self.datatable.columns[col], ascending=0)
         else:
-            self.datatable = self.datatable.sort(self.datatable.columns[col])
+            self.datatable = self.datatable.sort_values(by=self.datatable.columns[col])
         self.layoutChanged.emit()
 
     def flags(self, index):
