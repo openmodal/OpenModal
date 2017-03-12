@@ -947,28 +947,29 @@ class MainWindow(QtGui.QFrame):
         file_name = QtGui.QFileDialog.getOpenFileName(self, self.tr("Open File"), "/.",
                                         self.tr("Universal File Format (*.uff *.unv *.txt);;"))
 
-        self.status_bar.setBusy('root', 'importing')
+        if file_name:
+            self.status_bar.setBusy('root', 'importing')
 
-        def endimport():
-            # -- Update all widgets.
-            for key, widget in self.open_stack.items():
-                widget.reload()
-            self.status_bar.setNotBusy('root')
+            def endimport():
+                # -- Update all widgets.
+                for key, widget in self.open_stack.items():
+                    widget.reload()
+                self.status_bar.setNotBusy('root')
 
-        class IOThread(QtCore.QThread):
+            class IOThread(QtCore.QThread):
 
-            def __init__(self, modaldata, file_name):
-                super().__init__()
+                def __init__(self, modaldata, file_name):
+                    super().__init__()
 
-                self.modaldata_object = modaldata
-                self.file_name = file_name
+                    self.modaldata_object = modaldata
+                    self.file_name = file_name
 
-            def run(self):
-                self.modaldata_object.import_uff(self.file_name)
+                def run(self):
+                    self.modaldata_object.import_uff(self.file_name)
 
-        self.thread = IOThread(self.modaldata_object, file_name)
-        self.thread.finished.connect(endimport)
-        self.thread.start()
+            self.thread = IOThread(self.modaldata_object, file_name)
+            self.thread.finished.connect(endimport)
+            self.thread.start()
 
     # def ExportUff(self):
     #     """ File dialog for exporting uff files. """

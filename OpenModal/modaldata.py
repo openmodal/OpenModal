@@ -309,6 +309,7 @@ class ModalData(object):
         if td_x_axis.size > 0:
             n_averages = len(td_response)
             i = 0
+            # TODO: Optimize here.
             for td_excitation_i, td_response_i in zip(td_excitation, td_response):
             # TODO: Create it with size you already know. Should be faster?
                 newentry_val_td = pd.DataFrame(columns=['model_id', 'measurement_id', 'n_avg',
@@ -698,13 +699,14 @@ class ModalDataUff(object):
             return False
         
         mlist = []
-        dlist = pd.DataFrame()
+        #dlist = pd.DataFrame()
         
         # .. Create field list.
         sdata = self.uff_object.read_sets(mnums[0])
         fields = ['model_id', 'measurement_id', 'uffid', 'field_type']
         fields.extend([key for key in sdata.keys() if not ('x' in key or 'data' in key)])        
-        
+
+        concat_list = []
         for mnum in list(mnums):
             dlist_ = pd.DataFrame()
             
@@ -723,8 +725,11 @@ class ModalDataUff(object):
             dlist_['uffid'] = mnum
             dlist_['measurement_id'] = mnum
             dlist_['model_id'] = model_id
-            
-            dlist = pd.concat([dlist, dlist_], ignore_index=True)
+
+            concat_list.append(dlist_)
+
+        dlist = pd.concat(concat_list, ignore_index=True)
+        concat_list = []
 
         if 'measurement_index' in self.tables:
             self.tables['measurement_index'] = pd.concat([self.tables['measurement_index'], pd.DataFrame(mlist, columns=fields)], ignore_index=True)
@@ -907,25 +912,34 @@ class ModalDataUff(object):
 
         # TODO: Implement the handling of missing fields. For now, both must be present. Which makes sense in a way.
         if (len(mnums_151) == 0) or (len(mnums_164) == 0):
-            # self.info = None
-            return False
-        
-        mlist = []
-        #
-        # self.tables['info'] = pd.DataFrame(columns=['model_id', 'model_name', 'units_code', 'length',
-        #                                             'force', 'temp', 'temp_offset'])
+            # -- If no info table is present, generate a default entry,
+            #  similar to what ModalData.new_model(...) does. See above.
+            fields = {'db_app': 'ModalData', 'time_db_created': time.strftime("%d-%b-%y %H:%M:%S"),
+                      'time_db_saved': time.strftime("%d-%b-%y %H:%M:%S"), 'program': 'OpenModal',
+                      'model_name': 'Model-{}'.format(int(model_id)), 'description': 'DefaultDecription', 'units_code': 9,
+                      'temp': 1, 'temp_mode': 1, 'temp_offset': 1, 'length': 1, 'force': 1,
+                      'units_description': 'User unit system'}
 
-        for mnum_151, mnum_164 in zip(mnums_151, mnums_164):
-            sdata_151 = self.uff_object.read_sets(mnum_151)
-            sdata_164 = self.uff_object.read_sets(mnum_164)
-            # Join the data and create one new line for info table.
-            mlist.append([model_id, sdata_151['model_name'], sdata_151['description'], sdata_164['units_code'],
-                          sdata_164['length'], sdata_164['force'],  sdata_164['temp'],  sdata_164['temp_offset']])
+            mlist = [[model_id, fields['model_name'], fields['description'], fields['units_code'], fields['length'],
+                     fields['force'], fields['temp'], fields['temp_offset']]]
 
-        # for mnum in mnums:
-        #     sdata = self.uff_object.read_sets(mnum)
-        #     for key, val in sdata.items():
-        #         mlist.append([model_id, mnum, key, val])
+        else:
+            mlist = []
+            #
+            # self.tables['info'] = pd.DataFrame(columns=['model_id', 'model_name', 'units_code', 'length',
+            #                                             'force', 'temp', 'temp_offset'])
+
+            for mnum_151, mnum_164 in zip(mnums_151, mnums_164):
+                sdata_151 = self.uff_object.read_sets(mnum_151)
+                sdata_164 = self.uff_object.read_sets(mnum_164)
+                # Join the data and create one new line for info table.
+                mlist.append([model_id, sdata_151['model_name'], sdata_151['description'], sdata_164['units_code'],
+                              sdata_164['length'], sdata_164['force'],  sdata_164['temp'],  sdata_164['temp_offset']])
+
+            # for mnum in mnums:
+            #     sdata = self.uff_object.read_sets(mnum)
+            #     for key, val in sdata.items():
+            #         mlist.append([model_id, mnum, key, val])
 
 
         if 'info' in self.tables:
@@ -960,7 +974,8 @@ class ModalDataUff(object):
         # Table for holding arrays of data.
         analysis_values = pd.DataFrame(columns=['model_id', 'uffid', 'ref_node', 'ref_dir', 'rsp_node', 'rsp_dir',
                                                 'node_nums', 'r1', 'r2', 'r3'])
-        
+
+        concat_list = [analysis_values, ]
         for mnum in mnums:
             sdata = self.uff_object.read_sets(mnum)
             
@@ -977,8 +992,11 @@ class ModalDataUff(object):
             tmp_df['r3'] = sdata['r3']
             tmp_df['model_id'] = model_id
             tmp_df['uffid'] = mnum
+
+            concat_list.append(tmp_df)
             
-            analysis_values = pd.concat([analysis_values, tmp_df], ignore_index=True)
+        analysis_values = pd.concat(concat_list, ignore_index=True)
+        concat_list = []
 
         if 'analysis_values' in self.tables:
             self.tables['analysis_values'] = pd.concat([self.tables['analysis_values'], analysis_values], ignore_index=True)
@@ -1008,7 +1026,8 @@ class ModalDataUff(object):
         cols = ['model_id', 'uffid', 'id', 'field_type', 'trace_num', 'color', 'n_nodes', 'trace_id', 'pos', 'node']
         lines = pd.DataFrame(columns=cols)
         trace_id = 0
-        
+
+        concat_list = [lines, ]
         for mnum in mnums:
             sdata = self.uff_object.read_sets(mnum)
             
@@ -1028,8 +1047,11 @@ class ModalDataUff(object):
                 tmp_df['trace_num'] = sdata['trace_num']
                 tmp_df['color'] = sdata['color']
                 tmp_df['n_nodes'] = len(element)
+
+                concat_list.append(tmp_df)
                 
-                lines = pd.concat([lines, tmp_df], ignore_index=True)
+            lines = pd.concat(concat_list, ignore_index=True)
+            concat_list = []
 
         if 'lines' in self.tables:
             self.tables['lines'] = pd.concat([self.tables['lines'], lines], ignore_index=True)
