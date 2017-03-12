@@ -443,7 +443,7 @@ class GLView(gl.GLViewWidget):
         self.mousePos = ev.pos()
 
 
-        tr = QtGui.QTransform4x4()
+        tr = QtGui.QMatrix4x4()
         tr.rotate(self.opts['elevation']-90, 1, 0, 0) # rotation angle, x , y , z
         tr.rotate(self.opts['azimuth']+90, 0, 0, -1) # rotation angle, x , y , z
         tr_diff=tr.inverted()[0]*QtGui.QVector4D(diff.x(),diff.y(),0,1)
@@ -462,7 +462,7 @@ class GLView(gl.GLViewWidget):
             if self.opts['elevation']<0:
 
                 #calc transform
-                tr = QtGui.QTransform4x4()
+                tr = QtGui.QMatrix4x4()
                 tr.rotate(self.opts['elevation']+90, 1, 0, 0) # rotation angle, x , y , z
                 tr.rotate(self.opts['azimuth']-90, 0, 0, -1) # rotation angle, x , y , z
                 tr_diff=tr.inverted()[0]*QtGui.QVector4D(diff.x(),diff.y(),0,1)
@@ -470,7 +470,7 @@ class GLView(gl.GLViewWidget):
                 self.pan(-tr_diff.x(),-tr_diff.y(),-tr_diff.z(), relative=True)
             else:
                 #calc transform
-                tr = QtGui.QTransform4x4()
+                tr = QtGui.QMatrix4x4()
                 tr.rotate(self.opts['elevation']-90, 1, 0, 0) # rotation angle, x , y , z
                 tr.rotate(self.opts['azimuth']+90, 0, 0, -1) # rotation angle, x , y , z
                 tr_diff=tr.inverted()[0]*QtGui.QVector4D(diff.x(),diff.y(),0,1)
