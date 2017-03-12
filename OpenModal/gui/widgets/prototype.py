@@ -18,11 +18,11 @@
 
 __author__ = 'Matjaz'
 
-from PyQt4 import QtGui
+from PyQt5 import QtGui, QtWidgets
 
 import OpenModal.preferences as preferences_
 
-class SubWidget(QtGui.QWidget):
+class SubWidget(QtWidgets.QWidget):
     """Widget stub."""
     def __init__(self, modaldata, status_bar, lang, preferences=dict(), desktop_widget=None,
                  preferences_window=None, action_new=None, action_open=None, parent=None):

@@ -20,9 +20,9 @@ __author__ = 'Miha'
 
 import pandas as pd
 
-from PyQt4 import QtCore as pqc
+from PyQt5 import QtCore, QtWidgets
 
-from PyQt4 import QtGui as pqg
+from PyQt5 import QtGui, QtWidgets
 
 import pyqtgraph.opengl as gl
 
@@ -79,7 +79,7 @@ DRAW_EDGES_LCS=False
 
 class CustomPlotCurveItem(pg.PlotCurveItem):
 
-    pltClicked = pqc.Signal()
+    pltClicked = QtCore.Signal()
 
     def __init__(self, parent = None, *args, **kwargs):
         super(CustomPlotCurveItem, self).__init__(parent, *args, **kwargs)
@@ -89,9 +89,12 @@ class CustomPlotCurveItem(pg.PlotCurveItem):
         self.pltClicked.emit()
 
 
-class TableModel(pqc.QAbstractTableModel):
+class TableModel(QtCore.QAbstractTableModel):
     '''Table model that suits all tables (for now). It specifies
     access to data and some other stuff.'''
+    layoutAboutToBeChanged = QtCore.pyqtSignal()
+    layoutChanged = QtCore.pyqtSignal()
+    dataChanged = QtCore.pyqtSignal()
 
     def __init__(self, parent, *args):
         super(TableModel, self).__init__(parent, *args)
@@ -100,19 +103,19 @@ class TableModel(pqc.QAbstractTableModel):
         self.header_labels=[]
 
     def update(self, dataIn, model_id_list,fields):
-        self.emit(pqc.SIGNAL("layoutAboutToBeChanged()"))
+        self.layoutAboutToBeChanged.emit()
         self.dataIn = dataIn
         self.datatable = dataIn[dataIn['model_id'].isin(model_id_list)][fields]
-        self.emit(pqc.SIGNAL("layoutChanged()"))
+        self.layoutChanged.emit()
 
-    def rowCount(self, parent=pqc.QModelIndex()):
+    def rowCount(self, parent=QtCore.QModelIndex()):
         return len(self.datatable.index)
 
-    def columnCount(self, parent=pqc.QModelIndex()):
+    def columnCount(self, parent=QtCore.QModelIndex()):
         return len(self.datatable.columns.values)
 
     def headerData(self, col, orientation, role):
-        if orientation == pqc.Qt.Horizontal and role == pqc.Qt.DisplayRole:
+        if orientation == QtCore.Qt.Horizontal and role == QtCore.Qt.DisplayRole:
             try:
                 return self.header_labels[col]
             except:
@@ -124,7 +127,7 @@ class TableModel(pqc.QAbstractTableModel):
         col = self.datatable.columns[index.column()]
         if hasattr(value, 'toPyObject'):
             # Only for PyQt4? (QVariant)
-            value = value.toPyObject()
+            value = value
         else:
             # Only for PySide? (Unicode)
             dtype = self.datatable[col].dtype
@@ -139,16 +142,16 @@ class TableModel(pqc.QAbstractTableModel):
             print('only floats allowed')
 
         self.dataIn.update(self.datatable)
-        self.emit(pqc.SIGNAL("dataChanged()"))
+        self.dataChanged.emit()
         self.dataChanged.emit(self.createIndex(0, 0),
                            self.createIndex(self.rowCount(0),
                                             self.columnCount(0)))
         return True
 
-    def data(self, index, role=pqc.Qt.DisplayRole):
+    def data(self, index, role=QtCore.Qt.DisplayRole):
         if not index.isValid():
             return None
-        elif role != pqc.Qt.DisplayRole:
+        elif role != QtCore.Qt.DisplayRole:
             return None
 
         i = index.row()
@@ -160,15 +163,15 @@ class TableModel(pqc.QAbstractTableModel):
 
     def sort(self, col, order):
         """sort table by given column number col"""
-        self.emit(pqc.SIGNAL("layoutAboutToBeChanged()"))
-        if order == pqc.Qt.DescendingOrder:
+        self.layoutAboutToBeChanged.emit()
+        if order == QtCore.Qt.DescendingOrder:
             self.datatable = self.datatable.sort(self.datatable.columns[col], ascending=0)
         else:
             self.datatable = self.datatable.sort(self.datatable.columns[col])
-        self.emit(pqc.SIGNAL("layoutChanged()"))
+        self.layoutChanged.emit()
 
     def flags(self, index):
-        return pqc.QAbstractTableModel.flags(self, index) | pqc.Qt.ItemIsEditable
+        return QtCore.QAbstractTableModel.flags(self, index) | QtCore.Qt.ItemIsEditable
 
 
 
@@ -192,7 +195,7 @@ class AnimationWidget(AnimWidgBase):
         self.widget_mode = 'raw_data'
 
         #for timing animations
-        self.anim_timer = pqc.QTimer(self)
+        self.anim_timer = QtCore.QTimer(self)
 
 
     def cell_hover(self, index):
@@ -225,10 +228,10 @@ class AnimationWidget(AnimWidgBase):
 
     def create_2dview_actions(self):
 
-        self.plot_all_frfs_act = pqg.QAction(LANG_DICT[self._lang]['2D_view_cnt_menu_allFRF_txt'], self, checkable=True,
+        self.plot_all_frfs_act = QtWidgets.QAction(LANG_DICT[self._lang]['2D_view_cnt_menu_allFRF_txt'], self, checkable=True,
                                              statusTip=LANG_DICT[self._lang]['2D_view_cnt_menu_allFRF_statustip'],
                                              triggered=self.set_2d_view_settings)
-        self.plot_frf_sum_act = pqg.QAction("FRF sum", self, checkable=True,
+        self.plot_frf_sum_act = QtWidgets.QAction("FRF sum", self, checkable=True,
                                             statusTip="Plot sum of all available FRFs",
                                             triggered=self.set_2d_view_settings)
         self.plot_frf_sum_act.setChecked(True)  # by default FRF sum is plotted
@@ -238,35 +241,35 @@ class AnimationWidget(AnimWidgBase):
 
         super(self.__class__,self).create_model_view_actions()
 
-        self.anim_25_fpc_act = pqg.QAction('25 frames/cycle', self, checkable=True,
+        self.anim_25_fpc_act = QtWidgets.QAction('25 frames/cycle', self, checkable=True,
                                            statusTip='Set animation speed', triggered=self.anim_25_fpc)
 
-        self.anim_50_fpc_act = pqg.QAction('50 frames/cycle', self, checkable=True,
+        self.anim_50_fpc_act = QtWidgets.QAction('50 frames/cycle', self, checkable=True,
                                            statusTip='Set animation speed', triggered=self.anim_50_fpc)
         self.anim_50_fpc_act.setChecked(True)
 
-        self.anim_75_fpc_act = pqg.QAction('75 frames/cycle', self, checkable=True,
+        self.anim_75_fpc_act = QtWidgets.QAction('75 frames/cycle', self, checkable=True,
                                            statusTip='Set animation speed', triggered=self.anim_75_fpc)
 
-        self.anim_100_fpc_act = pqg.QAction('100 frames/cycle', self, checkable=True,
+        self.anim_100_fpc_act = QtWidgets.QAction('100 frames/cycle', self, checkable=True,
                                             statusTip='Set animation speed', triggered=self.anim_100_fpc)
 
-        self.set_rsp_rove_act = pqg.QAction('Response roved', self, checkable=True,
+        self.set_rsp_rove_act = QtWidgets.QAction('Response roved', self, checkable=True,
                                             statusTip='Set roving type', triggered=self.set_rsp_rove)
         self.set_rsp_rove_act.setChecked(True)
 
-        self.set_ref_rove_act = pqg.QAction('Reference roved', self, checkable=True,
+        self.set_ref_rove_act = QtWidgets.QAction('Reference roved', self, checkable=True,
                                             statusTip='Set roving type', triggered=self.set_ref_rove)
 
-        self.set_ref_x_act = pqg.QAction('Use X', self, checkable=True,
+        self.set_ref_x_act = QtWidgets.QAction('Use X', self, checkable=True,
                                             statusTip='Use reference direction x', triggered=self.set_ref_x)
         self.set_ref_x_act.setChecked(True)
 
-        self.set_ref_y_act = pqg.QAction('Use Y', self, checkable=True,
+        self.set_ref_y_act = QtWidgets.QAction('Use Y', self, checkable=True,
                                             statusTip='Use reference direction y', triggered=self.set_ref_y)
         self.set_ref_y_act.setChecked(True)
 
-        self.set_ref_z_act = pqg.QAction('Use Z', self, checkable=True,
+        self.set_ref_z_act = QtWidgets.QAction('Use Z', self, checkable=True,
                                             statusTip='Use reference direction z', triggered=self.set_ref_z)
         self.set_ref_z_act.setChecked(True)
 
@@ -274,22 +277,22 @@ class AnimationWidget(AnimWidgBase):
 
         super(self.__class__,self).create_toolbar_actions()
 
-        self.act_anim_stop = pqg.QAction(pqg.QIcon('gui/icons/icon_anim_pause.png'), 'Stop', self,
+        self.act_anim_stop = QtWidgets.QAction(QtGui.QIcon('gui/icons/icon_anim_pause.png'), 'Stop', self,
                                          statusTip='Stop animation', triggered=self.animation_stop)
 
-        self.act_anim_play = pqg.QAction(pqg.QIcon('gui/icons/icon_anim_play.png'), 'Play', self,
+        self.act_anim_play = QtWidgets.QAction(QtGui.QIcon('gui/icons/icon_anim_play.png'), 'Play', self,
                                          statusTip='Start animation', triggered=self.animate)
 
-        self.act_analysis_data_mode = pqg.QAction('Analysis mode', self,
+        self.act_analysis_data_mode = QtWidgets.QAction('Analysis mode', self,
                                                   statusTip='Open analysis mode', triggered=self.analysis_data_mode)
 
-        self.act_measurment_data_mode = pqg.QAction('Measurement mode', self,
+        self.act_measurment_data_mode = QtWidgets.QAction('Measurement mode', self,
                                                     statusTip='Open measurement mode',
                                                     triggered=self.measurement_data_mode)
 
     def model_view_context_menu(self, pos):
 
-        menu = pqg.QMenu()
+        menu = QtWidgets.QMenu()
         menu.addAction(self.act_anim_play)
         menu.addAction(self.act_anim_stop)
         menu.addAction(self.act_fit_view)
@@ -323,7 +326,7 @@ class AnimationWidget(AnimWidgBase):
         roving_menu.addAction(self.set_ref_rove_act)
 
 
-        menu.exec_(pqg.QCursor.pos())
+        menu.exec_(QtGui.QCursor.pos())
 
     def set_ref_x(self):
         '''
@@ -484,7 +487,7 @@ class AnimationWidget(AnimWidgBase):
 
         # create context view actions
         self.create_2dview_actions()
-        data_menu = pqg.QMenu("Data Options")
+        data_menu = QtWidgets.QMenu("Data Options")
         data_menu.addAction(self.plot_frf_sum_act)
         data_menu.addAction(self.plot_all_frfs_act)
 
@@ -610,7 +613,7 @@ class AnimationWidget(AnimWidgBase):
 
         self.table_view.setGeometry(table_x,table_y,table_width,table_height)
         #self.table_view.resizeColumnsToContents()
-        self.table_view.horizontalHeader().setResizeMode(pqg.QHeaderView.Stretch)
+        self.table_view.horizontalHeader().setSectionResizeMode(QtWidgets.QHeaderView.Stretch)
         self.plot_widget.setGeometry(table_x,table_y,table_width,table_height)
 
         # create buttons for available models
@@ -632,27 +635,27 @@ class AnimationWidget(AnimWidgBase):
         """
         super(self.__class__,self).create_layout()
 
-        self._btn_play = pqg.QPushButton(qta.icon('fa.play', color='white'),'Play', self)
+        self._btn_play = QtWidgets.QPushButton(qta.icon('fa.play', color='white'),'Play', self)
         self._btn_play.setObjectName('medium')
         self._btn_play.clicked.connect(self.animate)
 
-        self._btn_pause = pqg.QPushButton(qta.icon('fa.pause', color='white'),'Pause', self)
+        self._btn_pause = QtWidgets.QPushButton(qta.icon('fa.pause', color='white'),'Pause', self)
         self._btn_pause.setObjectName('medium')
         self._btn_pause.clicked.connect(self.animation_stop)
 
-        self._btn_fit_view = pqg.QPushButton(qta.icon('fa.search', color='white'),'Fit view', self)
+        self._btn_fit_view = QtWidgets.QPushButton(qta.icon('fa.search', color='white'),'Fit view', self)
         self._btn_fit_view.setObjectName('medium')
         self._btn_fit_view.clicked.connect(self.autofit_3d_view)
 
-        self._btn_slider_background = pqg.QPushButton('Displacement scale', self)
+        self._btn_slider_background = QtWidgets.QPushButton('Displacement scale', self)
         self._btn_slider_background.setObjectName('slider_background')
 
-        self._btn_analysis = pqg.QPushButton(qta.icon('fa.list-ol', color='white'),'Analysis', self)
+        self._btn_analysis = QtWidgets.QPushButton(qta.icon('fa.list-ol', color='white'),'Analysis', self)
         self._btn_analysis.setObjectName('table_button')
         self._btn_analysis.clicked.connect(self.analysis_data_mode)
         self._btn_analysis.setCheckable(True)
 
-        self._btn_measurement = pqg.QPushButton(qta.icon('fa.area-chart', color='white'),'Measurement', self)
+        self._btn_measurement = QtWidgets.QPushButton(qta.icon('fa.area-chart', color='white'),'Measurement', self)
         self._btn_measurement.setObjectName('table_button')
         self._btn_measurement.clicked.connect(self.measurement_data_mode)
         self._btn_measurement.setCheckable(True)
@@ -663,11 +666,11 @@ class AnimationWidget(AnimWidgBase):
         self.fields = ['analysis_id','mode_n','eig_real', 'eig_xi','model_id']
         fake_df=pd.DataFrame(columns=self.fields)
         self.table_model.update(fake_df, [0], self.fields)  # show some data
-        self.table_view = pqg.QTableView(self)
+        self.table_view = QtWidgets.QTableView(self)
 
         self.table_view.setModel(self.table_model)
-        self.table_view.setSelectionBehavior(pqg.QAbstractItemView.SelectRows)
-        self.table_view.setSelectionMode(pqg.QAbstractItemView.SingleSelection)
+        self.table_view.setSelectionBehavior(QtWidgets.QAbstractItemView.SelectRows)
+        self.table_view.setSelectionMode(QtWidgets.QAbstractItemView.SingleSelection)
 
         self.table_model.header_labels=[
                                         keys['analysis_id']['15'],
@@ -691,8 +694,8 @@ class AnimationWidget(AnimWidgBase):
         # Create 2D plot area
         self.create_2dplot_widget()
 
-        self.anim_scale_slider = pqg.QSlider(self)
-        self.anim_scale_slider.setOrientation(pqc.Qt.Horizontal)
+        self.anim_scale_slider = QtWidgets.QSlider(self)
+        self.anim_scale_slider.setOrientation(QtCore.Qt.Horizontal)
         self.anim_scale_slider.setInvertedAppearance(False)
         self.anim_scale_slider.setInvertedControls(False)
         self.anim_scale_slider.setObjectName('horizontalSlider')
@@ -752,7 +755,7 @@ class AnimationWidget(AnimWidgBase):
                                           self.table_view, self.table_model, uff_tree_index,self.fields)
 
 
-                button=pqg.QPushButton(qta.icon('fa.database', color='white'),str(model_name), self)
+                button=QtWidgets.QPushButton(qta.icon('fa.database', color='white'),str(model_name), self)
                 button.setObjectName('medium')
                 button.setCheckable(True)
                 button.clicked.connect(partial(on_activate, model_id))
@@ -863,19 +866,19 @@ class AnimationWidget(AnimWidgBase):
                 if self.widget_mode == 'raw_data':
                     model_obj.animate = True
                     model_obj.animation_init(anim_scale)
-                    self.connect(self.anim_timer, pqc.SIGNAL("timeout()"), model_obj.animation_timer_app)
+                    self.anim_timer.timeout.connect(model_obj.animation_timer_app)
                     model_obj.timer_conn = True  #indicator that signal connection has been made
                 elif self.widget_mode == 'EMA':
                     if model_obj.selected_model_id == model_obj.model_id:
                         model_obj.animate = True
                         model_obj.animation_init(anim_scale)
-                        self.connect(self.anim_timer, pqc.SIGNAL("timeout()"), model_obj.animation_timer_app)
+                        self.anim_timer.timeout.connect(model_obj.animation_timer_app)
                         model_obj.timer_conn = True  #indicator that signal connection has been made
                     else:
                         # disconnect other model_ids from timer
                         model_obj.animate = False
                         if model_obj.timer_conn:
-                            self.disconnect(self.anim_timer, pqc.SIGNAL("timeout()"), model_obj.animation_timer_app)
+                            self.anim_timer.timeout.disconnect(model_obj.animation_timer_app)
                             model_obj.timer_conn = False  #indicator that signal connection has been made
                 else:
                     raise Exception('Wrong widget mode.')
@@ -908,7 +911,7 @@ class AnimationWidget(AnimWidgBase):
 
             model_obj.animate = False
             if model_obj.timer_conn:
-                self.disconnect(self.anim_timer, pqc.SIGNAL("timeout()"), model_obj.animation_timer_app)
+                self.anim_timer.timeout.disconnect(model_obj.animation_timer_app)
                 model_obj.timer_conn = False  #indicator that signal connection has been made
 
 
@@ -1034,7 +1037,7 @@ class Model():
 
         self.needs_refresh_2d = True
 
-        self.color = pqg.QColor(0, 255, 0)
+        self.color = QtGui.QColor(0, 255, 0)
         self.offset = {}
         self.offset['x'] = 0
         self.offset['y'] = 0
@@ -1050,15 +1053,15 @@ class Model():
 
         #COLORS
         #TODO: take colors from color palete template.py
-        self.def_node_color=pqg.QColor(0, 255, 0, 255)
+        self.def_node_color=QtGui.QColor(0, 255, 0, 255)
         self.set_node_color(self.def_node_color)
 
-        self.def_triangle_color=pqg.QColor(0, 0, 255, 255)  # default element color (user cannot change)
-        self.cur_triangle_color=pqg.QColor(0, 0, 255, 255)  # currently set element color (user can change)
+        self.def_triangle_color=QtGui.QColor(0, 0, 255, 255)  # default element color (user cannot change)
+        self.cur_triangle_color=QtGui.QColor(0, 0, 255, 255)  # currently set element color (user can change)
         self.set_elem_color(self.def_triangle_color,'triangle')
 
-        self.def_line_color=pqg.QColor(0, 0, 0, 255)  # default element color (user cannot change)
-        self.cur_line_color=pqg.QColor(0, 0, 0, 255)  # currently set element color (user can change)
+        self.def_line_color=QtGui.QColor(0, 0, 0, 255)  # default element color (user cannot change)
+        self.cur_line_color=QtGui.QColor(0, 0, 0, 255)  # currently set element color (user can change)
         self.set_elem_color(self.def_line_color,'line')
 
 
@@ -1939,7 +1942,7 @@ class Model():
         pens = []
         if (num_of_meas) <= 7:
             for i in range(num_of_meas):
-                pens.append(pg.mkPen(COLORS[i], width=1, style=pqc.Qt.DashLine))
+                pens.append(pg.mkPen(COLORS[i], width=1, style=QtCore.Qt.DashLine))
         else:
             color_chg = 256. / num_of_meas * 3
 
@@ -1955,7 +1958,7 @@ class Model():
             green = np.concatenate((green_chg, start_col, green_chg[::-1]))
             blue = np.concatenate((end_col, blue_chg, start_col))
             for i in range(num_of_meas):
-                pens.append(pg.mkPen(color=(red[i], green[i], blue[i]), width=1))  #, style=pqc.Qt.DashLine))
+                pens.append(pg.mkPen(color=(red[i], green[i], blue[i]), width=1))  #, style=QtCore.Qt.DashLine))
 
         grouped = self.modal_data.tables['measurement_values']
         grouped = grouped.set_index(['model_id', 'measurement_id'],
@@ -2116,14 +2119,14 @@ if __name__ == '__main__':
     import OpenModal.modaldata as md
 
     obj = md.ModalData()
-    app = pqg.QApplication(sys.argv)
+    app = QtWidgets.QApplication(sys.argv)
 
     main_window = AnimationWidget(obj, None, 'en_GB')
     main_window.setGeometry(100, 100, 640, 480)
     main_window.show()
 
     sys.exit(app.exec_())
-    app = pqg.QApplication(sys.argv)
+    app = QtWidgets.QApplication(sys.argv)
     window = main_window()
     window.setGeometry(80, 80, 1000, 800)
     window.show()

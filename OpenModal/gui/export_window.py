@@ -32,7 +32,7 @@ import qtawesome as qta
 
 # import DAQTask as dq
 
-from PyQt4 import QtGui, QtCore
+from PyQt5 import QtCore, QtGui, QtWidgets
 
 import pyqtgraph as pg
 
@@ -44,7 +44,7 @@ from OpenModal.gui.templates import COLOR_PALETTE
 
 MAX_WINDOW_LENGTH = 1e9
 
-class ExportSelector(QtGui.QWidget):
+class ExportSelector(QtWidgets.QWidget):
     """Measurement configuration window.
     """
     def __init__(self, desktop_widget, status_bar, modaldata_object, *args, **kwargs):
@@ -66,25 +66,25 @@ class ExportSelector(QtGui.QWidget):
         self.setAutoFillBackground(True)
         self.fields = dict()
 
-        self.save = QtGui.QPushButton('Done')
+        self.save = QtWidgets.QPushButton('Done')
         self.save.setObjectName('small')
         # self.save.setDisabled(True)
 
-        self.dismiss = QtGui.QPushButton('Dismiss')
+        self.dismiss = QtWidgets.QPushButton('Dismiss')
         self.dismiss.setObjectName('small')
 
         self.setGeometry(400, 50, 600, 800)
         self.setContentsMargins(25, 0, 25, 25)
 
-        with open('gui/styles/style_template.css', 'r') as fh:
+        with open('gui/styles/style_template.css', 'r', encoding='utf8') as fh:
             src = Template(fh.read())
             src = src.substitute(COLOR_PALETTE)
             self.setStyleSheet(src)
 
-        hbox = QtGui.QHBoxLayout()
+        hbox = QtWidgets.QHBoxLayout()
         # hbox.addWidget(self.left_menu)
 
-        title_label = QtGui.QLabel('EXPORT DATA')
+        title_label = QtWidgets.QLabel('EXPORT DATA')
         font = title_label.font()
         font.setPointSize(8)
         font.setFamily('Verdana')
@@ -92,9 +92,9 @@ class ExportSelector(QtGui.QWidget):
         title_label.setContentsMargins(5, 0, 0, 25)
         title_label.setObjectName('title_label')
 
-        models_group = QtGui.QGroupBox('Models')
+        models_group = QtWidgets.QGroupBox('Models')
         models_group.setStyleSheet("QGroupBox {font-weight: bold;}")
-        models_grid = QtGui.QGridLayout()
+        models_grid = QtWidgets.QGridLayout()
         models_grid.setContentsMargins(80, 20, 80, 20)
         models_grid.setColumnStretch(1, 0)
         models_grid.setColumnStretch(1, 2)
@@ -106,8 +106,8 @@ class ExportSelector(QtGui.QWidget):
 
         # models = ['Nosilec', 'Transformator', 'Jedro', 'Pralni stroj', 'Letalo']
 
-        self.model_checkbox_widgets = [QtGui.QCheckBox() for model in models]
-        model_label_widgets = [QtGui.QLabel(model) for model in models]
+        self.model_checkbox_widgets = [QtWidgets.QCheckBox() for model in models]
+        model_label_widgets = [QtWidgets.QLabel(model) for model in models]
 
         for i, (checkbox, label) in enumerate(zip(self.model_checkbox_widgets,model_label_widgets)):
             models_grid.addWidget(checkbox, i//2, 0 + (i%2)*2)
@@ -116,9 +116,9 @@ class ExportSelector(QtGui.QWidget):
 
         models_group.setLayout(models_grid)
 
-        data_type_group = QtGui.QGroupBox('Data')
+        data_type_group = QtWidgets.QGroupBox('Data')
         data_type_group.setStyleSheet("QGroupBox {font-weight: bold;}")
-        data_type_grid = QtGui.QGridLayout()
+        data_type_grid = QtWidgets.QGridLayout()
         data_type_grid.setContentsMargins(80, 20, 80, 20)
         data_type_grid.setColumnStretch(1, 0)
         data_type_grid.setColumnStretch(1, 2)
@@ -127,8 +127,8 @@ class ExportSelector(QtGui.QWidget):
         data_types_populated = [True if self.modaldata_object.tables[key].size != 0 else False
                                 for key in data_types_keys]
 
-        self.data_type_checkbox_widgets = [QtGui.QCheckBox() for data_type in self.data_types_names]
-        model_label_widgets = [QtGui.QLabel(data_type) for data_type in self.data_types_names]
+        self.data_type_checkbox_widgets = [QtWidgets.QCheckBox() for data_type in self.data_types_names]
+        model_label_widgets = [QtWidgets.QLabel(data_type) for data_type in self.data_types_names]
 
         for i, (checkbox, label) in enumerate(zip(self.data_type_checkbox_widgets,model_label_widgets)):
             data_type_grid.addWidget(checkbox, i, 0)
@@ -138,16 +138,16 @@ class ExportSelector(QtGui.QWidget):
 
         data_type_group.setLayout(data_type_grid)
 
-        other_group = QtGui.QGroupBox('Separate Files for Data Types (UFF)')
+        other_group = QtWidgets.QGroupBox('Separate Files for Data Types (UFF)')
         other_group.setStyleSheet("QGroupBox {font-weight: bold;}")
 
-        one_file_radio = QtGui.QRadioButton()
-        self.multiple_file_radio = QtGui.QRadioButton()
-        one_file_radio_label = QtGui.QLabel('No')
-        multiple_file_radio_label = QtGui.QLabel('Yes')
+        one_file_radio = QtWidgets.QRadioButton()
+        self.multiple_file_radio = QtWidgets.QRadioButton()
+        one_file_radio_label = QtWidgets.QLabel('No')
+        multiple_file_radio_label = QtWidgets.QLabel('Yes')
         one_file_radio.setChecked(True)
 
-        h_files = QtGui.QGridLayout()
+        h_files = QtWidgets.QGridLayout()
         h_files.setContentsMargins(80, 20, 80, 20)
         h_files.setColumnStretch(1, 0)
         h_files.setColumnStretch(1, 2)
@@ -158,29 +158,29 @@ class ExportSelector(QtGui.QWidget):
 
         other_group.setLayout(h_files)
 
-        button_export_xls = QtGui.QPushButton(qta.icon('fa.line-chart', color='white', scale_factor=1.2),
+        button_export_xls = QtWidgets.QPushButton(qta.icon('fa.line-chart', color='white', scale_factor=1.2),
                                               ' Export CSV')
         button_export_xls.setObjectName('altpushbutton_')
         button_export_xls.clicked.connect(self.ExportCSV)
-        button_export_xls_hbox = QtGui.QHBoxLayout()
+        button_export_xls_hbox = QtWidgets.QHBoxLayout()
         button_export_xls_hbox.addStretch()
         button_export_xls_hbox.addWidget(button_export_xls)
         button_export_xls_hbox.addStretch()
 
-        button_export_unv = QtGui.QPushButton(qta.icon('fa.rocket', color='white', scale_factor=1.2),
+        button_export_unv = QtWidgets.QPushButton(qta.icon('fa.rocket', color='white', scale_factor=1.2),
                                               ' Export UFF')
         button_export_unv.setObjectName('altpushbutton_')
         button_export_unv.clicked.connect(self.ExportUff)
-        button_export_unv_hbox = QtGui.QHBoxLayout()
+        button_export_unv_hbox = QtWidgets.QHBoxLayout()
         button_export_unv_hbox.addStretch()
         button_export_unv_hbox.addWidget(button_export_unv)
         button_export_unv_hbox.addStretch()
 
-        title_layout = QtGui.QHBoxLayout()
+        title_layout = QtWidgets.QHBoxLayout()
         title_layout.addWidget(title_label)
         title_layout.addStretch()
 
-        vbox = QtGui.QVBoxLayout()
+        vbox = QtWidgets.QVBoxLayout()
         vbox.addLayout(title_layout)
         vbox.setContentsMargins(0, 1, 0, 0)
         vbox.addLayout(hbox)
@@ -200,10 +200,10 @@ class ExportSelector(QtGui.QWidget):
         # vbox.addLayout(button_layout)
         vbox.setContentsMargins(20, 20, 20, 20)
 
-        vbox_outer = QtGui.QVBoxLayout()
+        vbox_outer = QtWidgets.QVBoxLayout()
         vbox_outer.setContentsMargins(0, 0, 0, 0)
         vbox_outer.addLayout(vbox)
-        vbox_outer.addWidget(QtGui.QSizeGrip(self.parent()), 0, QtCore.Qt.AlignBottom |QtCore.Qt.AlignRight)
+        vbox_outer.addWidget(QtWidgets.QSizeGrip(self.parent()), 0, QtCore.Qt.AlignBottom |QtCore.Qt.AlignRight)
 
         self.setContentsMargins(0, 0, 0, 0)
         self.setLayout(vbox_outer)
@@ -257,7 +257,7 @@ class ExportSelector(QtGui.QWidget):
         #                                                      QtGui.QFileDialog.Directory)
         # elif variant == 'PyQt4':
 
-        file_name = QtGui.QFileDialog.getExistingDirectory(self, 'Select Directory')
+        file_name = QtWidgets.QFileDialog.getExistingDirectory(self, 'Select Directory')
 
         # file_name = QtGui.QFileDialog.getSaveFileName(self, self.tr("Chose Folder"), "/.",
         #                                                  QtGui.QFileDialog.Directory)
@@ -302,7 +302,7 @@ class ExportSelector(QtGui.QWidget):
         #                                                      QtGui.QFileDialog.Directory)
         # elif variant == 'PyQt4':
 
-        file_name = QtGui.QFileDialog.getExistingDirectory(self, 'Select Directory')
+        file_name = QtWidgets.QFileDialog.getExistingDirectory(self, 'Select Directory')
 
         # file_name = QtGui.QFileDialog.getSaveFileName(self, self.tr("Chose Folder"), "/.",
         #                                                  QtGui.QFileDialog.Directory)

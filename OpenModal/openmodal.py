@@ -27,7 +27,7 @@ import multiprocessing as mp
 #     mp.set_executable(executable)
 #     mp.freeze_support()
 
-from PyQt4 import QtGui
+from PyQt5 import QtGui, QtWidgets
 
 class Logger(object):
     def __init__(self, filename):
@@ -52,8 +52,8 @@ else:
 sys.path.append('../')
 
 if __name__ == '__main__':
-    app = QtGui.QApplication(sys.argv)
-    app.addLibraryPath('c:/Anaconda3/Lib/site-packages/PyQt4/plugins/')
+    app = QtWidgets.QApplication(sys.argv)
+    app.addLibraryPath('c:/Anaconda3/Lib/site-packages/PyQt5/plugins/')
 
     #pixmap = QtGui.QPixmap('gui/widgets/splash.png')
     #splash = QtGui.QSplashScreen(pixmap)

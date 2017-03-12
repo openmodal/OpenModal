@@ -22,7 +22,7 @@ import pickle
 import sys, time
 from string import Template
 
-from PyQt4 import QtGui, QtCore
+from PyQt5 import QtCore, QtGui, QtWidgets
 
 import qtawesome as qta
 
@@ -94,28 +94,28 @@ pyqtgraph.setConfigOption('background', 'w')
 pyqtgraph.setConfigOption('foreground', 'k')
 
 # TODO: Put it inside a thread.
-class StatusWidget(QtGui.QWidget):
+class StatusWidget(QtWidgets.QWidget):
     """Custom statusbar widget.
     """
     def __init__(self):
         super(StatusWidget, self).__init__()
 
-        self.button_weird = QtGui.QPushButton(' ready')
+        self.button_weird = QtWidgets.QPushButton(' ready')
         self.button_weird.setObjectName('linkbutton')
         self.spin_icon = qta.icon('fa.spinner', color='red', animation=qta.Spin(self.button_weird))
         self.button_weird.setIcon(self.spin_icon)
 
-        self.label = QtGui.QLabel('busy')
+        self.label = QtWidgets.QLabel('busy')
         self.label.setObjectName('small')
         self.label.setStyleSheet('color: {0};'.format(COLOR_PALETTE['primary']))
-        self.label_mov = QtGui.QLabel()
+        self.label_mov = QtWidgets.QLabel()
         self.movie = QtGui.QMovie('gui/icons/loader-ring.gif')
         self.movie.setScaledSize(QtCore.QSize(20,20))
         self.label_mov.setMovie(self.movie)
         self.movie.start()
         self.label_mov.hide()
 
-        status_layout = QtGui.QHBoxLayout()
+        status_layout = QtWidgets.QHBoxLayout()
         status_layout.addWidget(self.label_mov)
         status_layout.addWidget(self.label)
 
@@ -146,7 +146,7 @@ class StatusWidget(QtGui.QWidget):
         self.active_identities[identity] = (0, msg)
         self._refresh_status()
 
-class AboutWindow(QtGui.QWidget):
+class AboutWindow(QtWidgets.QWidget):
     """Measurement configuration window.
     """
     def __init__(self):
@@ -161,13 +161,13 @@ class AboutWindow(QtGui.QWidget):
         self.setAutoFillBackground(True)
         self.fields = dict()
 
-        self.dismiss = QtGui.QPushButton('Dismiss')
+        self.dismiss = QtWidgets.QPushButton('Dismiss')
         self.dismiss.setObjectName('small')
         self.dismiss.clicked.connect(self.close)
 
-        self.main_area = QtGui.QWidget()
+        self.main_area = QtWidgets.QWidget()
 
-        self.main_description = QtGui.QLabel('''
+        self.main_description = QtWidgets.QLabel('''
 OpenModal
 
 OpenModal is an open source program for performing experimental modal analysis from data aquisition to mode animation.
@@ -178,12 +178,12 @@ Team: Matjaž Mršnik, Blaž Starc, Miha Pirnat, Janko Slavič'''
 
 
                              )
-        self.webpage = QtGui.QLabel('''Webpage: <a href='http://openmodal.com'>OpenModal</a>''')
+        self.webpage = QtWidgets.QLabel('''Webpage: <a href='http://openmodal.com'>OpenModal</a>''')
         self.webpage.setOpenExternalLinks(True)
         self.main_description.setWordWrap(True)
         # self.main_description.setFixedSize(550, 500)
 
-        layout = QtGui.QVBoxLayout()
+        layout = QtWidgets.QVBoxLayout()
         layout.addWidget(self.main_description)
         layout.addWidget(self.webpage)
 
@@ -197,7 +197,7 @@ Team: Matjaž Mršnik, Blaž Starc, Miha Pirnat, Janko Slavič'''
             src = src.substitute(COLOR_PALETTE)
             self.setStyleSheet(src)
 
-        title_label = QtGui.QLabel('ABOUT')
+        title_label = QtWidgets.QLabel('ABOUT')
         font = title_label.font()
         font.setPointSize(8)
         font.setFamily('Verdana')
@@ -206,15 +206,15 @@ Team: Matjaž Mršnik, Blaž Starc, Miha Pirnat, Janko Slavič'''
         title_label.setObjectName('title_label')
 
 
-        title_layout = QtGui.QHBoxLayout()
+        title_layout = QtWidgets.QHBoxLayout()
         title_layout.addWidget(title_label)
         title_layout.addStretch()
 
-        vbox = QtGui.QVBoxLayout()
+        vbox = QtWidgets.QVBoxLayout()
         vbox.addLayout(title_layout)
         vbox.setContentsMargins(0, 1, 0, 0)
         vbox.addWidget(self.main_area)
-        button_layout = QtGui.QHBoxLayout()
+        button_layout = QtWidgets.QHBoxLayout()
         button_layout.addStretch()
         button_layout.addWidget(self.dismiss)
 
@@ -223,10 +223,10 @@ Team: Matjaž Mršnik, Blaž Starc, Miha Pirnat, Janko Slavič'''
         vbox.addLayout(button_layout)
         vbox.setContentsMargins(20, 20, 20, 20)
 
-        vbox_outer = QtGui.QVBoxLayout()
+        vbox_outer = QtWidgets.QVBoxLayout()
         vbox_outer.setContentsMargins(0, 0, 0, 0)
         vbox_outer.addLayout(vbox)
-        vbox_outer.addWidget(QtGui.QSizeGrip(self.parent()), 0, QtCore.Qt.AlignBottom |QtCore.Qt.AlignRight)
+        vbox_outer.addWidget(QtWidgets.QSizeGrip(self.parent()), 0, QtCore.Qt.AlignBottom |QtCore.Qt.AlignRight)
 
         self.setContentsMargins(0, 0, 0, 0)
         self.setLayout(vbox_outer)
@@ -275,7 +275,7 @@ Team: Matjaž Mršnik, Blaž Starc, Miha Pirnat, Janko Slavič'''
 
             self.mouse_drag_position = event.globalPos() - self.frameGeometry().topLeft()
 
-class FramelesContainer(QtGui.QMainWindow):
+class FramelesContainer(QtWidgets.QMainWindow):
 
     def __init__(self, desktop_widget):
         super().__init__()
@@ -367,7 +367,7 @@ class FramelesContainer(QtGui.QMainWindow):
         else:
             event.accept()
 
-class MainApp(QtGui.QWidget):
+class MainApp(QtWidgets.QWidget):
 
     def __init__(self, desktop_widget, frameGeometry, main_window_handle):
         super().__init__()
@@ -375,7 +375,7 @@ class MainApp(QtGui.QWidget):
 
         self.main_window = MainWindow(desktop_widget, frameGeometry, main_window_handle)
         self.setAutoFillBackground(True)
-        self.box = QtGui.QHBoxLayout()
+        self.box = QtWidgets.QHBoxLayout()
         self.box.setContentsMargins(0, 0, 0, 0)
         self.box.setSpacing(0)
         self.box.addWidget(self.main_window)
@@ -449,7 +449,7 @@ class MainApp(QtGui.QWidget):
         self.painter.end()
 
 
-class MainMenuTabbed(QtGui.QTabBar):
+class MainMenuTabbed(QtWidgets.QTabBar):
     def __init__(self):
         super().__init__()
 
@@ -461,18 +461,18 @@ class MainMenuTabbed(QtGui.QTabBar):
         self.addTab('ANIMATION  ')
         self.setContentsMargins(0, 0, 0, 0)
 
-class MainMenuDrop(QtGui.QFrame):
+class MainMenuDrop(QtWidgets.QFrame):
     def __init__(self):
         super().__init__()
 
-        self.button_go = QtGui.QToolButton()
+        self.button_go = QtWidgets.QToolButton()
         self.button_go.setIcon(qta.icon('fa.bars', color='white', scale_factor=1.0))
         self.button_go.setMaximumWidth(40)
         self.button_go.setMinimumWidth(40)
         self.button_go.setMinimumHeight(40)
         self.button_go.setMinimumHeight(40)
 
-        self.q_menu = QtGui.QMenu()
+        self.q_menu = QtWidgets.QMenu()
 
         with open('gui/styles/style_template.css', 'r', encoding='utf-8') as fh:
             src = Template(fh.read())
@@ -484,9 +484,9 @@ class MainMenuDrop(QtGui.QFrame):
         self.q_menu.setMinimumWidth(140)
         self.q_menu.setMaximumWidth(140)
         self.button_go.setMenu(self.q_menu)
-        self.button_go.setPopupMode(QtGui.QToolButton.InstantPopup)
+        self.button_go.setPopupMode(QtWidgets.QToolButton.InstantPopup)
 
-        self.hbox = QtGui.QHBoxLayout()
+        self.hbox = QtWidgets.QHBoxLayout()
         self.hbox.setContentsMargins(0, 0, 0, 0)
         self.hbox.addWidget(self.button_go)
 
@@ -495,16 +495,16 @@ class MainMenuDrop(QtGui.QFrame):
         self.setLayout(self.hbox)
 
 
-class MainMenu(QtGui.QWidget):
+class MainMenu(QtWidgets.QWidget):
     def __init__(self):
         super().__init__()
 
-        self.button_go = QtGui.QToolButton()
+        self.button_go = QtWidgets.QToolButton()
         self.button_go.setText('START')
         self.button_go.setMaximumWidth(140)
         self.button_go.setMinimumWidth(140)
 
-        self.q_menu = QtGui.QMenu()
+        self.q_menu = QtWidgets.QMenu()
 
         with open('gui/styles/style_template.css', 'r', encoding='utf-8') as fh:
             src = Template(fh.read())
@@ -514,24 +514,24 @@ class MainMenu(QtGui.QWidget):
         self.q_menu.setMinimumWidth(140)
         self.q_menu.setMaximumWidth(140)
         self.button_go.setMenu(self.q_menu)
-        self.button_go.setPopupMode(QtGui.QToolButton.InstantPopup)
+        self.button_go.setPopupMode(QtWidgets.QToolButton.InstantPopup)
 
 
-        self.button_open = QtGui.QPushButton(qta.icon('fa.folder-open-o'), 'open')
+        self.button_open = QtWidgets.QPushButton(qta.icon('fa.folder-open-o'), 'open')
         self.button_open.setObjectName('linkbutton')
         self.button_open.setCursor(QtGui.QCursor(QtCore.Qt.PointingHandCursor))
 
-        self.button_save = QtGui.QPushButton(qta.icon('fa.save'), 'save')
+        self.button_save = QtWidgets.QPushButton(qta.icon('fa.save'), 'save')
         self.button_save.setObjectName('linkbutton')
         self.button_save.setCursor(QtGui.QCursor(QtCore.Qt.PointingHandCursor))
 
         # self.button_go.setView(QtGui.QListView())
         # self.button_go.setStyleSheet("QComboBox QAbstractItemView::item { min-height: 35px; min-width: 50px; }");
-        self.button_settings = QtGui.QPushButton(qta.icon('fa.cogs'), 'settings')
+        self.button_settings = QtWidgets.QPushButton(qta.icon('fa.cogs'), 'settings')
         self.button_settings.setObjectName('linkbutton')
         self.button_settings.setCursor(QtGui.QCursor(QtCore.Qt.PointingHandCursor))
 
-        self.hbox = QtGui.QHBoxLayout()
+        self.hbox = QtWidgets.QHBoxLayout()
         self.hbox.addWidget(self.button_go)
         self.hbox.addStretch()
         self.hbox.addWidget(self.button_open)
@@ -540,7 +540,7 @@ class MainMenu(QtGui.QWidget):
 
         self.setLayout(self.hbox)
 
-class MainWindow(QtGui.QFrame):
+class MainWindow(QtWidgets.QFrame):
     """Main window of the application.
     """
     def __init__(self, desktop_widget, parent_geometry, main_window_handle):
@@ -563,7 +563,7 @@ class MainWindow(QtGui.QFrame):
 
         # -- Stacked widget is used to -- stack widgets. In the
         #   beginning the welcome widget is open.
-        self.stacked_widget = QtGui.QStackedWidget()
+        self.stacked_widget = QtWidgets.QStackedWidget()
         # self.stacked_widget.setContentsMargins(25, 25, 25, 25)
         self.stacked_widget.setContentsMargins(0, 0, 0, 0)
 
@@ -597,7 +597,7 @@ class MainWindow(QtGui.QFrame):
         self.menu_basic.q_menu.addAction(qta.icon('fa.info-circle', scale_factor=1.0, color='white'), 'About', self.about_window.show)
         self.menu_basic.q_menu.addAction('Exit', self.main_window_handle.close)
 
-        self.hmenubox = QtGui.QHBoxLayout()
+        self.hmenubox = QtWidgets.QHBoxLayout()
         self.hmenubox.setContentsMargins(0, 0, 0, 0)
         self.hmenubox.setSpacing(0)
         self.hmenubox.addWidget(self.menu_basic)
@@ -606,27 +606,27 @@ class MainWindow(QtGui.QFrame):
         self.hmenubox.addStretch(1)
         self.hmenubox.addWidget(self.status_bar)
         self.hmenubox.addStretch(1)
-        self.vbox_gobal = QtGui.QVBoxLayout()
+        self.vbox_gobal = QtWidgets.QVBoxLayout()
         self.vbox_gobal.setContentsMargins(0, 0, 0, 0)
         self.vbox_gobal.setSpacing(0)
 
-        bg_widget = QtGui.QWidget()
+        bg_widget = QtWidgets.QWidget()
         bg_widget.setLayout(self.hmenubox)
 
         bg_widget.setContentsMargins(0,0,0,0)
 
         self.vbox_gobal.addWidget(bg_widget)
 
-        self.vbox = QtGui.QVBoxLayout()
+        self.vbox = QtWidgets.QVBoxLayout()
         self.vbox.setContentsMargins(0, 0, 0, 0)
         self.vbox.setSpacing(0)
         self.vbox.addWidget(self.stacked_widget)
 
-        self.hbox = QtGui.QHBoxLayout()
+        self.hbox = QtWidgets.QHBoxLayout()
         self.hbox.setContentsMargins(0, 0, 0, 0)
         self.hbox.setSpacing(0)
 
-        self.vbox_left = QtGui.QVBoxLayout()
+        self.vbox_left = QtWidgets.QVBoxLayout()
         self.vbox_left.setContentsMargins(0, 0, 0, 0)
         self.vbox_left.setSpacing(0)
 
@@ -657,7 +657,7 @@ class MainWindow(QtGui.QFrame):
         # self.setStyleSheet('background-color: red;')
         # self.stacked_widget.setContentsMargins(-10, -10, -10, -10)
 
-        self.overlayed = QtGui.QSizeGrip(self)
+        self.overlayed = QtWidgets.QSizeGrip(self)
         # self.overlayed.setAttribute(QtCore.Qt.WA_TranslucentBackground)
         # self.overlayed.setAutoFillBackground(True)
         self.overlayed.setStyleSheet('border-image: url(gui/icons/icon_size_grab_4.png) 0 0 0 0 stretch stretch; border-width: 0px;')
@@ -705,7 +705,7 @@ class MainWindow(QtGui.QFrame):
                 self.modaldata_object.new_model(entries=dict(model_name='NewModel'))
 
             self.measurement_configuration_window = cf.ExcitationConfig(self.desktop_widget, self.preferences)
-            self.export_window = QtGui.QWidget()
+            self.export_window = QtWidgets.QWidget()
 
         for key in widgets.keys():
 
@@ -747,12 +747,12 @@ class MainWindow(QtGui.QFrame):
         # TODO: Software should automatically check for new version.
 
     def _warn_about_data_loss(self):
-        msgBox = QtGui.QMessageBox()
+        msgBox = QtWidgets.QMessageBox()
         msgBox.setWindowTitle('Caution')
-        msgBox.setIcon(QtGui.QMessageBox.Warning)
+        msgBox.setIcon(QtWidgets.QMessageBox.Warning)
         msgBox.setText('This action will discard all non-saved data! Are you sure you want to proceed?')
-        msgBox.setStandardButtons(QtGui.QMessageBox.Discard | QtGui.QMessageBox.Cancel)
-        msgBox.setDefaultButton(QtGui.QMessageBox.Cancel)
+        msgBox.setStandardButtons(QtWidgets.QMessageBox.Discard | QtWidgets.QMessageBox.Cancel)
+        msgBox.setDefaultButton(QtWidgets.QMessageBox.Cancel)
         ret = msgBox.exec_()
 
         return ret
@@ -761,9 +761,9 @@ class MainWindow(QtGui.QFrame):
         """ Create new project."""
         ret = self._warn_about_data_loss()
 
-        if ret == QtGui.QMessageBox.Cancel:
+        if ret == QtWidgets.QMessageBox.Cancel:
             pass
-        elif ret == QtGui.QMessageBox.Discard:
+        elif ret == QtWidgets.QMessageBox.Discard:
 
 
             # -- Reload stack (__init__).
@@ -796,15 +796,15 @@ class MainWindow(QtGui.QFrame):
 
         ret = self._warn_about_data_loss()
 
-        if ret == QtGui.QMessageBox.Cancel:
+        if ret == QtWidgets.QMessageBox.Cancel:
             pass
-        elif ret == QtGui.QMessageBox.Discard:
+        elif ret == QtWidgets.QMessageBox.Discard:
 
 
-            file_name = QtGui.QFileDialog.getOpenFileName(self, self.tr("Open File"), "/.",
-                                                          self.tr("ModalData File (*.mdd)"))
+            file_name = QtWidgets.QFileDialog.getOpenFileName(self, self.tr("Open File"), "/.",
+                                                          self.tr("ModalData File (*.mdd)"))[0]
             #
-            if isinstance(file_name, tuple):  # PySide returns a tuple (name, filtr), while PyQt4 returns only the name
+            if isinstance(file_name, tuple):  # PySide returns a tuple (name, filtr), while PyQt5 returns only the name
                 file_name = file_name[0]      # we only need the file_name
 
             self.status_bar.setBusy('root')
@@ -850,10 +850,10 @@ class MainWindow(QtGui.QFrame):
 
     def SaveAs(self):
         """Save as ... dialog."""
-        file_name = QtGui.QFileDialog.getSaveFileName(self, self.tr('Save file as'), '/.',
-                                                         self.tr('ModalData File (*.mdd)'))
+        file_name = QtWidgets.QFileDialog.getSaveFileName(self, self.tr('Save file as'), '/.',
+                                                         self.tr('ModalData File (*.mdd)'))[0]
 
-        if isinstance(file_name, tuple):  # PySide returns a tuple (name, filtr), while PyQt4 returns only the name
+        if isinstance(file_name, tuple):  # PySide returns a tuple (name, filtr), while PyQt5 returns only the name
             file_name = file_name[0]      # we only need the file_name
 
         self.savefile = file_name
@@ -944,8 +944,8 @@ class MainWindow(QtGui.QFrame):
         #                                     self.tr("Universal File Format (*.uff *.unv *.txt);;"))
 
         # elif variant == 'PyQt4':
-        file_name = QtGui.QFileDialog.getOpenFileName(self, self.tr("Open File"), "/.",
-                                        self.tr("Universal File Format (*.uff *.unv *.txt);;"))
+        file_name = QtWidgets.QFileDialog.getOpenFileName(self, self.tr("Open File"), "/.",
+                                        self.tr("Universal File Format (*.uff *.unv *.txt);;"))[0]
 
         if file_name:
             self.status_bar.setBusy('root', 'importing')
@@ -1013,20 +1013,20 @@ class MainWindow(QtGui.QFrame):
         model_nr = self.modaldata_object.tables['info'].model_id.count()
 
         if model_nr > 0:
-            msgBox = QtGui.QMessageBox()
+            msgBox = QtWidgets.QMessageBox()
             msgBox.setWindowTitle('Caution')
-            msgBox.setIcon(QtGui.QMessageBox.Warning)
+            msgBox.setIcon(QtWidgets.QMessageBox.Warning)
             msgBox.setText('This action will discard all non-saved data! Are you sure you want to proceed?')
-            msgBox.setStandardButtons(QtGui.QMessageBox.Close | QtGui.QMessageBox.Cancel)
-            msgBox.setDefaultButton(QtGui.QMessageBox.Cancel)
+            msgBox.setStandardButtons(QtWidgets.QMessageBox.Close | QtWidgets.QMessageBox.Cancel)
+            msgBox.setDefaultButton(QtWidgets.QMessageBox.Cancel)
             ret = msgBox.exec_()
         else:
-            ret = QtGui.QMessageBox.Close
+            ret = QtWidgets.QMessageBox.Close
 
-        if ret == QtGui.QMessageBox.Cancel:
+        if ret == QtWidgets.QMessageBox.Cancel:
             event.ignore()
             return True
-        elif ret == QtGui.QMessageBox.Close:
+        elif ret == QtWidgets.QMessageBox.Close:
 
             self.measurement_configuration_window.closeEvent(event)
             self.export_window.closeEvent(event)
@@ -1040,7 +1040,7 @@ class MainWindow(QtGui.QFrame):
 
 
 if __name__ == '__main__':
-    app = QtGui.QApplication(sys.argv)
+    app = QtWidgets.QApplication(sys.argv)
 
     main_window = FramelesContainer(app.desktop())
     main_window.show()
