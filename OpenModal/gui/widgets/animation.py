@@ -139,7 +139,7 @@ class TableModel(QtCore.QAbstractTableModel):
             print('only floats allowed')
 
         self.dataIn.update(self.datatable)
-        self.dataChanged.emit()
+        #self.dataChanged.emit()
         self.dataChanged.emit(self.createIndex(0, 0),
                            self.createIndex(self.rowCount(0),
                                             self.columnCount(0)))
