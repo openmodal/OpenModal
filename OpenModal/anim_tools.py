@@ -843,9 +843,9 @@ class AnimWidgBase(prot.SubWidget):
         :return:
         '''
         if (ev.modifiers() & QtCore.Qt.ControlModifier):
-            self.model_view.opts['fov'] *= 0.999 ** ev.delta()
+            self.model_view.opts['fov'] *= 0.999 ** (ev.angleDelta().y())
         else:
-            self.model_view.opts['distance'] *= 0.999 ** ev.delta()
+            self.model_view.opts['distance'] *= 0.999 ** (ev.angleDelta().y())
 
         self.model_view.update()
         self.plot_activated_models(wheel_event=True)
