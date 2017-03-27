@@ -18,7 +18,7 @@
 
 __author__ = 'Matjaz'
 
-from PyQt5 import QtCore, QtGui, QtWebKitWidgets, QtWidgets
+from PyQt5 import QtCore, QtGui, QtWidgets, QtWebEngineWidgets
 # from PyQt4 import QtGui, QtCore, QtWebKit
 
 import qtawesome as qta
@@ -34,10 +34,8 @@ class WelcomeWidget(prototype.SubWidget):
         super(WelcomeWidget, self).__init__(*args, **kwargs)
         layout = QtWidgets.QHBoxLayout()
 
-        view = QtWebKitWidgets.QWebView()
+        view = QtWebEngineWidgets.QWebEngineView()
         view.load(QtCore.QUrl("http://openmodal.com/draft/alpha_greeting.html"))
-        view.setContentsMargins(100, 200, 100, 200)
-        # view.setStyleSheet('border: 1px solid black;')
 
         self.label = QtWidgets.QLabel('Welcome')
         self.label.setObjectName('big')

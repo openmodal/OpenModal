@@ -27,7 +27,7 @@ import multiprocessing as mp
 #     mp.set_executable(executable)
 #     mp.freeze_support()
 
-from PyQt5 import QtGui, QtWidgets
+from PyQt5 import QtGui, QtWidgets, QtWebEngineWidgets
 
 class Logger(object):
     def __init__(self, filename):
