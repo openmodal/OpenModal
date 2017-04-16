@@ -979,7 +979,7 @@ class ExcitationConfig(QtWidgets.QWidget):
         self.fig_plotitem = self.fig.getPlotItem()
 
     def fft_toggle(self, pressed):
-        print(self.fig_plotitem.spectrumMode)
+        #print(self.fig_plotitem.spectrumMode)
         if pressed:
             # self.fft = True
             # self.fig_plotitem.spectrumMode = True

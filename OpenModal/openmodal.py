@@ -53,7 +53,8 @@ sys.path.append('../')
 
 if __name__ == '__main__':
     app = QtWidgets.QApplication(sys.argv)
-    app.addLibraryPath('c:/Anaconda3/Lib/site-packages/PyQt5/plugins/')
+    #TODO: do we need the following?
+    #app.addLibraryPath('c:/Anaconda3/Lib/site-packages/PyQt5/plugins/')
 
     #pixmap = QtGui.QPixmap('gui/widgets/splash.png')
     #splash = QtGui.QSplashScreen(pixmap)
@@ -71,4 +72,5 @@ if __name__ == '__main__':
 
     #splash.finish(main_window)
 
-    sys.exit(app.exec_())
+    #sys.exit(app.exec_())
+    app.exec()
