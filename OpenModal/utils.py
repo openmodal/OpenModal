@@ -71,6 +71,7 @@ def unique_row_indices(a):
     :return: number of unique rows
     """
     a = a[:, 0] + 1j*a[:, 1]
+    a = a.astype(complex)
     unique, inv = np.unique(a, return_inverse=True)
     return inv, len(unique)
 
