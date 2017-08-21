@@ -425,7 +425,7 @@ class MeasurementWidget(prototype.SubWidget):
         self.table_view.setModel(self.table_model)
         self.table_view.setSelectionMode(QtGui.QAbstractItemView.ExtendedSelection)
         hh = self.table_view.horizontalHeader()
-        hh.setResizeMode(QtGui.QHeaderView.Stretch)
+        hh.setSectionResizeMode(QtGui.QHeaderView.Stretch)
 
         selection = self.table_view.selectionModel()
         selection.selectionChanged.connect(self.view_measurement_frf)

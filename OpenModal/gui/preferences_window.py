@@ -514,7 +514,7 @@ class ExcitationConfig(QtGui.QWidget):
         table.setVerticalHeaderLabels(['Channel {0}'.format(i+1) for i in range(3)])
         table.resizeColumnsToContents()
         header_view = table.horizontalHeader()
-        header_view.setResizeMode(0, header_view.Stretch)
+        header_view.setSectionResizeMode(0, header_view.Stretch)
         # cw = QtGui.QPushButton('Bu')
         # header_view.setCornerWidget(cw)
         table.setDisabled(True)
