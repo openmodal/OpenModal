@@ -162,9 +162,9 @@ class TableModel(pqc.QAbstractTableModel):
         """sort table by given column number col"""
         self.emit(pqc.SIGNAL("layoutAboutToBeChanged()"))
         if order == pqc.Qt.DescendingOrder:
-            self.datatable = self.datatable.sort(self.datatable.columns[col], ascending=0)
+            self.datatable = self.datatable.sort_values(self.datatable.columns[col], ascending=0)
         else:
-            self.datatable = self.datatable.sort(self.datatable.columns[col])
+            self.datatable = self.datatable.sort_values(self.datatable.columns[col])
         self.emit(pqc.SIGNAL("layoutChanged()"))
 
     def flags(self, index):
@@ -1189,7 +1189,7 @@ class Model():
         elem_disp_df=pd.merge(elem,final_node_data.reset_index(),how='left',left_on='node_id',right_on='node_nums')
 
         # Use same node order as when the meshitem was generated
-        elem_disp_df.sort(['element_id','node_pos'],inplace=True)
+        elem_disp_df.sort_values(['element_id','node_pos'],inplace=True)
 
 
         elem_disp=np.array(
@@ -1511,7 +1511,7 @@ class Model():
 
         #get element ids
         new=pd.merge(elem,modal_data.tables['geometry'][combined_mask2],how='left',left_on='node_id',right_on='node_nums')
-        new.sort(['element_id','node_pos'],inplace=True)
+        new.sort_values(['element_id','node_pos'],inplace=True)
 
         #get nodes from element ids
         xyz = new[['x','y','z']].values

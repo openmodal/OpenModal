@@ -217,7 +217,7 @@ class MeasurementWidget(prototype.SubWidget):
 
         # buttons
         # Check if any models exist.
-        self.modaldata.tables['info'].sort('model_id', inplace=True)
+        self.modaldata.tables['info'].sort_values('model_id', inplace=True)
         models = self.modaldata.tables['info'].model_name
 
         ICON_SIZE = 24
@@ -646,7 +646,7 @@ class MeasurementWidget(prototype.SubWidget):
                 del self.settings['task_name']
 
         # Update models list.
-        self.modaldata.tables['info'].sort('model_id', inplace=True)
+        self.modaldata.tables['info'].sort_values('model_id', inplace=True)
         models = self.modaldata.tables['info'].model_name
         # old_model_index = self.button_model.currentIndex()
         self.button_model.clear()
@@ -1337,9 +1337,9 @@ class TableModel(QtCore.QAbstractTableModel):
         """sort table by given column number col"""
         self.emit(QtCore.SIGNAL("layoutAboutToBeChanged()"))
         if order == QtCore.Qt.DescendingOrder:
-            self.datatable = self.datatable.sort(self.datatable.columns[col], ascending=0)
+            self.datatable = self.datatable.sort_values(self.datatable.columns[col], ascending=0)
         else:
-            self.datatable = self.datatable.sort(self.datatable.columns[col])
+            self.datatable = self.datatable.sort_values(self.datatable.columns[col])
         self.emit(QtCore.SIGNAL("layoutChanged()"))
 
     def flags(self, index):
