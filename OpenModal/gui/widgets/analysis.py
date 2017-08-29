@@ -1075,7 +1075,7 @@ class PropertiesTab(QtWidgets.QTabWidget):
         position = p.viewPos()
 
         if self.spots_plot.spots.shape[0] > 0:
-            spot_in_data = np.isclose(self.spots_plot.spots.values,
+            spot_in_data = np.isclose(self.spots_plot.spots.values.astype(complex),
                                       position.x() + 1j * position.y())
         else:
             spot_in_data = np.array(False)

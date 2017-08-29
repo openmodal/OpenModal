@@ -204,6 +204,7 @@ def determine_display_points(modaldata_object):
     :return: A tuple containing two strings and the number of references.
     """
     nodes = modaldata_object.tables['measurement_index'].loc[:, ['ref_node', 'ref_dir', 'rsp_node', 'rsp_dir']]
+    nodes = nodes.astype(int)
 
     ref = np.unique(nodes.loc[:, 'ref_node'] + 1j * nodes.loc[:, 'ref_dir'])
     rsp = np.unique(nodes.loc[:, 'rsp_node'] + 1j * nodes.loc[:, 'rsp_dir'])

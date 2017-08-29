@@ -162,9 +162,9 @@ class TableModel(QtCore.QAbstractTableModel):
         """sort table by given column number col"""
         self.layoutAboutToBeChanged.emit()
         if order == QtCore.Qt.DescendingOrder:
-            self.datatable = self.datatable.sort_values(by=self.datatable.columns[col], ascending=0)
+            self.datatable = self.datatable.sort_values(self.datatable.columns[col], ascending=0)
         else:
-            self.datatable = self.datatable.sort_values(by=self.datatable.columns[col])
+            self.datatable = self.datatable.sort_values(self.datatable.columns[col])
         self.layoutChanged.emit()
 
     def flags(self, index):
@@ -1189,7 +1189,7 @@ class Model():
         elem_disp_df=pd.merge(elem,final_node_data.reset_index(),how='left',left_on='node_id',right_on='node_nums')
 
         # Use same node order as when the meshitem was generated
-        elem_disp_df.sort_values(by=['element_id','node_pos'],inplace=True)
+        elem_disp_df.sort_values(['element_id','node_pos'],inplace=True)
 
 
         elem_disp=np.array(

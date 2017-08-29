@@ -1,0 +1,130 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+  "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+
+
+<html xmlns="http://www.w3.org/1999/xhtml">
+  <head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    
+    <title>Deploying Commercial PyQt4 Applications &mdash; PyQt 4.11.4 Reference Guide</title>
+    
+    <link rel="stylesheet" href="_static/classic.css" type="text/css" />
+    <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
+    
+    <script type="text/javascript">
+      var DOCUMENTATION_OPTIONS = {
+        URL_ROOT:    './',
+        VERSION:     '4.11.4',
+        COLLAPSE_INDEX: false,
+        FILE_SUFFIX: '.html',
+        HAS_SOURCE:  true
+      };
+    </script>
+    <script type="text/javascript" src="_static/jquery.js"></script>
+    <script type="text/javascript" src="_static/underscore.js"></script>
+    <script type="text/javascript" src="_static/doctools.js"></script>
+    <link rel="shortcut icon" href="_static/logo_tn.ico"/>
+    <link rel="top" title="PyQt 4.11.4 Reference Guide" href="index.html" />
+    <link rel="next" title="The PyQt4 Build System" href="build_system.html" />
+    <link rel="prev" title="Selecting Incompatible APIs" href="incompatible_apis.html" /> 
+  </head>
+  <body role="document">
+    <div class="related" role="navigation" aria-label="related navigation">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="genindex.html" title="General Index"
+             accesskey="I">index</a></li>
+        <li class="right" >
+          <a href="py-modindex.html" title="Python Module Index"
+             >modules</a> |</li>
+        <li class="right" >
+          <a href="build_system.html" title="The PyQt4 Build System"
+             accesskey="N">next</a> |</li>
+        <li class="right" >
+          <a href="incompatible_apis.html" title="Selecting Incompatible APIs"
+             accesskey="P">previous</a> |</li>
+        <li class="nav-item nav-item-0"><a href="index.html">PyQt 4.11.4 Reference Guide</a> &raquo;</li> 
+      </ul>
+    </div>  
+
+    <div class="document">
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          <div class="body" role="main">
+            
+  <div class="section" id="deploying-commercial-pyqt4-applications">
+<h1>Deploying Commercial PyQt4 Applications<a class="headerlink" href="#deploying-commercial-pyqt4-applications" title="Permalink to this headline">¶</a></h1>
+<p>Deploying commercial PyQt4 applications can be a complicated process for a
+number of reasons:</p>
+<ul class="simple">
+<li>It is usually better not to rely on pre-requisite packages being already
+installed on the user&#8217;s system.  This means that as well as your application
+code, you also need to include the Python interpreter, the standard library,
+third-pary packages and extension modules, and Qt itself.</li>
+<li>Some target platforms (iOS for example) have restrictions on how an
+application is built in order for it to be included in app stores.</li>
+<li>It is necessary to discourage users from accessing the underlying PyQt4
+modules for themselves.  A user that used the modules shipped with your
+application to develop new applications would themselves be considered a
+developer and would need their own commercial PyQt4 license.</li>
+</ul>
+<p>The recommended solution to all of these issues is to use <a class="reference external" href="http://www.riverbankcomputing.com/software/pyqtdeploy/">pyqtdeploy</a>.</p>
+</div>
+
+
+          </div>
+        </div>
+      </div>
+      <div class="sphinxsidebar" role="navigation" aria-label="main navigation">
+        <div class="sphinxsidebarwrapper">
+            <p class="logo"><a href="index.html">
+              <img class="logo" src="_static/logo.png" alt="Logo"/>
+            </a></p>
+  <h4>Previous topic</h4>
+  <p class="topless"><a href="incompatible_apis.html"
+                        title="previous chapter">Selecting Incompatible APIs</a></p>
+  <h4>Next topic</h4>
+  <p class="topless"><a href="build_system.html"
+                        title="next chapter">The PyQt4 Build System</a></p>
+<div id="searchbox" style="display: none" role="search">
+  <h3>Quick search</h3>
+    <form class="search" action="search.html" method="get">
+      <input type="text" name="q" />
+      <input type="submit" value="Go" />
+      <input type="hidden" name="check_keywords" value="yes" />
+      <input type="hidden" name="area" value="default" />
+    </form>
+    <p class="searchtip" style="font-size: 90%">
+    Enter search terms or a module, class or function name.
+    </p>
+</div>
+<script type="text/javascript">$('#searchbox').show(0);</script>
+        </div>
+      </div>
+      <div class="clearer"></div>
+    </div>
+    <div class="related" role="navigation" aria-label="related navigation">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="genindex.html" title="General Index"
+             >index</a></li>
+        <li class="right" >
+          <a href="py-modindex.html" title="Python Module Index"
+             >modules</a> |</li>
+        <li class="right" >
+          <a href="build_system.html" title="The PyQt4 Build System"
+             >next</a> |</li>
+        <li class="right" >
+          <a href="incompatible_apis.html" title="Selecting Incompatible APIs"
+             >previous</a> |</li>
+        <li class="nav-item nav-item-0"><a href="index.html">PyQt 4.11.4 Reference Guide</a> &raquo;</li> 
+      </ul>
+    </div>
+    <div class="footer" role="contentinfo">
+        &copy; Copyright 2015 Riverbank Computing Limited.
+      Created using <a href="http://sphinx-doc.org/">Sphinx</a> 1.3.1.
+    </div>
+  </body>
+</html>

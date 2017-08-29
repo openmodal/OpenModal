@@ -1,0 +1,331 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+  "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+
+
+<html xmlns="http://www.w3.org/1999/xhtml">
+  <head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    
+    <title>Potential Incompatibilities with Earlier Versions &mdash; PyQt 4.11.4 Reference Guide</title>
+    
+    <link rel="stylesheet" href="_static/classic.css" type="text/css" />
+    <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
+    
+    <script type="text/javascript">
+      var DOCUMENTATION_OPTIONS = {
+        URL_ROOT:    './',
+        VERSION:     '4.11.4',
+        COLLAPSE_INDEX: false,
+        FILE_SUFFIX: '.html',
+        HAS_SOURCE:  true
+      };
+    </script>
+    <script type="text/javascript" src="_static/jquery.js"></script>
+    <script type="text/javascript" src="_static/underscore.js"></script>
+    <script type="text/javascript" src="_static/doctools.js"></script>
+    <link rel="shortcut icon" href="_static/logo_tn.ico"/>
+    <link rel="top" title="PyQt 4.11.4 Reference Guide" href="index.html" />
+    <link rel="next" title="Installing PyQt4" href="installation.html" />
+    <link rel="prev" title="Introduction" href="introduction.html" /> 
+  </head>
+  <body role="document">
+    <div class="related" role="navigation" aria-label="related navigation">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="genindex.html" title="General Index"
+             accesskey="I">index</a></li>
+        <li class="right" >
+          <a href="py-modindex.html" title="Python Module Index"
+             >modules</a> |</li>
+        <li class="right" >
+          <a href="installation.html" title="Installing PyQt4"
+             accesskey="N">next</a> |</li>
+        <li class="right" >
+          <a href="introduction.html" title="Introduction"
+             accesskey="P">previous</a> |</li>
+        <li class="nav-item nav-item-0"><a href="index.html">PyQt 4.11.4 Reference Guide</a> &raquo;</li> 
+      </ul>
+    </div>  
+
+    <div class="document">
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          <div class="body" role="main">
+            
+  <div class="section" id="potential-incompatibilities-with-earlier-versions">
+<h1>Potential Incompatibilities with Earlier Versions<a class="headerlink" href="#potential-incompatibilities-with-earlier-versions" title="Permalink to this headline">¶</a></h1>
+<div class="section" id="pyqt4-v4-11">
+<h2>PyQt4 v4.11<a class="headerlink" href="#pyqt4-v4-11" title="Permalink to this headline">¶</a></h2>
+<div class="section" id="execution-of-python-slots">
+<h3>Execution of Python Slots<a class="headerlink" href="#execution-of-python-slots" title="Permalink to this headline">¶</a></h3>
+<p>Until the release of PyQt4 v4.9.4, when a signal was emitted to a Python slot
+that was not decorated with <a class="reference internal" href="new_style_signals_slots.html#PyQt4.QtCore.pyqtSlot" title="PyQt4.QtCore.pyqtSlot"><code class="xref py py-func docutils literal"><span class="pre">pyqtSlot()</span></code></a>, it would first
+check that the underlying C++ receiver instance still existed.  If it didn&#8217;t
+then the slot was ignored thereby reflecting the standard C++ behaviour.</p>
+<p>In v4.9.4 (strictly speaking it was the release of SIP at the time) the check
+was removed. It was done so that an object could connect its
+<code class="xref py py-func docutils literal"><span class="pre">destroyed()</span></code> signal to itself so that it could
+monitor when its underlying C++ instance was destroyed.  Unfortunately this
+turned out to be an undocumented and incompatible change and a potential source
+of obscure bugs for more common code.</p>
+<p>In v4.11 the check was reintroduced - hence creating an incompatibility for any
+code that relies on the v4.9.4 behaviour.  As a workaround for this the
+<code class="docutils literal"><span class="pre">no_receiver_check</span></code> argument has been added to
+<code class="xref py py-func docutils literal"><span class="pre">connect()</span></code> which allows the check to be suppressed
+on a per connection basis.</p>
+</div>
+</div>
+<div class="section" id="pyqt4-v4-9-2">
+<h2>PyQt4 v4.9.2<a class="headerlink" href="#pyqt4-v4-9-2" title="Permalink to this headline">¶</a></h2>
+<div class="section" id="qpynullvariant">
+<h3>QPyNullVariant<a class="headerlink" href="#qpynullvariant" title="Permalink to this headline">¶</a></h3>
+<p>In previous versions a <code class="docutils literal"><span class="pre">QPyNullVariant</span></code> would always evaluate to <code class="docutils literal"><span class="pre">True</span></code>
+when converted to a bool.</p>
+<p>In this version a <code class="docutils literal"><span class="pre">QPyNullVariant</span></code> will always evaluate to <code class="docutils literal"><span class="pre">False</span></code> when
+converted to a bool.  This makes it behave like <code class="docutils literal"><span class="pre">None</span></code> in these
+circumstances.</p>
+</div>
+</div>
+<div class="section" id="pyqt4-v4-8-3">
+<h2>PyQt4 v4.8.3<a class="headerlink" href="#pyqt4-v4-8-3" title="Permalink to this headline">¶</a></h2>
+<div class="section" id="sql-models">
+<h3>SQL Models<a class="headerlink" href="#sql-models" title="Permalink to this headline">¶</a></h3>
+<p>In previous versions, when using v2 of the QVariant API (the default for Python
+v3), there was no way to represent a null <code class="docutils literal"><span class="pre">QVariant</span></code>.  Therefore when reading
+values of certain types from an SQL model it was impossible to distinguish
+between, for example, a null integer and an integer with the value zero.</p>
+<p>In this version the <code class="docutils literal"><span class="pre">QPyNullVariant</span></code> class is used to represent a null
+QVariant.  Therefore the object read from an SQL model may now be a
+<code class="docutils literal"><span class="pre">QPyNullVariant</span></code> instance.</p>
+<p>A null <code class="docutils literal"><span class="pre">QVariant</span></code> is only converted to a <code class="docutils literal"><span class="pre">QPyNullVariant</span></code> if the underlying
+C++ type of the <code class="docutils literal"><span class="pre">QVariant</span></code> cannot be tested for null, i.e. it does not
+implement an <code class="docutils literal"><span class="pre">isNull()</span></code> method.  This ensures that existing code that uses
+non-SQL models will continue to work unchanged.</p>
+</div>
+</div>
+<div class="section" id="pyqt4-v4-8">
+<h2>PyQt4 v4.8<a class="headerlink" href="#pyqt4-v4-8" title="Permalink to this headline">¶</a></h2>
+<div class="section" id="qvariantlist">
+<h3>QVariantList<a class="headerlink" href="#qvariantlist" title="Permalink to this headline">¶</a></h3>
+<p>In previous versions PyQt4 would always try and convert a Python list to a
+<code class="docutils literal"><span class="pre">QVariantList</span></code>.  In this version PyQt4 will first try to convert it to a
+<code class="docutils literal"><span class="pre">QVariant</span></code> containing a <code class="docutils literal"><span class="pre">QList&lt;QObject</span> <span class="pre">*&gt;</span></code>, but only if
+<code class="docutils literal"><span class="pre">QList&lt;QObject</span> <span class="pre">*&gt;</span></code> has been registered with Qt as a meta-type.</p>
+<p>Normally it is only the <code class="xref py py-mod docutils literal"><span class="pre">QtDeclarative</span></code> module that registers this
+meta-type and so the behaviour of existing applications should be unchanged.
+It is possible however that you might observe different conversion behaviour
+after importing the <code class="xref py py-mod docutils literal"><span class="pre">QtDeclarative</span></code> module.</p>
+</div>
+</div>
+<div class="section" id="pyqt4-v4-7-4">
+<h2>PyQt4 v4.7.4<a class="headerlink" href="#pyqt4-v4-7-4" title="Permalink to this headline">¶</a></h2>
+<div class="section" id="pyqtsignal-with-dict-and-list">
+<h3><a class="reference internal" href="new_style_signals_slots.html#PyQt4.QtCore.pyqtSignal" title="PyQt4.QtCore.pyqtSignal"><code class="xref py py-func docutils literal"><span class="pre">pyqtSignal()</span></code></a> with dict and list<a class="headerlink" href="#pyqtsignal-with-dict-and-list" title="Permalink to this headline">¶</a></h3>
+<p>In previous versions a Qt signal defined using
+<a class="reference internal" href="new_style_signals_slots.html#PyQt4.QtCore.pyqtSignal" title="PyQt4.QtCore.pyqtSignal"><code class="xref py py-func docutils literal"><span class="pre">pyqtSignal()</span></code></a> that had an argument specified as a dict then,
+when emitting a value, PyQt4 would try and convert the value to a
+<code class="docutils literal"><span class="pre">QVariantMap</span></code> if possible.  If it wasn&#8217;t possible, normally because the dict
+had non-string keys, then the value would be left as a dict object.</p>
+<p>In this version PyQt4 will not attempt to convert the value to a
+<code class="docutils literal"><span class="pre">QVariantMap</span></code> and will always leave it as a dict object.  If you want the
+value to be converted to a <code class="docutils literal"><span class="pre">QVariantMap</span></code> then define the signal argument as
+<code class="docutils literal"><span class="pre">'QVariantMap'</span></code>.</p>
+<p>The same applies to conversions between lists and <code class="docutils literal"><span class="pre">QVariantList</span></code>.</p>
+</div>
+</div>
+<div class="section" id="pyqt4-v4-7-1">
+<h2>PyQt4 v4.7.1<a class="headerlink" href="#pyqt4-v4-7-1" title="Permalink to this headline">¶</a></h2>
+<div class="section" id="qvariant">
+<h3>QVariant<a class="headerlink" href="#qvariant" title="Permalink to this headline">¶</a></h3>
+<p>This version introduces a slight incompatibility in the conversion between
+sub-classes of standard Python types and <code class="docutils literal"><span class="pre">QVariant</span></code>.</p>
+<p>Take, for example, the following code:</p>
+<div class="highlight-python"><div class="highlight"><pre><span class="kn">from</span> <span class="nn">PyQt4.QtCore</span> <span class="kn">import</span> <span class="n">QVariant</span>
+
+<span class="k">class</span> <span class="nc">MyFloat</span><span class="p">(</span><span class="nb">float</span><span class="p">):</span>
+    <span class="k">pass</span>
+
+<span class="n">myfloat</span> <span class="o">=</span> <span class="n">MyFloat</span><span class="p">(</span><span class="mf">5.0</span><span class="p">)</span>
+<span class="n">variant</span> <span class="o">=</span> <span class="n">QVariant</span><span class="p">(</span><span class="n">myfloat</span><span class="p">)</span>
+</pre></div>
+</div>
+<p>With this version of PyQt4 <code class="docutils literal"><span class="pre">myfloat</span></code> will be converted in such a way as to
+preserve any additional attributes (including methods) and will not be
+converted to a C++ <code class="docutils literal"><span class="pre">double</span></code>.  In other words, the following assertions are
+true:</p>
+<div class="highlight-python"><div class="highlight"><pre><span class="k">assert</span><span class="p">(</span><span class="n">variant</span><span class="o">.</span><span class="n">type</span><span class="p">()</span> <span class="o">!=</span> <span class="n">QVariant</span><span class="o">.</span><span class="n">Double</span><span class="p">)</span>
+<span class="k">assert</span><span class="p">(</span><span class="n">variant</span><span class="o">.</span><span class="n">toPyObject</span><span class="p">()</span> <span class="ow">is</span> <span class="n">myfloat</span><span class="p">)</span>
+</pre></div>
+</div>
+<p>Prior to this version <code class="docutils literal"><span class="pre">myfloat</span></code> would be converted to a C++ <code class="docutils literal"><span class="pre">double</span></code>.  In
+other words, the following assertions would be true:</p>
+<div class="highlight-python"><div class="highlight"><pre><span class="k">assert</span><span class="p">(</span><span class="n">variant</span><span class="o">.</span><span class="n">type</span><span class="p">()</span> <span class="o">==</span> <span class="n">QVariant</span><span class="o">.</span><span class="n">Double</span><span class="p">)</span>
+<span class="k">assert</span><span class="p">(</span><span class="n">variant</span><span class="o">.</span><span class="n">toPyObject</span><span class="p">()</span> <span class="o">==</span> <span class="n">myfloat</span><span class="p">)</span>
+<span class="k">assert</span><span class="p">(</span><span class="nb">type</span><span class="p">(</span><span class="n">variant</span><span class="o">.</span><span class="n">toPyObject</span><span class="p">())</span> <span class="ow">is</span> <span class="nb">float</span><span class="p">)</span>
+</pre></div>
+</div>
+<p>The same change also affects objects that implement the sequence protocol.
+Prior to this version such an object would be converted to a <code class="docutils literal"><span class="pre">QVariantList</span></code>
+which would mean that it was converted back to a Python <code class="docutils literal"><span class="pre">list</span></code> rather than to
+the original type.</p>
+</div>
+</div>
+<div class="section" id="pyqt4-v4-5">
+<h2>PyQt4 v4.5<a class="headerlink" href="#pyqt4-v4-5" title="Permalink to this headline">¶</a></h2>
+<div class="section" id="id1">
+<h3>QVariant<a class="headerlink" href="#id1" title="Permalink to this headline">¶</a></h3>
+<p>This version introduces a slight incompatibility in the conversion between
+Python sub-classes of certain Qt classes and <code class="docutils literal"><span class="pre">QVariant</span></code>.  The Qt classes
+affected are those that <code class="docutils literal"><span class="pre">QVariant</span></code> has explicit support for, e.g. <code class="docutils literal"><span class="pre">QSize</span></code>,
+<code class="docutils literal"><span class="pre">QBitmap</span></code>.</p>
+<p>Take, for example, the following code:</p>
+<div class="highlight-python"><div class="highlight"><pre><span class="kn">from</span> <span class="nn">PyQt4.QtCore</span> <span class="kn">import</span> <span class="n">QSize</span><span class="p">,</span> <span class="n">QVariant</span>
+
+<span class="k">class</span> <span class="nc">MySize</span><span class="p">(</span><span class="n">QSize</span><span class="p">):</span>
+    <span class="k">pass</span>
+
+<span class="n">mysize</span> <span class="o">=</span> <span class="n">MySize</span><span class="p">(</span><span class="mi">5</span><span class="p">,</span> <span class="mi">5</span><span class="p">)</span>
+<span class="n">variant</span> <span class="o">=</span> <span class="n">QVariant</span><span class="p">(</span><span class="n">mysize</span><span class="p">)</span>
+</pre></div>
+</div>
+<p>With this version of PyQt4 <code class="docutils literal"><span class="pre">mysize</span></code> will be converted in such a way as to
+preserve any additional attributes (including methods) and will not be
+converted to a C++ <code class="docutils literal"><span class="pre">QSize</span></code> instance.  In other words, the following
+assertions are true:</p>
+<div class="highlight-python"><div class="highlight"><pre><span class="k">assert</span><span class="p">(</span><span class="n">variant</span><span class="o">.</span><span class="n">type</span><span class="p">()</span> <span class="o">!=</span> <span class="n">QVariant</span><span class="o">.</span><span class="n">Size</span><span class="p">)</span>
+<span class="k">assert</span><span class="p">(</span><span class="n">variant</span><span class="o">.</span><span class="n">toPyObject</span><span class="p">()</span> <span class="ow">is</span> <span class="n">mysize</span><span class="p">)</span>
+</pre></div>
+</div>
+<p>Prior to this version <code class="docutils literal"><span class="pre">mysize</span></code> would be converted to a C++ <code class="docutils literal"><span class="pre">QSize</span></code>
+instance.  In other words, the following assertions would be true:</p>
+<div class="highlight-python"><div class="highlight"><pre><span class="k">assert</span><span class="p">(</span><span class="n">variant</span><span class="o">.</span><span class="n">type</span><span class="p">()</span> <span class="o">==</span> <span class="n">QVariant</span><span class="o">.</span><span class="n">Size</span><span class="p">)</span>
+<span class="k">assert</span><span class="p">(</span><span class="n">variant</span><span class="o">.</span><span class="n">toPyObject</span><span class="p">()</span> <span class="o">==</span> <span class="n">mysize</span><span class="p">)</span>
+<span class="k">assert</span><span class="p">(</span><span class="nb">type</span><span class="p">(</span><span class="n">variant</span><span class="o">.</span><span class="n">toPyObject</span><span class="p">())</span> <span class="ow">is</span> <span class="n">QSize</span><span class="p">)</span>
+</pre></div>
+</div>
+<p>It is hoped that this change of behaviour will not have a significant impact.
+However if you need the old behaviour then simply create a copy of your
+sub-class instance using the base class constructor as shown below:</p>
+<div class="highlight-python"><div class="highlight"><pre><span class="n">variant</span> <span class="o">=</span> <span class="n">QVariant</span><span class="p">(</span><span class="n">QSize</span><span class="p">(</span><span class="n">mysize</span><span class="p">))</span>
+</pre></div>
+</div>
+<p>A similar issue also affects the conversion of the Python <code class="docutils literal"><span class="pre">datetime</span></code>,
+<code class="docutils literal"><span class="pre">date</span></code> and <code class="docutils literal"><span class="pre">time</span></code> types to <code class="docutils literal"><span class="pre">QVariant</span></code>.  These are no longer converted to
+the corresponding <code class="docutils literal"><span class="pre">QDateTime</span></code>, <code class="docutils literal"><span class="pre">QDate</span></code> and <code class="docutils literal"><span class="pre">QTime</span></code> classes.  The values
+can be retrieved using <code class="docutils literal"><span class="pre">QVariant.toPyObject()</span></code>.  Again, the old behaviour can
+be achieved using an explicit conversion to the Qt class before converting to
+<code class="docutils literal"><span class="pre">QVariant</span></code>.</p>
+<p>A further incompatible change is the handling of Python sub-classes of
+<code class="docutils literal"><span class="pre">QObject</span></code>.  In previous versions <code class="docutils literal"><span class="pre">QVariant.userType()</span></code> would return an
+internal type and an extra reference would be kept to the Python object.  In
+the current version <code class="docutils literal"><span class="pre">QVariant.userType()</span></code> will correctly return
+<code class="docutils literal"><span class="pre">QMetaType.QObjectStar</span></code> (or <code class="docutils literal"><span class="pre">QMetaType.QWidgetStar</span></code>) but an extra
+reference to the Python object is not kept.  To avoid a potential crash you
+should ensure that you keep a separate reference to the Python object, either
+explicitly or implicitly by giving it a parent.</p>
+</div>
+<div class="section" id="pyrcc4-support-for-python-v3">
+<h3><strong class="program">pyrcc4</strong> Support for Python v3<a class="headerlink" href="#pyrcc4-support-for-python-v3" title="Permalink to this headline">¶</a></h3>
+<p><strong class="program">pyrcc4</strong> will now generate code for Python v3 when the new
+<a class="reference internal" href="resources.html#cmdoption-pyrcc4-py3"><code class="xref std std-option docutils literal"><span class="pre">-py3</span></code></a> command line option is used.  The generated code
+will also work with Python v2.6 and later.</p>
+<p>By default <strong class="program">pyrcc4</strong> will generate code for all Python v2 versions but
+you should use the new <a class="reference internal" href="resources.html#cmdoption-pyrcc4-py2"><code class="xref std std-option docutils literal"><span class="pre">-py2</span></code></a> command line option to
+enforce this in case the default is changed in the future.</p>
+</div>
+</div>
+</div>
+
+
+          </div>
+        </div>
+      </div>
+      <div class="sphinxsidebar" role="navigation" aria-label="main navigation">
+        <div class="sphinxsidebarwrapper">
+            <p class="logo"><a href="index.html">
+              <img class="logo" src="_static/logo.png" alt="Logo"/>
+            </a></p>
+  <h3><a href="index.html">Table Of Contents</a></h3>
+  <ul>
+<li><a class="reference internal" href="#">Potential Incompatibilities with Earlier Versions</a><ul>
+<li><a class="reference internal" href="#pyqt4-v4-11">PyQt4 v4.11</a><ul>
+<li><a class="reference internal" href="#execution-of-python-slots">Execution of Python Slots</a></li>
+</ul>
+</li>
+<li><a class="reference internal" href="#pyqt4-v4-9-2">PyQt4 v4.9.2</a><ul>
+<li><a class="reference internal" href="#qpynullvariant">QPyNullVariant</a></li>
+</ul>
+</li>
+<li><a class="reference internal" href="#pyqt4-v4-8-3">PyQt4 v4.8.3</a><ul>
+<li><a class="reference internal" href="#sql-models">SQL Models</a></li>
+</ul>
+</li>
+<li><a class="reference internal" href="#pyqt4-v4-8">PyQt4 v4.8</a><ul>
+<li><a class="reference internal" href="#qvariantlist">QVariantList</a></li>
+</ul>
+</li>
+<li><a class="reference internal" href="#pyqt4-v4-7-4">PyQt4 v4.7.4</a><ul>
+<li><a class="reference internal" href="#pyqtsignal-with-dict-and-list"><code class="docutils literal"><span class="pre">pyqtSignal()</span></code> with dict and list</a></li>
+</ul>
+</li>
+<li><a class="reference internal" href="#pyqt4-v4-7-1">PyQt4 v4.7.1</a><ul>
+<li><a class="reference internal" href="#qvariant">QVariant</a></li>
+</ul>
+</li>
+<li><a class="reference internal" href="#pyqt4-v4-5">PyQt4 v4.5</a><ul>
+<li><a class="reference internal" href="#id1">QVariant</a></li>
+<li><a class="reference internal" href="#pyrcc4-support-for-python-v3"><strong class="program">pyrcc4</strong> Support for Python v3</a></li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+
+  <h4>Previous topic</h4>
+  <p class="topless"><a href="introduction.html"
+                        title="previous chapter">Introduction</a></p>
+  <h4>Next topic</h4>
+  <p class="topless"><a href="installation.html"
+                        title="next chapter">Installing PyQt4</a></p>
+<div id="searchbox" style="display: none" role="search">
+  <h3>Quick search</h3>
+    <form class="search" action="search.html" method="get">
+      <input type="text" name="q" />
+      <input type="submit" value="Go" />
+      <input type="hidden" name="check_keywords" value="yes" />
+      <input type="hidden" name="area" value="default" />
+    </form>
+    <p class="searchtip" style="font-size: 90%">
+    Enter search terms or a module, class or function name.
+    </p>
+</div>
+<script type="text/javascript">$('#searchbox').show(0);</script>
+        </div>
+      </div>
+      <div class="clearer"></div>
+    </div>
+    <div class="related" role="navigation" aria-label="related navigation">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="genindex.html" title="General Index"
+             >index</a></li>
+        <li class="right" >
+          <a href="py-modindex.html" title="Python Module Index"
+             >modules</a> |</li>
+        <li class="right" >
+          <a href="installation.html" title="Installing PyQt4"
+             >next</a> |</li>
+        <li class="right" >
+          <a href="introduction.html" title="Introduction"
+             >previous</a> |</li>
+        <li class="nav-item nav-item-0"><a href="index.html">PyQt 4.11.4 Reference Guide</a> &raquo;</li> 
+      </ul>
+    </div>
+    <div class="footer" role="contentinfo">
+        &copy; Copyright 2015 Riverbank Computing Limited.
+      Created using <a href="http://sphinx-doc.org/">Sphinx</a> 1.3.1.
+    </div>
+  </body>
+</html>
