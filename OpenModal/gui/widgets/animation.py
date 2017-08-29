@@ -2106,7 +2106,7 @@ class Model():
             self.view_3d.render_text_dict.pop(self.model_id)
         except KeyError:
             pass
-        self.view_3d.paintGL()
+        #self.view_3d.paintGL()
 
 
 # Create an instance of the application window and run it
