@@ -98,12 +98,14 @@ def add_reconstruction_to_mdd(modaldata, model_id, lambdak, modal_constants, met
     yzref = np.tile(yzref, nmodes)
 
     # chose the value for the reference (to compute the modal shapes)
-    index = np.unravel_index(np.argmax(np.sum(np.abs(modal_constants), axis=2)),
-                             dims=modal_constants.shape[:2])  # TODO: maybe max min would be better
-    reference = np.sqrt(modal_constants[index])  # Modal constant `a` with largest value is choosen due to division.
+    # index = np.unravel_index(np.argmax(np.sum(np.abs(modal_constants), axis=2)),
+    #                          dims=modal_constants.shape[:2])  # TODO: maybe max min would be better
+    # reference = np.sqrt(modal_constants[index])  # Modal constant `a` with largest value is choosen due to division.
+    #
+    # # Computation of eigenvectors
+    # r = modal_constants / reference
 
-    # Computation of eigenvectors
-    r = modal_constants / reference
+    r = modal_constants
 
     # Table for converting measurement index to analysis index
     ref_rsp = modaldata.tables['measurement_index'][selected_rows].loc[:, ['ref_node', 'ref_dir', 'rsp_node', 'rsp_dir']]
