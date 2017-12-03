@@ -76,7 +76,7 @@ class ExportSelector(QtGui.QWidget):
         self.setGeometry(400, 50, 600, 800)
         self.setContentsMargins(25, 0, 25, 25)
 
-        with open('gui/styles/style_template.css', 'r') as fh:
+        with open('gui/styles/style_template.css', 'r', encoding='utf-8') as fh:
             src = Template(fh.read())
             src = src.substitute(COLOR_PALETTE)
             self.setStyleSheet(src)

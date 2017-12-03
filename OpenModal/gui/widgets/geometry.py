@@ -2183,7 +2183,7 @@ class dialog_new_model(pqg.QDialog):
         super(dialog_new_model, self).__init__(parent)
         self.setWindowTitle('Create new model')
 
-        with open('gui/styles/style_template.css', 'r') as fh:
+        with open('gui/styles/style_template.css', 'r', encoding='utf-8') as fh:
             src = Template(fh.read())
             src = src.substitute(COLOR_PALETTE)
             self.setStyleSheet(src)
@@ -2222,7 +2222,7 @@ class dialog_rename_model(pqg.QDialog):
         super(dialog_new_model, self).__init__(parent)
         self.setWindowTitle('Rename model')
 
-        with open('gui/styles/style_template.css', 'r') as fh:
+        with open('gui/styles/style_template.css', 'r', encoding='utf-8') as fh:
             src = Template(fh.read())
             src = src.substitute(COLOR_PALETTE)
             self.setStyleSheet(src)
@@ -2261,7 +2261,7 @@ class dialog_delete_model(pqg.QDialog):
     def __init__(self, parent=None):
         super(dialog_delete_model, self).__init__(parent)
         self.setWindowTitle('Delete model')
-        with open('gui/styles/style_template.css', 'r') as fh:
+        with open('gui/styles/style_template.css', 'r', encoding='utf-8') as fh:
             src = Template(fh.read())
             src = src.substitute(COLOR_PALETTE)
             self.setStyleSheet(src)
@@ -2318,7 +2318,7 @@ class dialog_geom_primitives(pqg.QDialog):
         self.Stack.addWidget(self.stack3)
         self.Stack.addWidget(self.stack4)
 
-        with open('gui/styles/style_template.css', 'r') as fh:
+        with open('gui/styles/style_template.css', 'r', encoding='utf-8') as fh:
             src = Template(fh.read())
             src = src.substitute(COLOR_PALETTE)
             self.setStyleSheet(src)

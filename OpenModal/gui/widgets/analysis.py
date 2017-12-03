@@ -305,7 +305,7 @@ class FFTLengthPopout(QtGui.QDialog):
 
         self.setContentsMargins(0, 0, 0, 0)
 
-        with open('gui/styles/style_template.css', 'r') as fh:
+        with open('gui/styles/style_template.css', 'r', encoding='utf-8') as fh:
             src = Template(fh.read())
             src = src.substitute(COLOR_PALETTE)
             self.setStyleSheet(src)
