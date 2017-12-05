@@ -1,4 +1,4 @@
-
+# -*- coding: utf-8 -*-
 # Copyright (C) 2014-2017 Matjaž Mršnik, Miha Pirnat, Janko Slavič, Blaž Starc (in alphabetic order)
 # 
 # This file is part of OpenModal.
