@@ -1619,7 +1619,8 @@ class PropertiesTab(QtWidgets.QTabWidget):
 
         for i in self.spots_plot.spots.values:
             # compare the selected points, with the points from stailisation mdd table
-            index = int(np.argwhere(np.isclose(i, stabilisation.loc[:, 'pos'].values))[0][0])
+            points = np.array(stabilisation.loc[:, 'pos'].values, dtype=complex)
+            index = int(np.argwhere(np.isclose(i, points))[0][0])
 
             # plot the selected point bold and red
             self.spots_plot.points()[index]._data[7].setPen('r', width=2)
