@@ -4,10 +4,10 @@ OpenModal is an open source experimental modal analysis software written in Pyth
 OpenModal combines geometry builder, measurement, identification and animation module to aid in experimental analysis of the dynamic properties of structures. It is written in Python and published under the GPL license.
 
 ## Running the software
-In order to develop the software on the same Python version and the corresponding library versions,
-a virtual environment is created in with the `pipenv` library.
+In order to develop the software on the same Python version with the corresponding library versions, it is recommended
+to create a virtual environment with the `pipenv` library.
 
-In order to set the environment use the command prompt (terminal, Windows PowerShell,...):
+In order to set the environment use the command prompt (terminal, Windows PowerShell,...) and execute the following:
 
 ```
 pip install pipenv
@@ -15,7 +15,7 @@ cd .\path\to\OpenModal
 pipenv install requests
 ```
 
-This should should install the virtual environment with the associated librraries.
+This should should install the `pipenv` library and install the virtual environment.
 
 To run the software, execute the following:
 
