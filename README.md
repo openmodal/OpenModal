@@ -5,15 +5,17 @@ OpenModal combines geometry builder, measurement, identification and animation m
 
 ## Running the software
 In order to develop the software on the same Python version and the corresponding library versions,
-a virtual environment is created in the folder *virtual-environment*.
+a virtual environment is created in with the `pipenv` library.
 
-To run the virtual environment on Windows PowerShell, execute the following commands:
+In order to set the environment use the command prompt (terminal, Windows PowerShell,...):
 
 ```
-.\virtual-environment\Scripts\Activate.ps1
+pip install pipenv
+cd .\path\to\OpenModal
+pipenv install requests
 ```
 
-This should set the environment to `Python 3.6` and to the `PyQt4` and the associated librraries.
+This should should install the virtual environment with the associated librraries.
 
 To run the software, execute the following:
 
