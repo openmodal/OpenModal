@@ -1,0 +1,27 @@
+[[source]]
+
+url = "https://pypi.python.org/simple"
+verify_ssl = true
+name = "pypi"
+
+
+[packages]
+
+requests = "*"
+numpy = "*"
+pandas = "*"
+pydaqmx = "*"
+pyopengl = "*"
+pyuff = "*"
+pyparsing = "*"
+pyqtgraph = "*"
+"pyqt5" = "*"
+python-dateutil = "*"
+pytz = "*"
+qtawesome = "*"
+qtpy = "*"
+sip = "*"
+
+
+[dev-packages]
+
