@@ -19,9 +19,7 @@
 
 import numpy as np
 
-from PyQt4 import QtCore as pqc
-
-from PyQt4 import QtGui as pqg
+from PyQt5 import QtCore, QtGui, QtWidgets
 
 from pyqtgraph.opengl.shaders import *
 
@@ -344,9 +342,9 @@ def get_gcs_meshitem(gcs_meshitem, scale, alpha=0):
     gcs_meshitem.meshDataChanged()
     return gcs_meshitem
 
-class ClickedSignal(pqc.QObject):
+class ClickedSignal(QtCore.QObject):
 
-    clicked = pqc.Signal()
+    clicked = QtCore.pyqtSignal()
 
 class GLView(gl.GLViewWidget):
     '''
@@ -360,20 +358,20 @@ class GLView(gl.GLViewWidget):
 
         super(GLView, self).__init__(parent)
         self.render_text_dict = {}  #for storing node labels
-        self.setSizePolicy(pqg.QSizePolicy.Expanding, pqg.QSizePolicy.Expanding)
+        self.setSizePolicy(QtWidgets.QSizePolicy.Expanding, QtWidgets.QSizePolicy.Expanding)
 
 
 
-        #self.setAttribute(pqc.Qt.WA_TranslucentBackground)
+        #self.setAttribute(QtCore.Qt.WA_TranslucentBackground)
 
 
-        #self.setAttribute(pqc.Qt.WA_TintedBackground)
-        #self.setAttribute(pqc.Qt.WA_StyledBackground)
-        #self.setAttribute(pqc.Qt.WA_NoBackground)
-        #self.setAttribute(pqc.Qt.WA_NoSystemBackground)
-        #self.setWindowFlags(pqc.Qt.FramelessWindowHint)
-        #self.setAttribute(pqc.Qt.WA_TranslucentBackground)
-        #self.setWindowFlags(pqc.Qt.WindowStaysOnTopHint)
+        #self.setAttribute(QtCore.Qt.WA_TintedBackground)
+        #self.setAttribute(QtCore.Qt.WA_StyledBackground)
+        #self.setAttribute(QtCore.Qt.WA_NoBackground)
+        #self.setAttribute(QtCore.Qt.WA_NoSystemBackground)
+        #self.setWindowFlags(QtCore.Qt.FramelessWindowHint)
+        #self.setAttribute(QtCore.Qt.WA_TranslucentBackground)
+        #self.setWindowFlags(QtCore.Qt.WindowStaysOnTopHint)
         #self.setStyleSheet("background-color:black;")
         #self.setWindowOpacity(0.5)
         #self.setAutoFillBackground(False)
@@ -381,13 +379,13 @@ class GLView(gl.GLViewWidget):
 
         self.default_width = 500
         self.default_height = 500
-        self.setMinimumSize(pqc.QSize(self.default_width, self.default_height))
+        self.setMinimumSize(QtCore.QSize(self.default_width, self.default_height))
 
         self.clicked_signal=ClickedSignal()
 
 
     def viewMatrix(self):
-        tr = pqg.QMatrix4x4()
+        tr = QtGui.QMatrix4x4()
         tr.translate( 0.0, 0.0, -self.opts['distance'])
         center = self.opts['center']
         tr.translate(-center.x(), -center.y(), -center.z())
@@ -417,7 +415,7 @@ class GLView(gl.GLViewWidget):
 
         """
         if not relative:
-            self.opts['center'] += pqg.QVector3D(dx, dy, dz)
+            self.opts['center'] += QtGui.QVector3D(dx, dy, dz)
         else:
             cPos = self.cameraPosition()
             cVec = self.opts['center'] - cPos
@@ -427,9 +425,9 @@ class GLView(gl.GLViewWidget):
 
 
 
-            zVec = pqg.QVector3D(0,0,1)
-            xVec = pqg.QVector3D.crossProduct(zVec, cVec).normalized()
-            yVec = pqg.QVector3D.crossProduct(xVec, zVec).normalized()
+            zVec = QtGui.QVector3D(0,0,1)
+            xVec = QtGui.QVector3D.crossProduct(zVec, cVec).normalized()
+            yVec = QtGui.QVector3D.crossProduct(xVec, zVec).normalized()
 
             #print(self.opts['azimuth'],self.opts['elevation'])
             self.opts['center'] = self.opts['center'] + xVec * xScale * dx + yVec * xScale * dy + zVec * xScale * dz
@@ -445,17 +443,17 @@ class GLView(gl.GLViewWidget):
         self.mousePos = ev.pos()
 
 
-        tr = pqg.QMatrix4x4()
+        tr = QtGui.QMatrix4x4()
         tr.rotate(self.opts['elevation']-90, 1, 0, 0) # rotation angle, x , y , z
         tr.rotate(self.opts['azimuth']+90, 0, 0, -1) # rotation angle, x , y , z
-        tr_diff=tr.inverted()[0]*pqg.QVector4D(diff.x(),diff.y(),0,1)
+        tr_diff=tr.inverted()[0]*QtGui.QVector4D(diff.x(),diff.y(),0,1)
 
-        if ev.buttons() == pqc.Qt.LeftButton:
+        if ev.buttons() == QtCore.Qt.LeftButton:
             self.orbit(-diff.x(), diff.y())
 
             #print self.opts['azimuth'], self.opts['elevation']
-        elif ev.buttons() == pqc.Qt.MidButton:
-            # if (ev.modifiers() & pqc.Qt.ControlModifier):
+        elif ev.buttons() == QtCore.Qt.MidButton:
+            # if (ev.modifiers() & QtCore.Qt.ControlModifier):
             #
             #     self.pan(tr_diff.x(), tr_diff.y(), tr_diff.z(), relative=True)
             # else:
@@ -464,18 +462,18 @@ class GLView(gl.GLViewWidget):
             if self.opts['elevation']<0:
 
                 #calc transform
-                tr = pqg.QMatrix4x4()
+                tr = QtGui.QMatrix4x4()
                 tr.rotate(self.opts['elevation']+90, 1, 0, 0) # rotation angle, x , y , z
                 tr.rotate(self.opts['azimuth']-90, 0, 0, -1) # rotation angle, x , y , z
-                tr_diff=tr.inverted()[0]*pqg.QVector4D(diff.x(),diff.y(),0,1)
+                tr_diff=tr.inverted()[0]*QtGui.QVector4D(diff.x(),diff.y(),0,1)
 
                 self.pan(-tr_diff.x(),-tr_diff.y(),-tr_diff.z(), relative=True)
             else:
                 #calc transform
-                tr = pqg.QMatrix4x4()
+                tr = QtGui.QMatrix4x4()
                 tr.rotate(self.opts['elevation']-90, 1, 0, 0) # rotation angle, x , y , z
                 tr.rotate(self.opts['azimuth']+90, 0, 0, -1) # rotation angle, x , y , z
-                tr_diff=tr.inverted()[0]*pqg.QVector4D(diff.x(),diff.y(),0,1)
+                tr_diff=tr.inverted()[0]*QtGui.QVector4D(diff.x(),diff.y(),0,1)
 
                 self.pan(tr_diff.x(),tr_diff.y(), tr_diff.z(), relative=True)
 
@@ -485,7 +483,7 @@ class GLView(gl.GLViewWidget):
         :return:
         '''
         gl.GLViewWidget.paintGL(self, *args, **kwargs)
-        self.qglColor(pqc.Qt.black)
+        self.qglColor(QtCore.Qt.black)
 
         #print gcs labels
         for i in [0,1,2]:
@@ -534,10 +532,10 @@ class GLView(gl.GLViewWidget):
 
 
         # calculate pos at ndc3=1 and ndc3=-1
-        aux=self.viewMatrix().inverted()[0]*self.projectionMatrix().inverted()[0]*pqg.QVector4D(left,bottom,-1,1)
+        aux=self.viewMatrix().inverted()[0]*self.projectionMatrix().inverted()[0]*QtGui.QVector4D(left,bottom,-1,1)
         start_point=aux/aux.w()
 
-        aux=self.viewMatrix().inverted()[0]*self.projectionMatrix().inverted()[0]*pqg.QVector4D(left,bottom,1,1)
+        aux=self.viewMatrix().inverted()[0]*self.projectionMatrix().inverted()[0]*QtGui.QVector4D(left,bottom,1,1)
         end_point=aux/aux.w()
 
         # get normalized vector
@@ -583,7 +581,7 @@ class GLView(gl.GLViewWidget):
         top    = ((region[1]+region[3]-y0) * (2.0/h) - 1)
 
         # Projection matrix
-        #tr = pqg.QMatrix4x4()
+        #tr = QtGui.QMatrix4x4()
         #tr.frustum(left, right, bottom, top, nearClip, farClip)
         # return tr
 
@@ -592,15 +590,15 @@ class GLView(gl.GLViewWidget):
         # ray=np.linspace(0.99,1,100)
         #
         # for ndc3 in ray:
-        #     aux=self.viewMatrix().inverted()[0]*self.projectionMatrix().inverted()[0]*pqg.QVector4D(left,bottom,ndc3,1)
+        #     aux=self.viewMatrix().inverted()[0]*self.projectionMatrix().inverted()[0]*QtGui.QVector4D(left,bottom,ndc3,1)
         #     fin_pos=aux/aux.w()
         #     print(fin_pos)
 
         # calculate pos at ndc3=1 and ndc3=-1
-        aux=self.viewMatrix().inverted()[0]*self.projectionMatrix().inverted()[0]*pqg.QVector4D(left,bottom,-1,1)
+        aux=self.viewMatrix().inverted()[0]*self.projectionMatrix().inverted()[0]*QtGui.QVector4D(left,bottom,-1,1)
         start_point=aux/aux.w()
 
-        aux=self.viewMatrix().inverted()[0]*self.projectionMatrix().inverted()[0]*pqg.QVector4D(left,bottom,1,1)
+        aux=self.viewMatrix().inverted()[0]*self.projectionMatrix().inverted()[0]*QtGui.QVector4D(left,bottom,1,1)
         end_point=aux/aux.w()
 
         # get normalized vector
@@ -654,7 +652,7 @@ class AnimWidgBase(prot.SubWidget):
         self.model_view = GLView()
         self.model_view.setBackgroundColor('w')
         self.model_view.wheelEvent = self.wheel_event  #override wheel event for autoscaling
-        self.model_view.setContextMenuPolicy(pqc.Qt.CustomContextMenu)
+        self.model_view.setContextMenuPolicy(QtCore.Qt.CustomContextMenu)
         self.model_view.customContextMenuRequested.connect(self.model_view_context_menu)
         self.draw_node_labels = False  # node labels are not ploted by default
         self.model_view.addItem(self.gcs_meshitem)
@@ -727,40 +725,40 @@ class AnimWidgBase(prot.SubWidget):
 
     def create_model_view_actions(self):
 
-        self.plot_node_labels_act = pqg.QAction('Node labels', self, checkable=True,
+        self.plot_node_labels_act = QtWidgets.QAction('Node labels', self, checkable=True,
                                                 statusTip='Plot node labels', triggered=self.plot_node_labels)
-        self.plot_node_lcs_act = pqg.QAction('Node csys', self, checkable=True,
+        self.plot_node_lcs_act = QtWidgets.QAction('Node csys', self, checkable=True,
                                              statusTip='Plot node local coordinate system',
                                              triggered=self.plot_node_lcs_ctxmenu)
-        self.plot_gcs_act = pqg.QAction('Global csys', self, checkable=True,
+        self.plot_gcs_act = QtWidgets.QAction('Global csys', self, checkable=True,
                                         statusTip='Plot global coordinate system', triggered=self.plot_gcs_ctxmenu)
         self.plot_gcs_act.setChecked(True)  # by default gcs is plotted
 
-        self.plot_nodes_act = pqg.QAction('Nodes', self, checkable=True,
+        self.plot_nodes_act = QtWidgets.QAction('Nodes', self, checkable=True,
                                                statusTip='Plot nodes', triggered=self.plot_nodes)
         self.plot_nodes_act.setChecked(True)  # by default nodes are plotted
 
-        self.plot_lines_act = pqg.QAction('Lines', self, checkable=True,
+        self.plot_lines_act = QtWidgets.QAction('Lines', self, checkable=True,
                                                statusTip='Plot lines', triggered=self.plot_lines)
 
         self.plot_lines_act.setChecked(True)  # by default lines are plotted
 
-        self.plot_elements_act = pqg.QAction('Elements', self, checkable=True,
+        self.plot_elements_act = QtWidgets.QAction('Elements', self, checkable=True,
                                                statusTip='Plot elements', triggered=self.plot_elements)
 
         self.plot_elements_act.setChecked(True)  # by default elements are plotted
 
-        self.node_color_act = pqg.QAction('Nodes', self,
+        self.node_color_act = QtWidgets.QAction('Nodes', self,
                                         statusTip='Choose node color', triggered=self.choose_node_color)
-        self.line_color_act = pqg.QAction('Lines', self,
+        self.line_color_act = QtWidgets.QAction('Lines', self,
                                         statusTip='Choose line color', triggered=self.choose_line_color)
-        self.elem_color_act = pqg.QAction('Elements', self,
+        self.elem_color_act = QtWidgets.QAction('Elements', self,
                                         statusTip='Choose element color', triggered=self.choose_elem_color)
 
-        self.cart_csys_act = pqg.QAction('Cartesian', self, checkable=True,
+        self.cart_csys_act = QtWidgets.QAction('Cartesian', self, checkable=True,
                                                statusTip='Change input to cartesian csys', triggered=self.cart_csys)
         self.cart_csys_act.setChecked(True)  # cartesian system is default
-        self.cyl_csys_act = pqg.QAction('Cylindrical', self, checkable=True,
+        self.cyl_csys_act = QtWidgets.QAction('Cylindrical', self, checkable=True,
                                                statusTip='Change input to cylindrical csys', triggered=self.cyl_csys)
 
     def cart_csys(self):
@@ -786,7 +784,7 @@ class AnimWidgBase(prot.SubWidget):
     def create_toolbar_actions(self):
 
 
-        self.act_fit_view = pqg.QAction(pqg.QIcon('gui/icons/Icon_fit_view.png'), 'Fit view', self,
+        self.act_fit_view = QtWidgets.QAction(QtGui.QIcon('gui/icons/Icon_fit_view.png'), 'Fit view', self,
                                         statusTip='Fit 3D view', triggered=self.autofit_3d_view)
 
     def create_layout(self):
@@ -795,7 +793,7 @@ class AnimWidgBase(prot.SubWidget):
         :return:
         """
 
-        vbox = pqg.QVBoxLayout()
+        vbox = QtWidgets.QVBoxLayout()
         vbox.addWidget(self.model_view)
         self.setLayout(vbox)
 
@@ -804,7 +802,7 @@ class AnimWidgBase(prot.SubWidget):
         Open color chooser dialogue and change element color
         :return:
         """
-        col = pqg.QColorDialog.getColor()
+        col = QtWidgets.QColorDialog.getColor()
 
         if col.isValid():
             for model_id, model_obj in self.models.items():
@@ -817,7 +815,7 @@ class AnimWidgBase(prot.SubWidget):
         Open color chooser dialogue and change node color
         :return:
         """
-        col = pqg.QColorDialog.getColor()
+        col = QtWidgets.QColorDialog.getColor()
 
         if col.isValid():
             for model_id, model_obj in self.models.items():
@@ -830,7 +828,7 @@ class AnimWidgBase(prot.SubWidget):
         Open color chooser dialogue and change node color
         :return:
         """
-        col = pqg.QColorDialog.getColor()
+        col = QtWidgets.QColorDialog.getColor()
 
         if col.isValid():
             for model_id, model_obj in self.models.items():
@@ -844,10 +842,10 @@ class AnimWidgBase(prot.SubWidget):
         :param ev:
         :return:
         '''
-        if (ev.modifiers() & pqc.Qt.ControlModifier):
-            self.model_view.opts['fov'] *= 0.999 ** ev.delta()
+        if (ev.modifiers() & QtCore.Qt.ControlModifier):
+            self.model_view.opts['fov'] *= 0.999 ** (ev.angleDelta().y())
         else:
-            self.model_view.opts['distance'] *= 0.999 ** ev.delta()
+            self.model_view.opts['distance'] *= 0.999 ** (ev.angleDelta().y())
 
         self.model_view.update()
         self.plot_activated_models(wheel_event=True)
@@ -1153,8 +1151,8 @@ class AnimWidgBase(prot.SubWidget):
     #     items=self.plot_area.items
     #     for item in items:
     #         if isinstance(item,pg.PlotCurveItem):
-    #             #self.connect(item, pqc.SIGNAL("pltClicked()"), functools.partial(self.plot_item_clicked, item))
-    #             #self.connect(item, pqc.SIGNAL("sigClicked()"), functools.partial(self.plot_item_clicked, item))
+    #             #self.connect(item, QtCore.pyqtSignal("pltClicked()"), functools.partial(self.plot_item_clicked, item))
+    #             #self.connect(item, QtCore.pyqtSignal("sigClicked()"), functools.partial(self.plot_item_clicked, item))
     #             item.sigClicked.connect(self.plot_item_clicked)
     #
     #
@@ -1195,7 +1193,7 @@ class AnimWidgBase(prot.SubWidget):
         self.model_view.opts['distance'] = max_dist * window_width_ratio / fov * fac
 
         #reset any movement of center
-        self.model_view.opts['center'] = pqg.QVector3D(0, 0, 0)
+        self.model_view.opts['center'] = QtGui.QVector3D(0, 0, 0)
 
         #self.model_view.updateGL()
 

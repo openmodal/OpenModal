@@ -16,7 +16,7 @@
 # along with OpenModal.  If not, see <http://www.gnu.org/licenses/>.
 
 
-from PyQt4 import QtGui, QtCore
+from PyQt5 import QtCore, QtGui, QtWidgets
 import pandas as pd
 from OpenModal.analysis.stabilisation import *
 from OpenModal.analysis import lsce, lscf, lsfd
@@ -59,10 +59,10 @@ class IdentificationWidget(prot.SubWidget):
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
 
-        self.v_global_layout = QtGui.QVBoxLayout()
+        self.v_global_layout = QtWidgets.QVBoxLayout()
         self.v_global_layout.setContentsMargins(0, 0, 0, 0)
 
-        self.stackedWidget = QtGui.QStackedWidget()
+        self.stackedWidget = QtWidgets.QStackedWidget()
         self.lscf_method = LSCFDialog()
         self.lsce_method = LSCEDialog()
 
@@ -127,7 +127,7 @@ class IdentificationWidget(prot.SubWidget):
 #         self.ce_widget.stabilisation_diagrams(f, frf, method='ce')
 
 
-class LSCEDialog(QtGui.QWidget):
+class LSCEDialog(QtWidgets.QWidget):
     """
     Class that deals with Least-squares Complex Exponential method (LSCE) GUI internals.
     """
@@ -143,7 +143,7 @@ class LSCEDialog(QtGui.QWidget):
         self.lsce_widget = PropertiesTab()
         self.lsce_widget.spots_plot.method = 'lsce'
 
-        main_layout = QtGui.QGridLayout()
+        main_layout = QtWidgets.QGridLayout()
         main_layout.setContentsMargins(0, 0, 0, 0)
         main_layout.addWidget(self.lsce_widget)
         self.setLayout(main_layout)
@@ -208,7 +208,7 @@ class LSCEDialog(QtGui.QWidget):
                                                 method='lsce', low_lim=low_lim)
 
 
-class LSCFDialog(QtGui.QWidget):
+class LSCFDialog(QtWidgets.QWidget):
     """
     Class that deals with Least-squares Complex Frequency Domain method (LSCF) GUI internals.
     """
@@ -224,7 +224,7 @@ class LSCFDialog(QtGui.QWidget):
         self.lscf_widget = PropertiesTab()
         self.lscf_widget.spots_plot.method = 'lscf'
 
-        main_layout = QtGui.QGridLayout()
+        main_layout = QtWidgets.QGridLayout()
         main_layout.setContentsMargins(0, 0, 0, 0)
         main_layout.addWidget(self.lscf_widget)
         self.setLayout(main_layout)
@@ -287,7 +287,7 @@ class LSCFDialog(QtGui.QWidget):
                                                 method='lscf', low_lim=low_lim)
 
 
-class FFTLengthPopout(QtGui.QDialog):
+class FFTLengthPopout(QtWidgets.QDialog):
     """
     A warning popout window, which appears when the FFT length max prime factor
     is under the MAX_FFT_PRIME_FACTOR limit
@@ -305,7 +305,7 @@ class FFTLengthPopout(QtGui.QDialog):
 
         self.setContentsMargins(0, 0, 0, 0)
 
-        with open('gui/styles/style_template.css', 'r') as fh:
+        with open('gui/styles/style_template.css', 'r', encoding='utf-8') as fh:
             src = Template(fh.read())
             src = src.substitute(COLOR_PALETTE)
             self.setStyleSheet(src)
@@ -317,18 +317,18 @@ class FFTLengthPopout(QtGui.QDialog):
         self.max_prime_value = MAX_FFT_PRIME_FACTOR
 
         text1 = (" For best performance of FFT slightly change the frequency range!")
-        text1 = QtGui.QLabel(text1)
+        text1 = QtWidgets.QLabel(text1)
 
-        layout_text = QtGui.QVBoxLayout()
+        layout_text = QtWidgets.QVBoxLayout()
         layout_text.addWidget(text1)
         layout_text.setAlignment(QtCore.Qt.AlignJustify)
 
-        autoselect = QtGui.QPushButton('Autoselect')
+        autoselect = QtWidgets.QPushButton('Autoselect')
         autoselect.setObjectName('medium')
-        self.reset = QtGui.QPushButton('Reset')
+        self.reset = QtWidgets.QPushButton('Reset')
         self.reset.setObjectName('small')
         self.reset.setDisabled(True)
-        autoselect_layout = QtGui.QHBoxLayout()
+        autoselect_layout = QtWidgets.QHBoxLayout()
         autoselect_layout.addWidget(autoselect)
         autoselect_layout.setAlignment(QtCore.Qt.AlignCenter)
 
@@ -380,8 +380,8 @@ class FFTLengthPopout(QtGui.QDialog):
         autoselect.clicked.connect(autoselect_fft_len)
         self.reset.clicked.connect(reset_data)
 
-        cutoff_high_freq = QtGui.QRadioButton('Cutoff higher frequencies, index:')
-        cutoff_low_freq = QtGui.QRadioButton('Cutoff lower frequencies, index:')
+        cutoff_high_freq = QtWidgets.QRadioButton('Cutoff higher frequencies, index:')
+        cutoff_low_freq = QtWidgets.QRadioButton('Cutoff lower frequencies, index:')
 
         cutoff_high_freq.setChecked(True)
         cutoff_low_freq.setChecked(False)
@@ -405,12 +405,12 @@ class FFTLengthPopout(QtGui.QDialog):
         self.f_min_index = 0
         self.f_max_index = len(self.f)
 
-        self.min_freq_index = QtGui.QSpinBox()
+        self.min_freq_index = QtWidgets.QSpinBox()
         self.min_freq_index.setMaximum(len(f))
         self.min_freq_index.setValue(self.f_min_index)
         self.min_freq_index.setFixedWidth(width)
 
-        self.max_freq_index = QtGui.QSpinBox()
+        self.max_freq_index = QtWidgets.QSpinBox()
         self.max_freq_index.setMaximum(len(f))
         self.max_freq_index.setValue(self.f_max_index)
         self.max_freq_index.setFixedWidth(width)
@@ -418,10 +418,10 @@ class FFTLengthPopout(QtGui.QDialog):
         self.f_min = self.f[0]
         self.f_max = self.f[-1]
 
-        self.text_max_freq = QtGui.QLabel('(' + str(self.f_max) + ' Hz)')
-        self.text_min_freq = QtGui.QLabel('(' + str(self.f_min) + ' Hz)')
+        self.text_max_freq = QtWidgets.QLabel('(' + str(self.f_max) + ' Hz)')
+        self.text_min_freq = QtWidgets.QLabel('(' + str(self.f_min) + ' Hz)')
 
-        grid_layout = QtGui.QGridLayout()
+        grid_layout = QtWidgets.QGridLayout()
         grid_layout.addWidget(cutoff_high_freq, 0, 0, 1, 1)
         grid_layout.addWidget(self.max_freq_index, 0, 1, 1, 1)
 
@@ -431,14 +431,14 @@ class FFTLengthPopout(QtGui.QDialog):
         grid_layout.addWidget(self.text_min_freq, 1, 2, 1, 1)
         grid_layout.setAlignment(QtCore.Qt.AlignLeft)
 
-        self.text_slow = QtGui.QLabel('<b>Slow</b>')
+        self.text_slow = QtWidgets.QLabel('<b>Slow</b>')
         self.text_slow.setStyleSheet('color: red')
 
-        self.text_fast = QtGui.QLabel('<b>Fast</b>')
+        self.text_fast = QtWidgets.QLabel('<b>Fast</b>')
         self.text_fast.setStyleSheet('color: lightgray')
 
-        grid_layout_status = QtGui.QGridLayout()
-        grid_layout_status.addWidget(QtGui.QLabel('Status:'), 0, 0, 1, 1)
+        grid_layout_status = QtWidgets.QGridLayout()
+        grid_layout_status.addWidget(QtWidgets.QLabel('Status:'), 0, 0, 1, 1)
         grid_layout_status.addWidget(self.text_slow, 0, 1, 1, 1)
         grid_layout_status.addWidget(self.text_fast, 0, 2, 1, 1)
         grid_layout_status.setAlignment(QtCore.Qt.AlignLeft)
@@ -487,15 +487,15 @@ class FFTLengthPopout(QtGui.QDialog):
         self.min_freq_index.valueChanged.connect(min_value_changed)
         self.max_freq_index.valueChanged.connect(max_value_changed)
 
-        done = QtGui.QPushButton('Done')
+        done = QtWidgets.QPushButton('Done')
         done.setObjectName('small')
 
-        local_layout_buttons = QtGui.QHBoxLayout()
+        local_layout_buttons = QtWidgets.QHBoxLayout()
         local_layout_buttons.addWidget(done)
         local_layout_buttons.addWidget(self.reset)
         local_layout_buttons.setAlignment(QtCore.Qt.AlignLeft)
 
-        layout = QtGui.QVBoxLayout()
+        layout = QtWidgets.QVBoxLayout()
         layout.addLayout(layout_text)
         layout.addLayout(autoselect_layout)
         layout.addLayout(grid_layout)
@@ -575,7 +575,7 @@ class DataFrameModel(QtCore.QAbstractTableModel):
         return self.df.shape[1]
 
 
-class DrawSelection(QtGui.QWidget):
+class DrawSelection(QtWidgets.QWidget):
     """Class for data visualization. It draws selected data (rows) - FRFs """
 
     def __init__(self):
@@ -599,7 +599,7 @@ class DrawSelection(QtGui.QWidget):
         self.xy = None
         self.singlefrf = self.plot_area
 
-        layout = QtGui.QVBoxLayout()
+        layout = QtWidgets.QVBoxLayout()
         layout.addWidget(self.fig)
         self.setLayout(layout)
 
@@ -688,7 +688,7 @@ class DrawSelection(QtGui.QWidget):
         self.cmif_plot.clear()
 
 
-class PropertiesTab(QtGui.QTabWidget):
+class PropertiesTab(QtWidgets.QTabWidget):
     """
     Main class for the GUI of the Analysis tab.
     """
@@ -701,24 +701,24 @@ class PropertiesTab(QtGui.QTabWidget):
         """
         super().__init__()
 
-        grid_layout = QtGui.QGridLayout()
+        grid_layout = QtWidgets.QGridLayout()
 
         # table
         # self.data = modaldata_object
 
         # left table with reference and response nodes
         self.LeftDataModel = DataFrameModel()
-        self.LeftDataTable = QtGui.QTableView()
+        self.LeftDataTable = QtWidgets.QTableView()
 
         self.LeftDataTable.resizeColumnsToContents()
-        self.LeftDataTable.setSelectionBehavior(QtGui.QAbstractItemView.SelectRows)
+        self.LeftDataTable.setSelectionBehavior(QtWidgets.QAbstractItemView.SelectRows)
         self.LeftDataTable.setAlternatingRowColors(True)
         self.LeftDataTable.setSortingEnabled(True)
 
         self.LeftDataTable.setAttribute(QtCore.Qt.WA_TranslucentBackground)
         self.LeftDataTable.setModel(self.LeftDataModel)
 
-        layout = QtGui.QVBoxLayout()
+        layout = QtWidgets.QVBoxLayout()
         layout.addWidget(self.LeftDataTable)
 
         # add the scatter plot for stabilisation, stable and unstable poles
@@ -728,14 +728,14 @@ class PropertiesTab(QtGui.QTabWidget):
 
         # tables of selected natural frquencies and corresponding damping ratios
         self.spots_plot.dataModel = DataFrameModel()
-        self.spots_plot.dataTable = QtGui.QTableView()
+        self.spots_plot.dataTable = QtWidgets.QTableView()
         self.spots_plot.dataTable.installEventFilter(self)
 
         self.spots_plot.dataTable.setModel(self.spots_plot.dataModel)
         self.spots_plot.dataTable.setAttribute(QtCore.Qt.WA_TranslucentBackground)
 
         # Checkbox for FRF plot
-        self.check_box_frf = QtGui.QCheckBox(kkeys['frf']['3'])
+        self.check_box_frf = QtWidgets.QCheckBox(kkeys['frf']['3'])
 
         self.check_box_frf.setChecked(False)
 
@@ -743,26 +743,26 @@ class PropertiesTab(QtGui.QTabWidget):
         self.check_box_frf.stateChanged.connect(self.plot_frfs)
 
         # Checkbox for sum of FRFs plot
-        self.check_box_frf_sum = QtGui.QCheckBox(kkeys['sum']['3'])
+        self.check_box_frf_sum = QtWidgets.QCheckBox(kkeys['sum']['3'])
 
         # Connect frf sum checkbox with plot area
         self.check_box_frf_sum.stateChanged.connect(self.plot_frf_sum)
 
         # Checkbox for CMIF plot
-        self.check_box_cmif = QtGui.QCheckBox(kkeys['cmif']['15'])
+        self.check_box_cmif = QtWidgets.QCheckBox(kkeys['cmif']['15'])
 
         # Connect cmif checkbox with plot area
         self.check_box_cmif.stateChanged.connect(self.plot_cmif)
 
         # Label for selecting minimal freq. - f_min
-        self.label_f_min = QtGui.QLabel(kkeys['freq_min']['15'])
-        self.box_f_min = QtGui.QDoubleSpinBox()
+        self.label_f_min = QtWidgets.QLabel(kkeys['freq_min']['15'])
+        self.box_f_min = QtWidgets.QDoubleSpinBox()
         self.box_f_min.setMaximum(MAX_FREQUENCY)
         self.box_f_min.setMinimum(1)
 
         # Label for selecting maximal freq. - f_max
-        self.label_f_max = QtGui.QLabel(kkeys['freq_max']['15'])
-        self.box_f_max = QtGui.QDoubleSpinBox()
+        self.label_f_max = QtWidgets.QLabel(kkeys['freq_max']['15'])
+        self.box_f_max = QtWidgets.QDoubleSpinBox()
         self.box_f_max.setMaximum(MAX_FREQUENCY)
 
         # - (self.box_f_max.value() - self.box_f_min.value())/5
@@ -774,23 +774,23 @@ class PropertiesTab(QtGui.QTabWidget):
             lambda: self.spots_plot.draw_selection.plot_area.setXRange(self.box_f_min.value(), self.box_f_max.value()))
 
         # Max order Button
-        maxorder_label = QtGui.QLabel(kkeys['max_order']['15'])
-        self.maxorder_spinbox = QtGui.QSpinBox()
+        maxorder_label = QtWidgets.QLabel(kkeys['max_order']['15'])
+        self.maxorder_spinbox = QtWidgets.QSpinBox()
         self.nmax = 30
         self.maxorder_spinbox.setValue(self.nmax)
         self.maxorder_spinbox.setMaximum(999)
 
         # Frequency error button
-        err_freq_label = QtGui.QLabel(kkeys['freq_err']['15'])
-        self.err_fn_button = QtGui.QDoubleSpinBox()
+        err_freq_label = QtWidgets.QLabel(kkeys['freq_err']['15'])
+        self.err_fn_button = QtWidgets.QDoubleSpinBox()
         self.err_fn_button.setRange(0, 1)
         self.err_fn_button.setDecimals(3)
         self.err_fn = 0.01
         self.err_fn_button.setValue(self.err_fn)
 
         # Damping error button
-        err_damp_label = QtGui.QLabel(kkeys['damp_err']['15'])
-        self.err_xi_button = QtGui.QDoubleSpinBox()
+        err_damp_label = QtWidgets.QLabel(kkeys['damp_err']['15'])
+        self.err_xi_button = QtWidgets.QDoubleSpinBox()
         self.err_xi_button.setRange(0, 1)
         self.err_xi_button.setDecimals(3)
         self.err_xi = 0.05
@@ -806,16 +806,16 @@ class PropertiesTab(QtGui.QTabWidget):
         self.err_xi_button.valueChanged.connect(self.change_err_xi)
 
         # Define new child layout
-        child_layout = QtGui.QHBoxLayout()
+        child_layout = QtWidgets.QHBoxLayout()
         child_layout.setContentsMargins(100, 20, 100, 100)
 
         # method selection combobox
-        self.method_selection = QtGui.QComboBox()
+        self.method_selection = QtWidgets.QComboBox()
         self.method_selection.addItem("LSCF")
         self.method_selection.addItem("LSCE")
 
         # model selection combobox
-        self.button_model = QtGui.QComboBox()
+        self.button_model = QtWidgets.QComboBox()
         self.button_model.setObjectName('small')
 
         # update the analysis GUI, when another model is selected
@@ -823,19 +823,19 @@ class PropertiesTab(QtGui.QTabWidget):
 
         # Stabilization button
         run_icon = qta.icon('fa.play', scale_factor=1.6, color='white')
-        self.stabilization_button_properties = QtGui.QPushButton(run_icon, ' Analyse')
+        self.stabilization_button_properties = QtWidgets.QPushButton(run_icon, ' Analyse')
         self.stabilization_button_properties.setObjectName('altpushbutton_measurement')
         self.stabilization_button_properties.setCheckable(False)
 
         # analysis_id selection
-        self.analysis_id_label = QtGui.QLabel('Analysis id:')
-        self.analysis_id_model = QtGui.QComboBox()
+        self.analysis_id_label = QtWidgets.QLabel('Analysis id:')
+        self.analysis_id_model = QtWidgets.QComboBox()
 
         # update the analysis GUI, when another analysis_id is selected
         self.analysis_id_model.currentIndexChanged.connect(self.update_analysis_id)
 
         # layout at the right
-        self.right_child_layout = QtGui.QGridLayout()
+        self.right_child_layout = QtWidgets.QGridLayout()
         self.right_child_layout.addWidget(self.button_model, 0, 0, 1, 3)
         self.right_child_layout.addWidget(self.check_box_frf, 1, 0, 1, 1)
         self.right_child_layout.addWidget(self.check_box_frf_sum, 1, 1, 1, 1)
@@ -1375,7 +1375,7 @@ class PropertiesTab(QtGui.QTabWidget):
                         self.spots_plot.h[0, row, :].T))
                     self.spots_plot.h_rec.setPen(color=(0, 0, 255))
 
-        return QtGui.QWidget.eventFilter(self, widget, event)
+        return QtWidgets.QWidget.eventFilter(self, widget, event)
 
     def set_table_height(self):
         """

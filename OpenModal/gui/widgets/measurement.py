@@ -20,7 +20,7 @@ __author__ = 'Matjaz'
 
 import time
 
-from PyQt4 import QtGui, QtCore
+from PyQt5 import QtCore, QtGui, QtWidgets
 import pandas as pd
 import pyqtgraph as pg
 import pyqtgraph.dockarea as da
@@ -108,7 +108,7 @@ def updateStylePatched(self):
 
 DockLabel.updateStyle = updateStylePatched
 
-class ClockWidget(QtGui.QLabel):
+class ClockWidget(QtWidgets.QLabel):
     """Digital clock widget."""
     def __init__(self, format='hms'):
         super().__init__()
@@ -181,7 +181,7 @@ class MeasurementWidget(prototype.SubWidget):
         self.fig_resp = pg.PlotWidget(name='Measurement - Response')
         self.fig_exc_zoom = pg.PlotWidget(name='Measurement - Respsadonse')
         self.fig_exc_frq = pg.PlotWidget(name='Measurement - Resasdponse')
-        layout_measurement = QtGui.QGridLayout()
+        layout_measurement = QtWidgets.QGridLayout()
         layout_measurement.addWidget(self.fig_exc, 0, 0)
         layout_measurement.addWidget(self.fig_resp, 0, 1)
         layout_measurement.addWidget(self.fig_exc_zoom, 1, 0)
@@ -198,7 +198,7 @@ class MeasurementWidget(prototype.SubWidget):
         self.fig_h_mag.setLogMode(x=None, y=True)
         self.fig_h_phi = pg.PlotWidget(name='Estimator H1 - Phase')
         self.fig_h_mag.setXLink(self.fig_h_phi)
-        layout_estimators = QtGui.QGridLayout()
+        layout_estimators = QtWidgets.QGridLayout()
         layout_estimators.addWidget(self.fig_h_mag, 0, 0)
         layout_estimators.addWidget(self.fig_h_phi, 1, 0)
         graphics_view_measurement.setLayout(layout_estimators)
@@ -222,14 +222,14 @@ class MeasurementWidget(prototype.SubWidget):
 
         ICON_SIZE = 24
 
-        self.button_model = QtGui.QComboBox()
+        self.button_model = QtWidgets.QComboBox()
         self.button_model.setObjectName('small')
         self.button_model.addItems(models.values)
         self.button_model.currentIndexChanged.connect(self.update_table_model_id)
         self.button_model.currentIndexChanged.connect(lambda: self.settings.update({'selected_model_id': self.button_model.currentIndex()}))
         # self.button_model.setFixedHeight(ICON_SIZE + 6)
 
-        self.button_roving = QtGui.QComboBox()
+        self.button_roving = QtWidgets.QComboBox()
         self.button_roving.setObjectName('small')
         self.button_roving.addItems(['Ref. node', 'Resp. node'])
         # self.button_roving.setDisabled(True)
@@ -243,33 +243,33 @@ class MeasurementWidget(prototype.SubWidget):
         # -- Override and force roving response! (for now)
         # self.button_roving.setCurrentIndex(2)
 
-        roving_label = QtGui.QLabel('Roving:')
+        roving_label = QtWidgets.QLabel('Roving:')
 
-        self.button_remove_line = QtGui.QPushButton('Remove selected')
+        self.button_remove_line = QtWidgets.QPushButton('Remove selected')
         self.button_remove_line.setObjectName('small_wide')
         self.button_remove_line.clicked.connect(self.remove_selected)
 
-        self.button_accept_measurement = QtGui.QPushButton(qta.icon('fa.check', color='white'), 'Accept')
+        self.button_accept_measurement = QtWidgets.QPushButton(qta.icon('fa.check', color='white'), 'Accept')
         self.button_accept_measurement.setObjectName('small')
-        self.button_repeat_measurement = QtGui.QPushButton(qta.icon('fa.repeat', color='white'), 'Repeat')
+        self.button_repeat_measurement = QtWidgets.QPushButton(qta.icon('fa.repeat', color='white'), 'Repeat')
         self.button_repeat_measurement.setObjectName('small')
 
         self.button_accept_measurement.setDisabled(True)
         self.button_repeat_measurement.setDisabled(True)
 
-        main_button_layout = QtGui.QVBoxLayout()
+        main_button_layout = QtWidgets.QVBoxLayout()
 
 
 
         run_icon = qta.icon('fa.play', scale_factor=1.6, color='white')#, active='fa.stop')
-        self.button_run = QtGui.QPushButton(run_icon, ' Measure')
+        self.button_run = QtWidgets.QPushButton(run_icon, ' Measure')
         self.button_run.setObjectName('altpushbutton_measurement')
         self.button_run.setCheckable(True)
         self.button_run.toggled.connect(self._handle_measurement_button_toggle)
         self.button_repeat_measurement.clicked.connect(self.button_run.toggle)
 
         if dp is None:
-            button_preferences_link = QtGui.QPushButton(qta.icon('fa.warning', scale_factor=0.8,
+            button_preferences_link = QtWidgets.QPushButton(qta.icon('fa.warning', scale_factor=0.8,
                                                                  color='red'),
                                                                 'Install DAQmx!')
             button_preferences_link.setObjectName('linkbutton')
@@ -277,19 +277,19 @@ class MeasurementWidget(prototype.SubWidget):
             button_preferences_link.setContentsMargins(0, 0, 0, 0)
 
         else:
-            button_preferences_link = QtGui.QPushButton(qta.icon('fa.cogs', scale_factor=0.8,
+            button_preferences_link = QtWidgets.QPushButton(qta.icon('fa.cogs', scale_factor=0.8,
                                                                  color=temp.COLOR_PALETTE['primaryhex']),
                                                                 'configure ...')
             button_preferences_link.setObjectName('linkbutton')
             button_preferences_link.setContentsMargins(0, 0, 0, 0)
             button_preferences_link.clicked.connect(self.open_configuration_window)
 
-        run_button_pair = QtGui.QVBoxLayout()
+        run_button_pair = QtWidgets.QVBoxLayout()
         run_button_pair.setContentsMargins(0, 0, 0, 0)
         run_button_pair.addWidget(self.button_run)
         run_button_pair.addWidget(button_preferences_link)
 
-        node_number_layout = QtGui.QGridLayout()
+        node_number_layout = QtWidgets.QGridLayout()
         node_number_layout.setContentsMargins(40, 50, 40, 25)
 
         idx_m = self.modaldata.tables['measurement_index']
@@ -311,14 +311,14 @@ class MeasurementWidget(prototype.SubWidget):
                 rsp_node = last_line.rsp_node.values[0] + 1
 
 
-        self.ref_node_spin = QtGui.QSpinBox()
+        self.ref_node_spin = QtWidgets.QSpinBox()
         self.ref_node_spin.setValue(ref_node)
         self.ref_node_spin.setMaximumWidth(60)
         self.ref_node_spin.setMaximum(10000)
         self.ref_node_spin.setMinimum(1)
-        self.ref_node_check = QtGui.QCheckBox()
-        ref_node_label = QtGui.QLabel('Reference node:')
-        self.ref_node_increment = QtGui.QComboBox()
+        self.ref_node_check = QtWidgets.QCheckBox()
+        ref_node_label = QtWidgets.QLabel('Reference node:')
+        self.ref_node_increment = QtWidgets.QComboBox()
         self.ref_node_increment.setObjectName('small')
         self.ref_node_increment.addItems(['increment', 'fixed'])
 
@@ -328,15 +328,15 @@ class MeasurementWidget(prototype.SubWidget):
         node_number_layout.addWidget(ref_node_label, 1, 0)
         node_number_layout.addWidget(self.ref_node_spin, 1, 2)
 
-        self.resp_node_spin = QtGui.QSpinBox()
+        self.resp_node_spin = QtWidgets.QSpinBox()
         self.resp_node_spin.setValue(rsp_node)
         self.resp_node_spin.setMaximumWidth(60)
         self.resp_node_spin.setMaximum(10000)
         self.resp_node_spin.setMinimum(1)
-        resp_node_label = QtGui.QLabel('Response node:')
+        resp_node_label = QtWidgets.QLabel('Response node:')
 
 
-        accept_repeat_layout = QtGui.QHBoxLayout()
+        accept_repeat_layout = QtWidgets.QHBoxLayout()
         accept_repeat_layout.addWidget(self.button_accept_measurement)
         accept_repeat_layout.addWidget(self.button_repeat_measurement)
         accept_repeat_layout.setContentsMargins(100, 0, 80, 0)
@@ -348,11 +348,11 @@ class MeasurementWidget(prototype.SubWidget):
 
         # model_button_layout = QtGui.QHBoxLayout()
         # model_button_layout.setContentsMargins(0, 50, 0, 0)
-        model_label = QtGui.QLabel('Use model:')
-        self.button_model_new = QtGui.QPushButton(qta.icon('fa.plus-square', color='white'), '')
+        model_label = QtWidgets.QLabel('Use model:')
+        self.button_model_new = QtWidgets.QPushButton(qta.icon('fa.plus-square', color='white'), '')
         self.button_model_new.setObjectName('small_icon')
         self.button_model_new.clicked.connect(self._add_new_model)
-        model_h_layout = QtGui.QHBoxLayout()
+        model_h_layout = QtWidgets.QHBoxLayout()
         model_h_layout.addWidget(self.button_model)
         model_h_layout.addWidget(self.button_model_new)
         node_number_layout.addWidget(model_label, 3, 0)
@@ -360,8 +360,8 @@ class MeasurementWidget(prototype.SubWidget):
         # node_number_layout.addWidget(self.button_model_new, 3, 2)
         node_number_layout.addLayout(model_h_layout, 3, 2)
 
-        follow_geometry_label = QtGui.QLabel('Follow geometry:')
-        self.follow_geometry_check = QtGui.QCheckBox()
+        follow_geometry_label = QtWidgets.QLabel('Follow geometry:')
+        self.follow_geometry_check = QtWidgets.QCheckBox()
         node_number_layout.addWidget(follow_geometry_label, 4, 0)
         node_number_layout.addWidget(self.follow_geometry_check, 4, 2, QtCore.Qt.AlignCenter)
 
@@ -378,7 +378,7 @@ class MeasurementWidget(prototype.SubWidget):
         # follow_geometry_layout.setContentsMargins(150, 0, 150, 0)
 
         # run_button_layout.addStretch()
-        run_button_layout = QtGui.QHBoxLayout()
+        run_button_layout = QtWidgets.QHBoxLayout()
         run_button_layout.setContentsMargins(40, 0, 30, 0)
         run_button_layout.addLayout(run_button_pair)
         main_button_layout.addLayout(run_button_layout)
@@ -390,21 +390,21 @@ class MeasurementWidget(prototype.SubWidget):
 
         # self.failsafe_print_checkbox = QtGui.QCheckBox()
         # self.average_counter = QtGui.QLabel('Pass 0 of 0.')
-        self.average_counter = QtGui.QLabel('')
+        self.average_counter = QtWidgets.QLabel('')
         self.average_counter.setStyleSheet('color: black; font-weight: bold;')
         self.average_counter.setMaximumHeight(35)
 
-        self.button_overload = QtGui.QLabel("<b>Overload!</b>")
+        self.button_overload = QtWidgets.QLabel("<b>Overload!</b>")
         # self.button_overload.setStyleSheet('color: red')
         self.button_overload.setStyleSheet('color: lightgray')
         self.button_overload.setMaximumHeight(35)
 
-        self.button_doublehit = QtGui.QLabel("<b>Double hit!</b>")
+        self.button_doublehit = QtWidgets.QLabel("<b>Double hit!</b>")
         # self.button_doublehit.setStyleSheet('color: red')
         self.button_doublehit.setStyleSheet('color: lightgray')
         self.button_doublehit.setMaximumHeight(35)
 
-        button_layout = QtGui.QHBoxLayout()
+        button_layout = QtWidgets.QHBoxLayout()
 
         button_layout.addWidget(self.average_counter)
         button_layout.addStretch()
@@ -420,12 +420,12 @@ class MeasurementWidget(prototype.SubWidget):
         cdf = pd.DataFrame(columns=['None'])
         self.table_model = TableModel(self)
         self.table_model.update(self.modaldata.tables['measurement_index'], self.button_model.currentIndex())
-        self.table_view = QtGui.QTableView()
+        self.table_view = QtWidgets.QTableView()
         self.table_view.setShowGrid(False)
         self.table_view.setModel(self.table_model)
-        self.table_view.setSelectionMode(QtGui.QAbstractItemView.ExtendedSelection)
+        self.table_view.setSelectionMode(QtWidgets.QAbstractItemView.ExtendedSelection)
         hh = self.table_view.horizontalHeader()
-        hh.setSectionResizeMode(QtGui.QHeaderView.Stretch)
+        hh.setSectionResizeMode(QtWidgets.QHeaderView.Stretch)
 
         selection = self.table_view.selectionModel()
         selection.selectionChanged.connect(self.view_measurement_frf)
@@ -444,22 +444,22 @@ class MeasurementWidget(prototype.SubWidget):
         self.table_view.setMinimumWidth(420)
         self.table_view.setMaximumWidth(500)
 
-        h_global_layout = QtGui.QHBoxLayout()
-        v_global_layout = QtGui.QVBoxLayout()
+        h_global_layout = QtWidgets.QHBoxLayout()
+        v_global_layout = QtWidgets.QVBoxLayout()
         v_global_layout.addLayout(button_layout)
         v_global_layout.addWidget(self.dock_area)
         h_global_layout.addLayout(v_global_layout)
 
-        dock = QtGui.QDockWidget()
+        dock = QtWidgets.QDockWidget()
 
-        h_table_button_layout = QtGui.QHBoxLayout()
+        h_table_button_layout = QtWidgets.QHBoxLayout()
 
 
 
         # h_table_button_layout.addLayout(model_button_layout)
         h_table_button_layout.addWidget(self.button_remove_line)
 
-        v_table_layout = QtGui.QVBoxLayout()
+        v_table_layout = QtWidgets.QVBoxLayout()
         v_table_layout.addLayout(main_button_layout)
         v_table_layout.addWidget(self.table_view)
         v_table_layout.addLayout(h_table_button_layout)
@@ -515,25 +515,25 @@ class MeasurementWidget(prototype.SubWidget):
     def _handle_measurement_button_toggle(self):
 
         if dp is None:
-            msgBox = QtGui.QMessageBox()
+            msgBox = QtWidgets.QMessageBox()
             msgBox.setWindowTitle('DAQmx not found')
-            msgBox.setIcon(QtGui.QMessageBox.Information)
+            msgBox.setIcon(QtWidgets.QMessageBox.Information)
             msgBox.setText('Looks like DAQmx is not installed on your system. Plese install the'
                            ' DAQmx drivers and restart OpenModal.')
-            msgBox.setStandardButtons(QtGui.QMessageBox.Ok)
+            msgBox.setStandardButtons(QtWidgets.QMessageBox.Ok)
             msgBox.exec_()
 
             self.button_run.blockSignals(True)
             self.button_run.toggle()
             self.button_run.blockSignals(False)
         elif not ('task_name' in self.settings):
-            msgBox = QtGui.QMessageBox()
+            msgBox = QtWidgets.QMessageBox()
             msgBox.setWindowTitle('Missing data')
-            msgBox.setIcon(QtGui.QMessageBox.Information)
+            msgBox.setIcon(QtWidgets.QMessageBox.Information)
             msgBox.setText('Looks like there are no hardware interfaces configured. Plese do so using the'
                            ' preferences menu.')
-            connectButton = msgBox.addButton(self.tr('Take me to preferences'), QtGui.QMessageBox.ActionRole)
-            msgBox.setStandardButtons(QtGui.QMessageBox.Cancel)
+            connectButton = msgBox.addButton(self.tr('Take me to preferences'), QtWidgets.QMessageBox.ActionRole)
+            msgBox.setStandardButtons(QtWidgets.QMessageBox.Cancel)
             ret = msgBox.exec_()
 
             if msgBox.clickedButton() == connectButton:
@@ -562,23 +562,23 @@ class MeasurementWidget(prototype.SubWidget):
 
     def _add_new_model(self):
         # pop dialog window.
-        dialog = QtGui.QDialog()
+        dialog = QtWidgets.QDialog()
         dialog.setWindowTitle('New Model')
 
-        input_layout = QtGui.QHBoxLayout()
-        model_name_edit = QtGui.QLineEdit()
+        input_layout = QtWidgets.QHBoxLayout()
+        model_name_edit = QtWidgets.QLineEdit()
         rxval = QtGui.QRegExpValidator(QtCore.QRegExp('[A-Za-z_-][A-Za-z0-9_- ]{2,20}'))
         model_name_edit.setValidator(rxval)
-        model_name_label = QtGui.QLabel('Model name')
+        model_name_label = QtWidgets.QLabel('Model name')
         input_layout.addWidget(model_name_label)
         input_layout.addWidget(model_name_edit)
 
-        button_layout = QtGui.QHBoxLayout()
-        button_ok = QtGui.QPushButton('Accept')
+        button_layout = QtWidgets.QHBoxLayout()
+        button_ok = QtWidgets.QPushButton('Accept')
         button_ok.setDefault(True)
         button_ok.setDisabled(True)
         button_ok.clicked.connect(dialog.accept)
-        button_cancel = QtGui.QPushButton('Dismiss')
+        button_cancel = QtWidgets.QPushButton('Dismiss')
         button_cancel.clicked.connect(dialog.reject)
         button_layout.addWidget(button_cancel)
         button_layout.addWidget(button_ok)
@@ -592,7 +592,7 @@ class MeasurementWidget(prototype.SubWidget):
         model_name_edit.textEdited.connect(check)
 
 
-        layout = QtGui.QVBoxLayout()
+        layout = QtWidgets.QVBoxLayout()
         layout.addLayout(input_layout)
         layout.addLayout(button_layout)
         dialog.setLayout(layout)
@@ -1257,12 +1257,13 @@ class TableModel(QtCore.QAbstractTableModel):
     '''Table model that suits all tables (for now). It specifies
     access to data and some other stuff.'''
     # TODO: x -> 1 ...
+
     def __init__(self, parent, *args):
         super(TableModel, self).__init__(parent, *args)
         self.datatable = None
 
     def update(self, dataIn, model_id):
-        self.emit(QtCore.SIGNAL("layoutAboutToBeChanged()"))
+        self.layoutAboutToBeChanged.emit()
         self.dataIn = dataIn
         # self.datatable = dataIn[dataIn.model_id == model_id]
         self.datatable = self.dataIn[dataIn.model_id == model_id][ACTIVE_FIELDS]
@@ -1271,7 +1272,7 @@ class TableModel(QtCore.QAbstractTableModel):
         # print('buu')
         # print(self.dataIn[dataIn.model_id == model_id][ACTIVE_FIELDS])
         # self.dataChanged.emit(0,0)
-        self.emit(QtCore.SIGNAL("layoutChanged()"))
+        self.layoutChanged.emit()
 
     def rowCount(self, parent=QtCore.QModelIndex()):
         return len(self.datatable.index)
@@ -1308,7 +1309,7 @@ class TableModel(QtCore.QAbstractTableModel):
                 pass
         # self.maintable[ACTIVE_FIELDS] = self.datatable
 
-        # self.emit(QtCore.SIGNAL("dataChanged()"))
+        # self.emit(QtCore.pyqtSignal("dataChanged()"))
 
         except (TypeError, KeyError) as e:
             # Wrong data type.
@@ -1335,18 +1336,18 @@ class TableModel(QtCore.QAbstractTableModel):
 
     def sort(self, col, order):
         """sort table by given column number col"""
-        self.emit(QtCore.SIGNAL("layoutAboutToBeChanged()"))
+        self.layoutAboutToBeChanged.emit()
         if order == QtCore.Qt.DescendingOrder:
             self.datatable = self.datatable.sort_values(self.datatable.columns[col], ascending=0)
         else:
             self.datatable = self.datatable.sort_values(self.datatable.columns[col])
-        self.emit(QtCore.SIGNAL("layoutChanged()"))
+        self.layoutChanged.emit()
 
     def flags(self, index):
         return QtCore.QAbstractTableModel.flags(self, index) | QtCore.Qt.ItemIsEditable
 
 
-class PicButton(QtGui.QAbstractButton):
+class PicButton(QtWidgets.QAbstractButton):
     def __init__(self, pixmap, parent=None):
         super(PicButton, self).__init__(parent)
         self.pixmap = pixmap
@@ -1361,7 +1362,7 @@ class PicButton(QtGui.QAbstractButton):
 if __name__ == '__main__':
     import sys
     import modaldata
-    app = QtGui.QApplication(sys.argv)
+    app = QtWidgets.QApplication(sys.argv)
 
     main_window = MeasurementWidget(modaldata, status_bar=None)
     main_window.setGeometry(100, 100, 640, 480)
