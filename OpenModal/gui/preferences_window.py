@@ -32,7 +32,7 @@ import qtawesome as qta
 
 # import DAQTask as dq
 
-from PyQt4 import QtGui, QtCore
+from PyQt5 import QtCore, QtGui, QtWidgets
 
 import pyqtgraph as pg
 
@@ -64,7 +64,7 @@ def set_combo_box_index(combo_box, key):
     return combo_box.setCurrentIndex([i for i, option in enumerate(all_items) if option in key][0])
 
 
-class ExcitationConfig(QtGui.QWidget):
+class ExcitationConfig(QtWidgets.QWidget):
     """Measurement configuration window.
     """
     def __init__(self, desktop_widget, settings=dict()):
@@ -80,12 +80,12 @@ class ExcitationConfig(QtGui.QWidget):
         self.settings = settings
         self.fields = dict()
 
-        self.save = QtGui.QPushButton('Done')
+        self.save = QtWidgets.QPushButton('Done')
         self.save.setObjectName('small')
         self.save.setDisabled(True)
         self.save.clicked.connect(self._save_and_close)
 
-        self.dismiss = QtGui.QPushButton('Dismiss')
+        self.dismiss = QtWidgets.QPushButton('Dismiss')
         self.dismiss.setObjectName('small')
         self.dismiss.clicked.connect(self.close)
 
@@ -93,7 +93,7 @@ class ExcitationConfig(QtGui.QWidget):
         self.channel_table, self.channel_settings, self.preview_area = self.channels_widget()
 
         # TODO: Define these in a relative way!
-        self.settings_area = QtGui.QStackedWidget()
+        self.settings_area = QtWidgets.QStackedWidget()
         self.settings_area.setMinimumWidth(450)
         self.settings_area.setMaximumWidth(450)
         self.settings_area.setMinimumHeight(550)
@@ -114,12 +114,12 @@ class ExcitationConfig(QtGui.QWidget):
         self.fft = False
         self.measure_test_run_process_start()
 
-        hbox = QtGui.QHBoxLayout()
+        hbox = QtWidgets.QHBoxLayout()
         # hbox.addWidget(self.left_menu)
         hbox.addWidget(self.settings_area)
         hbox.addWidget(self.preview_area)
 
-        title_label = QtGui.QLabel('PREFERENCES')
+        title_label = QtWidgets.QLabel('PREFERENCES')
         font = title_label.font()
         font.setPointSize(8)
         font.setFamily('Verdana')
@@ -128,15 +128,15 @@ class ExcitationConfig(QtGui.QWidget):
         title_label.setObjectName('title_label')
 
 
-        title_layout = QtGui.QHBoxLayout()
+        title_layout = QtWidgets.QHBoxLayout()
         title_layout.addWidget(title_label)
         title_layout.addStretch()
 
-        vbox = QtGui.QVBoxLayout()
+        vbox = QtWidgets.QVBoxLayout()
         vbox.addLayout(title_layout)
         vbox.setContentsMargins(0, 1, 0, 0)
         vbox.addLayout(hbox)
-        button_layout = QtGui.QHBoxLayout()
+        button_layout = QtWidgets.QHBoxLayout()
         button_layout.addStretch()
         button_layout.addWidget(self.save)
         button_layout.addWidget(self.dismiss)
@@ -146,10 +146,10 @@ class ExcitationConfig(QtGui.QWidget):
         vbox.addLayout(button_layout)
         vbox.setContentsMargins(20, 20, 20, 20)
 
-        vbox_outer = QtGui.QVBoxLayout()
+        vbox_outer = QtWidgets.QVBoxLayout()
         vbox_outer.setContentsMargins(0, 0, 0, 0)
         vbox_outer.addLayout(vbox)
-        vbox_outer.addWidget(QtGui.QSizeGrip(self.parent()), 0, QtCore.Qt.AlignBottom |QtCore.Qt.AlignRight)
+        vbox_outer.addWidget(QtWidgets.QSizeGrip(self.parent()), 0, QtCore.Qt.AlignBottom |QtCore.Qt.AlignRight)
 
         self.setContentsMargins(0, 0, 0, 0)
         self.setLayout(vbox_outer)
@@ -263,33 +263,33 @@ class ExcitationConfig(QtGui.QWidget):
 
     def channels_widget(self):
         """Setup device an channels."""
-        channel_widget = QtGui.QWidget()
+        channel_widget = QtWidgets.QWidget()
 
         font = QtGui.QFont()
         font.setPointSize(13)
 
         # Select excitation
-        group = QtGui.QGroupBox('Excitation Type')
+        group = QtWidgets.QGroupBox('Excitation Type')
         group.setStyleSheet("QGroupBox {font-weight: bold;}")
-        self.radio_impulse = QtGui.QRadioButton('Impulse')
+        self.radio_impulse = QtWidgets.QRadioButton('Impulse')
         self.radio_impulse.setToolTip(tt.tooltips['impulse_excitation'])
 
         self.radio_impulse.toggled.connect(self.set_impulse_type)
         # self.settings['excitation_type'] = 'impulse' # TODO: It would be better if just set_impulse_type is called here.
 
-        self.radio_random = QtGui.QRadioButton('Random')
+        self.radio_random = QtWidgets.QRadioButton('Random')
         self.radio_random.setToolTip(tt.tooltips['random_excitation'])
         self.radio_random.toggled.connect(self.set_random_type)
 
-        self.radio_oma = QtGui.QRadioButton('OMA')
+        self.radio_oma = QtWidgets.QRadioButton('OMA')
         self.radio_oma.setToolTip(tt.tooltips['OMA_excitation'])
         self.radio_oma.toggled.connect(self.set_oma_type)
         # radio_random.setDisabled(True)
-        radio_sweep = QtGui.QRadioButton('Sine Sweep')
+        radio_sweep = QtWidgets.QRadioButton('Sine Sweep')
         self.fields['excitation_type'] = 'impulse'
         # radio_sweep.setDisabled(True)
 
-        group_layout = QtGui.QHBoxLayout()
+        group_layout = QtWidgets.QHBoxLayout()
         group_layout.addWidget(self.radio_impulse)
         group_layout.addWidget(self.radio_random)
         group_layout.addWidget(self.radio_oma)
@@ -301,25 +301,25 @@ class ExcitationConfig(QtGui.QWidget):
         # Get tasks
         # tasks_tmp = map(bytes.decode, dq.get_daq_tasks())
         # tasks = list(tasks_tmp).copy()
-        self.device_task = QtGui.QComboBox()
+        self.device_task = QtWidgets.QComboBox()
         self.device_task.setToolTip(tt.tooltips['signal_selection'])
         self.device_task.setObjectName('small')
-        task_status = QtGui.QLabel('')
+        task_status = QtWidgets.QLabel('')
 
         if (dp is None) or (dq is None):
-            warning_label = QtGui.QPushButton(qta.icon('fa.warning', scale_factor=0.8,
+            warning_label = QtWidgets.QPushButton(qta.icon('fa.warning', scale_factor=0.8,
                                                        color='red'),
                                                       'Install DAQmx, then restart OpenModal!')
             warning_label.setObjectName('linkbutton')
             warning_label.setStyleSheet('font-size: x-small; color: red; text-decoration: none; width:375px;')
             warning_label.setContentsMargins(0, 0, 0, 0)
 
-            signal_hbox = QtGui.QHBoxLayout()
+            signal_hbox = QtWidgets.QHBoxLayout()
             signal_hbox.addStretch()
             signal_hbox.addWidget(warning_label)
             signal_hbox.addStretch()
         else:
-            open_ni_max = QtGui.QPushButton('NIMax')
+            open_ni_max = QtWidgets.QPushButton('NIMax')
             open_ni_max.setToolTip(tt.tooltips['nimax'])
             open_ni_max.setObjectName('small')
             open_ni_max.clicked.connect(lambda:
@@ -335,7 +335,7 @@ class ExcitationConfig(QtGui.QWidget):
             #     self.device_task.addItem(item)
             # self.fields['task_name'] = self.device_task.currentText().encode
 
-            signal_hbox = QtGui.QHBoxLayout()
+            signal_hbox = QtWidgets.QHBoxLayout()
             # device_hbox.addWidget(label)
             signal_hbox.addWidget(self.device_task)
             signal_hbox.addStretch()
@@ -344,45 +344,45 @@ class ExcitationConfig(QtGui.QWidget):
             # signal_hbox.addWidget(task_status)
             signal_hbox.addStretch()
 
-        signal_vbox = QtGui.QVBoxLayout()
+        signal_vbox = QtWidgets.QVBoxLayout()
 
 
         # Signal setttings.
-        signal_grid = QtGui.QGridLayout()
+        signal_grid = QtWidgets.QGridLayout()
 
         # Window length.
-        self.win_length = QtGui.QSpinBox()
+        self.win_length = QtWidgets.QSpinBox()
         self.win_length.setToolTip(tt.tooltips['window_length'])
         self.win_length.setRange(1, MAX_WINDOW_LENGTH)
         self.win_length.setValue(DEFAULTS['samples_per_channel'])
-        win_length_label = QtGui.QLabel('Window length')
+        win_length_label = QtWidgets.QLabel('Window length')
         signal_grid.addWidget(win_length_label, 0, 0)
         signal_grid.addWidget(self.win_length, 0, 2)
         self.fields['samples_per_channel'] = self.win_length.value
         # signal_grid.addRow(self.tr('Window length'), win_length)
 
         # Zero padding.
-        zero_padding = QtGui.QSpinBox()
+        zero_padding = QtWidgets.QSpinBox()
         zero_padding.setToolTip(tt.tooltips['zero_padding'])
         zero_padding.setRange(0, MAX_WINDOW_LENGTH)
         zero_padding.setValue(DEFAULTS['zero_padding'])
-        zero_padding_label = QtGui.QLabel('Zero padding')
+        zero_padding_label = QtWidgets.QLabel('Zero padding')
         signal_grid.addWidget(zero_padding_label, 1, 0)
         signal_grid.addWidget(zero_padding, 1, 2)
         self.fields['zero_padding'] = zero_padding.value
 
         # Excitation window.
-        self.exc_win = QtGui.QComboBox()
+        self.exc_win = QtWidgets.QComboBox()
         self.exc_win.setToolTip(tt.tooltips['excitation_window'])
         for window in _WINDOWS:
             self.exc_win.addItem(window)
         self.exc_win.setCurrentIndex([i for i, window in enumerate(_WINDOWS) if window in DEFAULTS['exc_window']][0])
-        exc_win_label = QtGui.QLabel('Excitation window')
-        exc_win_percent = QtGui.QDoubleSpinBox()
+        exc_win_label = QtWidgets.QLabel('Excitation window')
+        exc_win_percent = QtWidgets.QDoubleSpinBox()
         exc_win_percent.setToolTip(tt.tooltips['excitation_window_percent'])
         exc_win_percent.setRange(0.01, 100)
         exc_win_percent.setValue(1)
-        exc_win_percent_unit = QtGui.QLabel('%')
+        exc_win_percent_unit = QtWidgets.QLabel('%')
         signal_grid.addWidget(exc_win_label, 2, 0)
         signal_grid.addWidget(self.exc_win, 2, 2)
         signal_grid.addWidget(exc_win_percent, 2, 3)
@@ -392,17 +392,17 @@ class ExcitationConfig(QtGui.QWidget):
         # signal_grid.addRow(self.tr('Excitation window'), exc_win)
 
         # Response window.
-        self.resp_win = QtGui.QComboBox()
+        self.resp_win = QtWidgets.QComboBox()
         self.resp_win.setToolTip(tt.tooltips['response_window'])
         for window in _WINDOWS:
             self.resp_win.addItem(window)
         self.resp_win.setCurrentIndex([i for i, window in enumerate(_WINDOWS) if window in DEFAULTS['resp_window']][0])
-        resp_win_label = QtGui.QLabel('Response window')
-        resp_win_percent = QtGui.QDoubleSpinBox()
+        resp_win_label = QtWidgets.QLabel('Response window')
+        resp_win_percent = QtWidgets.QDoubleSpinBox()
         resp_win_percent.setToolTip(tt.tooltips['response_window_percent'])
         resp_win_percent.setRange(0.01, 100)
         resp_win_percent.setValue(1)
-        resp_win_percent_unit = QtGui.QLabel('%')
+        resp_win_percent_unit = QtWidgets.QLabel('%')
         signal_grid.addWidget(resp_win_label, 3, 0)
         signal_grid.addWidget(self.resp_win, 3, 2)
         signal_grid.addWidget(resp_win_percent, 3, 3)
@@ -412,17 +412,17 @@ class ExcitationConfig(QtGui.QWidget):
         # signal_grid.addRow(self.tr('Response window'), resp_win)
 
         # Averaging.
-        self.avg_type = QtGui.QComboBox()
+        self.avg_type = QtWidgets.QComboBox()
         self.avg_type.setToolTip(tt.tooltips['averaging_type'])
         for weighting in _WGH_TYPES:
             self.avg_type.addItem(weighting)
         self.avg_type.setCurrentIndex([i for i, window in enumerate(_WGH_TYPES) if window in DEFAULTS['weighting']][0])
-        avg_type_label = QtGui.QLabel('Averaging')
-        avg_sample_number = QtGui.QSpinBox()
+        avg_type_label = QtWidgets.QLabel('Averaging')
+        avg_sample_number = QtWidgets.QSpinBox()
         avg_sample_number.setToolTip(tt.tooltips['averaging_number'])
         avg_sample_number.setRange(2, 50)
         avg_sample_number.setValue(DEFAULTS['n_averages'])
-        avg_sample_number_unit = QtGui.QLabel('samples')
+        avg_sample_number_unit = QtWidgets.QLabel('samples')
         signal_grid.addWidget(avg_type_label, 4, 0)
         signal_grid.addWidget(self.avg_type, 4, 2)
         signal_grid.addWidget(avg_sample_number, 4, 3)
@@ -431,32 +431,32 @@ class ExcitationConfig(QtGui.QWidget):
         self.fields['n_averages'] = avg_sample_number.value
 
         # Save time history.
-        save_time_history = QtGui.QCheckBox()
+        save_time_history = QtWidgets.QCheckBox()
         save_time_history.setToolTip(tt.tooltips['save_time_history'])
-        save_time_history_label = QtGui.QLabel('Save time-history')
+        save_time_history_label = QtWidgets.QLabel('Save time-history')
         save_time_history.setChecked(DEFAULTS['save_time_history'])
         signal_grid.addWidget(save_time_history_label, 5, 0)
         signal_grid.addWidget(save_time_history, 5, 2)
         self.fields['save_time_history'] = save_time_history.isChecked
 
         # Trigger level
-        self.trigger_level = QtGui.QDoubleSpinBox()
+        self.trigger_level = QtWidgets.QDoubleSpinBox()
         self.trigger_level.setToolTip(tt.tooltips['trigger_level'])
         self.trigger_level.setRange(0.0001, 1000000)
         self.trigger_level.setValue(DEFAULTS['trigger_level'])
-        trigger_level_label = QtGui.QLabel('Trigger level (excitation)')
+        trigger_level_label = QtWidgets.QLabel('Trigger level (excitation)')
         signal_grid.addWidget(trigger_level_label, 6, 0)
         signal_grid.addWidget(self.trigger_level, 6, 2)
         self.fields['trigger_level'] = self.trigger_level.value
 
         # Pre trigger samples.
-        self.pre_trigger = QtGui.QSpinBox()
+        self.pre_trigger = QtWidgets.QSpinBox()
         self.pre_trigger.setToolTip(tt.tooltips['pre_trigger_samples'])
         self.pre_trigger.setRange(0, self.win_length.value())
         self.pre_trigger.setValue(DEFAULTS['pre_trigger_samples'])
         # self.win_length.valueChanged.connect(lambda: self.pre_trigger.setRange(0, self.win_length.value()))
-        pre_trigger_label = QtGui.QLabel('Pre-trigger samples')
-        pre_trigger_unit = QtGui.QLabel('S')
+        pre_trigger_label = QtWidgets.QLabel('Pre-trigger samples')
+        pre_trigger_unit = QtWidgets.QLabel('S')
         signal_grid.addWidget(pre_trigger_label, 7, 0)
         signal_grid.addWidget(self.pre_trigger, 7, 2)
         signal_grid.addWidget(pre_trigger_unit, 7, 3)
@@ -490,7 +490,7 @@ class ExcitationConfig(QtGui.QWidget):
         signal_grid.setColumnStretch(1, 5)
         signal_grid.setColumnStretch(4, 15)
 
-        groupb_box = QtGui.QGroupBox()
+        groupb_box = QtWidgets.QGroupBox()
         groupb_box.setTitle('Signal ')
         # groupb_box.setStyleSheet("QGroupBox {font-size: 16px;}")
         groupb_box.setStyleSheet("QGroupBox {font-weight: bold;}")
@@ -501,11 +501,11 @@ class ExcitationConfig(QtGui.QWidget):
 
         groupb_box.setLayout(signal_vbox)
 
-        vbox = QtGui.QVBoxLayout()
+        vbox = QtWidgets.QVBoxLayout()
         vbox.addWidget(group)
         vbox.addWidget(groupb_box)
 
-        table = QtGui.QTableWidget(3, 5)
+        table = QtWidgets.QTableWidget(3, 5)
         table.setShowGrid(False)
 
         horizontal_header = table.horizontalHeader()
@@ -519,7 +519,7 @@ class ExcitationConfig(QtGui.QWidget):
         # header_view.setCornerWidget(cw)
         table.setDisabled(True)
 
-        excitation_warning = QtGui.QLabel('')
+        excitation_warning = QtWidgets.QLabel('')
 
         def refresh_table(names):
             """Populate table with channels for the chosen task."""
@@ -539,12 +539,12 @@ class ExcitationConfig(QtGui.QWidget):
 
             for i, name in enumerate(names):
                 # First cell
-                channel_name = QtGui.QTableWidgetItem(name)
+                channel_name = QtWidgets.QTableWidgetItem(name)
                 channel_name.setFlags(channel_name.flags() & ~QtCore.Qt.ItemIsEditable)
                 table.setItem(i, 0, channel_name)
 
                 # Type
-                type = QtGui.QComboBox()
+                type = QtWidgets.QComboBox()
                 type.addItem(self.tr('Response'))
                 type.addItem(self.tr('Excitation'))
                 # type.addItem(self.tr('Disabled'))
@@ -558,7 +558,7 @@ class ExcitationConfig(QtGui.QWidget):
                 table.setCellWidget(i, 1, type)
 
                 # Units
-                units = QtGui.QComboBox()
+                units = QtWidgets.QComboBox()
                 if 'Excitation' in type.currentText():
                     # units.setEnabled(True)
                     if self.fields['excitation_type']() == 'oma':
@@ -591,7 +591,7 @@ class ExcitationConfig(QtGui.QWidget):
                 table.setCellWidget(i, 2, units)
 
                 # Delay.
-                delay = QtGui.QDoubleSpinBox()
+                delay = QtWidgets.QDoubleSpinBox()
                 delay.setRange(-5000, 5000)
                 delay.setDecimals(3)
                 # print (self.settings['channel_delay'])
@@ -640,10 +640,10 @@ class ExcitationConfig(QtGui.QWidget):
 
 
 
-        table_title = QtGui.QLabel('Channels')
+        table_title = QtWidgets.QLabel('Channels')
         table_title.setStyleSheet("QLabel {font-weight: bold;}")
 
-        table_title_layout = QtGui.QHBoxLayout()
+        table_title_layout = QtWidgets.QHBoxLayout()
         table_title_layout.addWidget(table_title)
         table_title_layout.addWidget(excitation_warning)
 
@@ -653,15 +653,15 @@ class ExcitationConfig(QtGui.QWidget):
         # Preview window.
         preview_window = pg.GraphicsView()
         preview_window.setMinimumHeight(300)
-        v_graphic_layout = QtGui.QVBoxLayout()
-        h_button_layout = QtGui.QHBoxLayout()
+        v_graphic_layout = QtWidgets.QVBoxLayout()
+        h_button_layout = QtWidgets.QHBoxLayout()
         self.fig = pg.PlotWidget(name='Signal preview')
         self.fig.setLabel('bottom', 'time', units='s')
         self.fig.setLabel('left', 'amplitude')
 
         self.fig_plotitem = self.fig.getPlotItem()
 
-        self.button_testrun = QtGui.QPushButton('Test Run')
+        self.button_testrun = QtWidgets.QPushButton('Test Run')
         self.button_testrun.setToolTip(tt.tooltips['test_run'])
         self.button_testrun.setObjectName('small')
         self.button_testrun.setCheckable(True)
@@ -673,7 +673,7 @@ class ExcitationConfig(QtGui.QWidget):
                 self.stop_measurement_button_trigger()
         self.button_testrun.clicked[bool].connect(testrun_start_agent)
 
-        self.button_fft = QtGui.QPushButton('PSD Toggle')
+        self.button_fft = QtWidgets.QPushButton('PSD Toggle')
         self.button_fft.setToolTip(tt.tooltips['toggle_PSD'])
         self.button_fft.setObjectName('small')
         self.button_fft.setCheckable(True)
@@ -721,8 +721,8 @@ class ExcitationConfig(QtGui.QWidget):
                     #     self.save.setDisabled(True)
                     # else:
 
-                    combos = [QtGui.QComboBox() for channel in channel_list]
-                    labels = [QtGui.QLabel(channel) for channel in channel_list]
+                    combos = [QtWidgets.QComboBox() for channel in channel_list]
+                    labels = [QtWidgets.QLabel(channel) for channel in channel_list]
 
                     # task_status.setText("""<span style="color: green;">Sampling rate: <b>{0:.0f} S/s</b>, """
                     #                     """Samples to read: <b>{1:.0f} S</b><br />"""
@@ -979,7 +979,7 @@ class ExcitationConfig(QtGui.QWidget):
         self.fig_plotitem = self.fig.getPlotItem()
 
     def fft_toggle(self, pressed):
-        print(self.fig_plotitem.spectrumMode)
+        #print(self.fig_plotitem.spectrumMode)
         if pressed:
             # self.fft = True
             # self.fig_plotitem.spectrumMode = True
@@ -999,7 +999,7 @@ class ExcitationConfig(QtGui.QWidget):
 
 
 if __name__ == '__main__':
-    app = QtGui.QApplication(sys.argv)
+    app = QtWidgets.QApplication(sys.argv)
 
     main_window = ExcitationConfig()
     main_window.setGeometry(100, 100, 800, 480)

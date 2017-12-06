@@ -18,9 +18,7 @@
 
 from OpenModal.gui.widgets.animation import TableModel,Model
 
-from PyQt4 import QtCore as pqc
-
-from PyQt4 import QtGui as pqg
+from PyQt5 import QtCore, QtGui,QtWidgets
 
 import pyqtgraph as pg
 
@@ -70,31 +68,31 @@ pg.setConfigOption('foreground', 'k')
 
 
 
-class CustomQTableView(pqg.QTableView):
+class CustomQTableView(QtWidgets.QTableView):
 
     def __init__(self,parent):
         super(self.__class__, self).__init__(parent)
         self.catch=False #for catching right/left arrow keypress events in editor mode
-        self.keys = [pqc.Qt.Key_Left,
-                     pqc.Qt.Key_Right]
+        self.keys = [QtCore.Qt.Key_Left,
+                     QtCore.Qt.Key_Right]
 
     def focusInEvent(self, event):
         self.catch = False
-        return pqg.QTableView.focusInEvent(self, event)
+        return QtWidgets.QTableView.focusInEvent(self, event)
 
     def focusOutEvent(self, event):
         self.catch = True
-        return pqg.QTableView.focusOutEvent(self, event)
+        return QtWidgets.QTableView.focusOutEvent(self, event)
 
     def event(self, event):
-        if self.catch and event.type() == pqc.QEvent.KeyRelease and event.key() in self.keys:
+        if self.catch and event.type() == QtCore.QEvent.KeyRelease and event.key() in self.keys:
             self._moveCursor(event.key())
 
-        return pqg.QTableView.event(self,event)
+        return QtWidgets.QTableView.event(self,event)
 
     def keyPressEvent(self, event):
         if not self.catch:
-            return pqg.QTableView.keyPressEvent(self, event)
+            return QtWidgets.QTableView.keyPressEvent(self, event)
 
         self._moveCursor(event.key())
 
@@ -103,16 +101,16 @@ class CustomQTableView(pqg.QTableView):
         row = self.currentIndex().row()
         col = self.currentIndex().column()
 
-        if key == pqc.Qt.Key_Left and col > 0:
+        if key == QtCore.Qt.Key_Left and col > 0:
             col -= 1
 
-        elif key == pqc.Qt.Key_Right and col < (self.model().columnCount()-1):
+        elif key == QtCore.Qt.Key_Right and col < (self.model().columnCount()-1):
             col += 1
 
-        elif key == pqc.Qt.Key_Up and row > 0:
+        elif key == QtCore.Qt.Key_Up and row > 0:
             row -= 1
 
-        elif key == pqc.Qt.Key_Down and row < (self.model().rowCount()-1):
+        elif key == QtCore.Qt.Key_Down and row < (self.model().rowCount()-1):
             row += 1
 
         else:
@@ -136,6 +134,7 @@ class CustomQTableView(pqg.QTableView):
 class GeometryWidget(AnimWidgBase):
 
     # def __init__(self, modaldata_object,status_bar,language, preferences=dict(), desktop_widget=None, parent=None):
+
     def __init__(self, *args, **kwargs):
 
         super(self.__class__, self).__init__(*args, **kwargs)
@@ -377,7 +376,7 @@ class GeometryWidget(AnimWidgBase):
                 geom_table_model.dataChanged.emit(geom_table_model.createIndex(0, 0),
                                    geom_table_model.createIndex(geom_table_model.rowCount(0),
                                                     geom_table_model.columnCount(0)))
-                geom_table_model.emit(pqc.SIGNAL("layoutChanged()"))
+                geom_table_model.layoutChanged.emit()
 
             if self.widget_mode=='lines' or self.widget_mode=='elements':
 
@@ -404,7 +403,7 @@ class GeometryWidget(AnimWidgBase):
                 self.elem_table_model.dataChanged.emit(self.elem_table_model.createIndex(0, 0),
                                    self.elem_table_model.createIndex(self.elem_table_model.rowCount(0),
                                                     self.elem_table_model.columnCount(0)))
-                self.elem_table_model.emit(pqc.SIGNAL("layoutChanged()"))
+                self.elem_table_model.layoutChanged.emit()
 
 
 
@@ -430,13 +429,13 @@ class GeometryWidget(AnimWidgBase):
                         text=text+'\t'
                     text=text+str(cell.data())
 
-            pqc.QCoreApplication.instance().clipboard().setText(text)
+            QtCore.QCoreApplication.instance().clipboard().setText(text)
 
 
     def paste_selection(self):
 
 
-            text=pqc.QCoreApplication.instance().clipboard().text()
+            text=QtCore.QCoreApplication.instance().clipboard().text()
 
 
             lines=text.splitlines()
@@ -513,7 +512,7 @@ class GeometryWidget(AnimWidgBase):
                                                     self.geom_table_model.columnCount(0)))
 
 
-                self.geom_table_model.emit(pqc.SIGNAL("layoutChanged()"))
+                self.geom_table_model.layoutChanged.emit()
 
             if self.gcs_type==1:
                 self.cyl_geom_table_model.dataIn.update(self.geom_table_model.datatable)
@@ -524,7 +523,7 @@ class GeometryWidget(AnimWidgBase):
                                                         self.cyl_geom_table_model.columnCount(0)))
 
 
-                self.cyl_geom_table_model.emit(pqc.SIGNAL("layoutChanged()"))
+                self.cyl_geom_table_model.layoutChanged.emit()
 
     def keyPressEvent(self,evt):
         """
@@ -534,13 +533,13 @@ class GeometryWidget(AnimWidgBase):
         :return:
         """
 
-        if evt.key()==pqc.Qt.Key_C and evt.modifiers()==pqc.Qt.ControlModifier:
+        if evt.key()==QtCore.Qt.Key_C and evt.modifiers()==QtCore.Qt.ControlModifier:
             self.copy_selection()
 
-        if evt.key()==pqc.Qt.Key_V and evt.modifiers()==pqc.Qt.ControlModifier:
+        if evt.key()==QtCore.Qt.Key_V and evt.modifiers()==QtCore.Qt.ControlModifier:
             self.paste_selection()
 
-        if evt.key()==pqc.Qt.Key_Delete:
+        if evt.key()==QtCore.Qt.Key_Delete:
             self.delete_selection_aux()
 
 
@@ -549,25 +548,25 @@ class GeometryWidget(AnimWidgBase):
     def create_toolbar_actions(self):
 
         super(self.__class__,self).create_toolbar_actions()
-        self.act_new_model = pqg.QAction('New model', self,
+        self.act_new_model = QtWidgets.QAction('New model', self,
                                     statusTip='Create new model', triggered=self.new_model)
 
-        self.act_delete_model = pqg.QAction('Delete model', self,
+        self.act_delete_model = QtWidgets.QAction('Delete model', self,
                                             statusTip='Delete model', triggered=self.delete_model_dialog)
 
-        self.act_nodes_mode = pqg.QAction('Nodes', self,
+        self.act_nodes_mode = QtWidgets.QAction('Nodes', self,
                                                   statusTip='Geometry input mode', triggered=self.nodes_data_mode)
 
-        self.act_lines_mode = pqg.QAction('Lines', self,
+        self.act_lines_mode = QtWidgets.QAction('Lines', self,
                                                   statusTip='Lines input mode', triggered=self.lines_data_mode)
 
-        self.act_elements_mode = pqg.QAction('Elements', self,
+        self.act_elements_mode = QtWidgets.QAction('Elements', self,
                                                   statusTip='Elements input mode', triggered=self.elements_data_mode)
     def create_model_view_actions(self):
 
         super(self.__class__,self).create_model_view_actions()
 
-        self.elem_desel_act = pqg.QAction('Deselect elements', self, checkable=False,
+        self.elem_desel_act = QtWidgets.QAction('Deselect elements', self, checkable=False,
                                                statusTip='Clear element selection', triggered=partial(self.handle_elem_select,True))
 
     def nodes_data_mode(self):
@@ -609,7 +608,7 @@ class GeometryWidget(AnimWidgBase):
 
 
     def model_view_context_menu(self, pos):
-        menu = pqg.QMenu()
+        menu = QtWidgets.QMenu()
 
         menu.addAction(self.act_fit_view)
         menu.addAction(self.elem_desel_act)
@@ -633,7 +632,7 @@ class GeometryWidget(AnimWidgBase):
         csys_menu.addAction(self.cart_csys_act)
         csys_menu.addAction(self.cyl_csys_act)
 
-        menu.exec_(pqg.QCursor.pos())
+        menu.exec_(QtGui.QCursor.pos())
 
 
     def paintEvent(self, event):
@@ -672,14 +671,14 @@ class GeometryWidget(AnimWidgBase):
         self._button4.setGeometry(x_btn+2*w+10,table_y-y_btn,w,h)
 
         self.cyl_geom_table_view.setGeometry(table_x,table_y,table_width,table_height)
-        self.cyl_geom_table_view.horizontalHeader().setResizeMode(pqg.QHeaderView.Stretch)
+        self.cyl_geom_table_view.horizontalHeader().setSectionResizeMode(QtWidgets.QHeaderView.Stretch)
 
         self.geom_table_view.setGeometry(table_x,table_y,table_width,table_height)
-        self.geom_table_view.horizontalHeader().setResizeMode(pqg.QHeaderView.Stretch)
+        self.geom_table_view.horizontalHeader().setSectionResizeMode(QtWidgets.QHeaderView.Stretch)
 
 
         self.elem_table_view.setGeometry(table_x,table_y,table_width,table_height)
-        self.elem_table_view.horizontalHeader().setResizeMode(pqg.QHeaderView.Stretch)
+        self.elem_table_view.horizontalHeader().setSectionResizeMode(QtWidgets.QHeaderView.Stretch)
 
         # selected model label
         #self._label.setGeometry(window_width/2-self._label.width()/2,0.1*window_height,200,20)
@@ -695,31 +694,31 @@ class GeometryWidget(AnimWidgBase):
             offset=offset+height+5
 
     def table_view_context_menu(self, pos):
-        menu = pqg.QMenu()
+        menu = QtWidgets.QMenu()
         menu.addAction(self.act_delete)
         menu.addAction(self.act_copy)
         menu.addAction(self.act_paste)
         menu.addAction(self.elem_desel_act)
         menu.addAction(self.add_rows_act)
-        menu.exec_(pqg.QCursor.pos())
+        menu.exec_(QtGui.QCursor.pos())
 
     def model_btn_context_menu(self, pos):
         #get model button which was right clicked
         self.sending_button = self.sender()
 
-        menu = pqg.QMenu()
+        menu = QtWidgets.QMenu()
         menu.addAction(self.act_model_rename)
-        menu.exec_(pqg.QCursor.pos())
+        menu.exec_(QtGui.QCursor.pos())
 
     def model_btn_context_menu_act(self):
-        self.act_model_rename = pqg.QAction('Rename', self, statusTip='Rename model', triggered=self.rename_model)
+        self.act_model_rename = QtWidgets.QAction('Rename', self, statusTip='Rename model', triggered=self.rename_model)
 
     def context_menu_act(self):
 
-        self.act_delete = pqg.QAction('Delete', self, statusTip='Delete selection', triggered=self.delete_selection_aux)
-        self.act_copy = pqg.QAction('Copy', self, statusTip='Copy selection', triggered=self.copy_selection)
-        self.act_paste = pqg.QAction('Paste', self, statusTip='Paste selection', triggered=self.paste_selection)
-        self.add_rows_act = pqg.QAction('Add 100 rows', self, checkable=False,
+        self.act_delete = QtWidgets.QAction('Delete', self, statusTip='Delete selection', triggered=self.delete_selection_aux)
+        self.act_copy = QtWidgets.QAction('Copy', self, statusTip='Copy selection', triggered=self.copy_selection)
+        self.act_paste = QtWidgets.QAction('Paste', self, statusTip='Paste selection', triggered=self.paste_selection)
+        self.add_rows_act = QtWidgets.QAction('Add 100 rows', self, checkable=False,
                                                statusTip='Add 100 blank rows', triggered=partial(self.add_geom_rows,rows_to_add=100))
 
 
@@ -731,35 +730,35 @@ class GeometryWidget(AnimWidgBase):
         """
         super(self.__class__,self).create_layout()
 
-        self._button = pqg.QPushButton(qta.icon('fa.plus-circle', color='white'),'New model', self)
+        self._button = QtWidgets.QPushButton(qta.icon('fa.plus-circle', color='white'),'New model', self)
         self._button.setObjectName('medium')
         self._button.clicked.connect(self.new_model)
 
-        self._button5 = pqg.QPushButton(qta.icon('fa.trash-o', color='white'),'Delete model', self)
+        self._button5 = QtWidgets.QPushButton(qta.icon('fa.trash-o', color='white'),'Delete model', self)
         self._button5.setObjectName('medium')
         self._button5.clicked.connect(self.delete_model_dialog)
 
-        self._button2 = pqg.QPushButton(qta.icon('fa.search', color='white'),'Fit view', self)
+        self._button2 = QtWidgets.QPushButton(qta.icon('fa.search', color='white'),'Fit view', self)
         self._button2.setObjectName('medium')
         self._button2.clicked.connect(self.autofit_3d_view)
 
-        self._b_geom_prim= pqg.QPushButton(qta.icon('fa.industry', color='white'),'Create geometry', self)
+        self._b_geom_prim= QtWidgets.QPushButton(qta.icon('fa.industry', color='white'),'Create geometry', self)
         self._b_geom_prim.setObjectName('medium')
         self._b_geom_prim.clicked.connect(self.create_geom_primitive)
 
-        self._button3 = pqg.QPushButton('Add nodes', self)
+        self._button3 = QtWidgets.QPushButton('Add nodes', self)
         self._button3.setObjectName('table_button')
 
         self._button3.setCheckable(True)
         self._button3.setChecked(True)
         self._button3.clicked.connect(self.nodes_data_mode)
 
-        self._button6 = pqg.QPushButton('Add lines', self)
+        self._button6 = QtWidgets.QPushButton('Add lines', self)
         self._button6.setObjectName('table_button')
         self._button6.setCheckable(True)
         self._button6.clicked.connect(self.lines_data_mode)
 
-        self._button4 = pqg.QPushButton('Add triangles', self)
+        self._button4 = QtWidgets.QPushButton('Add triangles', self)
         self._button4.setObjectName('table_button')
         self._button4.setCheckable(True)
         self._button4.clicked.connect(self.elements_data_mode)
@@ -778,7 +777,7 @@ class GeometryWidget(AnimWidgBase):
         self.geom_table_view.setModel(self.geom_table_model)
         self.geom_table_model.dataChanged.connect(self.geometry_changed)
         self.geom_table_view.setSortingEnabled(False)
-        self.geom_table_view.setContextMenuPolicy(pqc.Qt.CustomContextMenu)
+        self.geom_table_view.setContextMenuPolicy(QtCore.Qt.CustomContextMenu)
         self.geom_table_view.customContextMenuRequested.connect(self.table_view_context_menu)
 
 
@@ -804,7 +803,7 @@ class GeometryWidget(AnimWidgBase):
         self.cyl_geom_table_model.dataChanged.connect(self.geometry_changed)
         self.cyl_geom_table_view.hide()
         self.cyl_geom_table_view.setSortingEnabled(False)
-        self.cyl_geom_table_view.setContextMenuPolicy(pqc.Qt.CustomContextMenu)
+        self.cyl_geom_table_view.setContextMenuPolicy(QtCore.Qt.CustomContextMenu)
         self.cyl_geom_table_view.customContextMenuRequested.connect(self.table_view_context_menu)
 
         #replace header from dataframe with custom one
@@ -827,13 +826,13 @@ class GeometryWidget(AnimWidgBase):
         self.elem_table_model.update(self.modaldata.tables['elements_index'], [0], self.elem_fields) # show some data
         self.elem_table_view = CustomQTableView(self)
         self.elem_table_view.setModel(self.elem_table_model)
-        self.elem_table_view.setSelectionBehavior(pqg.QAbstractItemView.SelectRows)
+        self.elem_table_view.setSelectionBehavior(QtWidgets.QAbstractItemView.SelectRows)
         self.elem_table_model.dataChanged.connect(self.plot_activated_models)
         self.elem_table_view.setMinimumHeight(150)
 
         self.elem_table_view.setSortingEnabled(True)
         self.elem_table_view.hide()
-        self.elem_table_view.setContextMenuPolicy(pqc.Qt.CustomContextMenu)
+        self.elem_table_view.setContextMenuPolicy(QtCore.Qt.CustomContextMenu)
         self.elem_table_view.customContextMenuRequested.connect(self.table_view_context_menu)
 
         #replace header from dataframe with custom one
@@ -883,7 +882,7 @@ class GeometryWidget(AnimWidgBase):
         #element selection color
         #TODO: move this to color pallete?
         #TODO: fix - selecting mulitple lines and triangles changes their color -  element color change must be element type sensitive
-        rgba_color = pqg.QColor(255, 0, 0, 255)
+        rgba_color = QtGui.QColor(255, 0, 0, 255)
         rgba_color = pg.colorTuple(rgba_color)
 
         rows=self.elem_table_view.selectionModel().selectedRows()
@@ -940,7 +939,7 @@ class GeometryWidget(AnimWidgBase):
         xe=float(line_data['xe']) # e = end point
         ye=float(line_data['ye'])
         ze=float(line_data['ze'])
-        num_of_points=float(line_data['num_of_points'])
+        num_of_points=int(line_data['num_of_points'])
         start_num=float(line_data['start_num'])
 
         s_point=np.array((xs,ys,zs))
@@ -964,7 +963,7 @@ class GeometryWidget(AnimWidgBase):
             #get node index corresponding with existing geomtry table
             model_mask=self.modaldata.tables['geometry'].ix[:,'model_id']==model_id
             node_mask=self.modaldata.tables['geometry'].ix[:,'node_nums'].isin(node_nums)
-            final_mask=model_mask*node_mask
+            final_mask=model_mask & node_mask
             node_index=self.modaldata.tables['geometry'].ix[final_mask].index
 
             if len(node_nums)>len(node_index):
@@ -988,7 +987,7 @@ class GeometryWidget(AnimWidgBase):
             df['thx']=0
             df['thy']=0
             df['thz']=0
-            rgba_color = pg.colorTuple(pqg.QColor(0,255,0,255))
+            rgba_color = pg.colorTuple(QtGui.QColor(0,255,0,255))
             df['clr_r']=rgba_color[0]/ 255.  # rbg values 0-1
             df['clr_g']=rgba_color[1]/ 255.  # rbg values 0-1
             df['clr_b']=rgba_color[2]/ 255.  # rbg values 0-1
@@ -1106,7 +1105,7 @@ class GeometryWidget(AnimWidgBase):
             df['model_id']=model_id
             df['node_nums']=node_nums
 
-            rgba_color = pg.colorTuple(pqg.QColor(0,255,0,255))
+            rgba_color = pg.colorTuple(QtGui.QColor(0,255,0,255))
             df['clr_r']=rgba_color[0]/ 255.  # rbg values 0-1
             df['clr_g']=rgba_color[1]/ 255.  # rbg values 0-1
             df['clr_b']=rgba_color[2]/ 255.  # rbg values 0-1
@@ -1170,7 +1169,7 @@ class GeometryWidget(AnimWidgBase):
         df['thx']=0
         df['thy']=0
         df['thz']=0
-        rgba_color = pg.colorTuple(pqg.QColor(0,255,0,255))
+        rgba_color = pg.colorTuple(QtGui.QColor(0,255,0,255))
         df['clr_r']=rgba_color[0]/ 255.  # rbg values 0-1
         df['clr_g']=rgba_color[1]/ 255.  # rbg values 0-1
         df['clr_b']=rgba_color[2]/ 255.  # rbg values 0-1
@@ -1422,7 +1421,7 @@ class GeometryWidget(AnimWidgBase):
             df['thx']=0
             df['thy']=0
             df['thz']=0
-            rgba_color = pg.colorTuple(pqg.QColor(0,255,0,255))
+            rgba_color = pg.colorTuple(QtGui.QColor(0,255,0,255))
             df['clr_r']=rgba_color[0]/ 255.  # rbg values 0-1
             df['clr_g']=rgba_color[1]/ 255.  # rbg values 0-1
             df['clr_b']=rgba_color[2]/ 255.  # rbg values 0-1
@@ -1646,7 +1645,7 @@ class GeometryWidget(AnimWidgBase):
             df['thx']=0
             df['thy']=0
             df['cyl_thz']=0
-            rgba_color = pg.colorTuple(pqg.QColor(0,255,0,255))
+            rgba_color = pg.colorTuple(QtGui.QColor(0,255,0,255))
             df['clr_r']=rgba_color[0]/ 255.  # rbg values 0-1
             df['clr_g']=rgba_color[1]/ 255.  # rbg values 0-1
             df['clr_b']=rgba_color[2]/ 255.  # rbg values 0-1
@@ -1873,7 +1872,7 @@ class GeometryWidget(AnimWidgBase):
                 df['model_id']=model_id
                 df['node_nums']=node_nums
 
-                rgba_color = pg.colorTuple(pqg.QColor(0,255,0,255))
+                rgba_color = pg.colorTuple(QtGui.QColor(0,255,0,255))
                 df['clr_r']=rgba_color[0]/ 255.  # rbg values 0-1
                 df['clr_g']=rgba_color[1]/ 255.  # rbg values 0-1
                 df['clr_b']=rgba_color[2]/ 255.  # rbg values 0-1
@@ -1959,11 +1958,11 @@ class GeometryWidget(AnimWidgBase):
                                               None, None, uff_tree_index,None)
 
 
-                button=pqg.QPushButton(qta.icon('fa.database', color='white'),str(model_name), self)
+                button=QtWidgets.QPushButton(qta.icon('fa.database', color='white'),str(model_name), self)
                 button.setObjectName('medium')
                 button.setCheckable(True)
                 button.clicked.connect(partial(on_activate, model_id))
-                button.setContextMenuPolicy(pqc.Qt.CustomContextMenu)
+                button.setContextMenuPolicy(QtCore.Qt.CustomContextMenu)
                 button.customContextMenuRequested.connect(self.model_btn_context_menu)
                 button.model_name=model_name
                 button.model_id=model_id
@@ -2177,7 +2176,7 @@ class GeometryWidget(AnimWidgBase):
         self.reload(refresh=True)
 
 
-class dialog_new_model(pqg.QDialog):
+class dialog_new_model(QtWidgets.QDialog):
 
     def __init__(self, parent=None):
         super(dialog_new_model, self).__init__(parent)
@@ -2189,17 +2188,17 @@ class dialog_new_model(pqg.QDialog):
             self.setStyleSheet(src)
 
         # Create widgets
-        self.model_name = pqg.QLineEdit("Enter model name")
-        self.button = pqg.QPushButton("Done")
+        self.model_name = QtWidgets.QLineEdit("Enter model name")
+        self.button = QtWidgets.QPushButton("Done")
         self.button.setObjectName('small')
 
-        self.cancel_button = pqg.QPushButton("Cancel")
+        self.cancel_button = QtWidgets.QPushButton("Cancel")
         self.cancel_button.setObjectName('small')
 
         # Create layout and add widgets
-        layout = pqg.QVBoxLayout()
+        layout = QtWidgets.QVBoxLayout()
         layout.addWidget(self.model_name)
-        button_layout= pqg.QHBoxLayout()
+        button_layout= QtWidgets.QHBoxLayout()
         button_layout.addWidget(self.button)
         button_layout.addWidget(self.cancel_button)
         layout.addLayout(button_layout)
@@ -2216,7 +2215,7 @@ class dialog_new_model(pqg.QDialog):
         model_name=dialog.model_name.text()
         return (result,model_name)
 
-class dialog_rename_model(pqg.QDialog):
+class dialog_rename_model(QtWidgets.QDialog):
 
     def __init__(self, parent=None):
         super(dialog_new_model, self).__init__(parent)
@@ -2228,17 +2227,17 @@ class dialog_rename_model(pqg.QDialog):
             self.setStyleSheet(src)
 
         # Create widgets
-        self.model_name = pqg.QLineEdit("Enter new model name")
-        self.button = pqg.QPushButton("Done")
+        self.model_name = QtWidgets.QLineEdit("Enter new model name")
+        self.button = QtWidgets.QPushButton("Done")
         self.button.setObjectName('small')
 
-        self.cancel_button = pqg.QPushButton("Cancel")
+        self.cancel_button = QtWidgets.QPushButton("Cancel")
         self.cancel_button.setObjectName('small')
 
         # Create layout and add widgets
-        layout = pqg.QVBoxLayout()
+        layout = QtWidgets.QVBoxLayout()
         layout.addWidget(self.model_name)
-        button_layout= pqg.QHBoxLayout()
+        button_layout= QtWidgets.QHBoxLayout()
         button_layout.addWidget(self.button)
         button_layout.addWidget(self.cancel_button)
         layout.addLayout(button_layout)
@@ -2256,7 +2255,7 @@ class dialog_rename_model(pqg.QDialog):
         return (result,model_name)
 
 
-class dialog_delete_model(pqg.QDialog):
+class dialog_delete_model(QtWidgets.QDialog):
 
     def __init__(self, parent=None):
         super(dialog_delete_model, self).__init__(parent)
@@ -2267,16 +2266,16 @@ class dialog_delete_model(pqg.QDialog):
             self.setStyleSheet(src)
 
         # Create widgets
-        self.question = pqg.QLabel("Are you sure you want to delete current model?")
-        self.delete_button = pqg.QPushButton("Yes")
+        self.question = QtWidgets.QLabel("Are you sure you want to delete current model?")
+        self.delete_button = QtWidgets.QPushButton("Yes")
         self.delete_button.setObjectName('small')
-        self.cancel_button = pqg.QPushButton("No")
+        self.cancel_button = QtWidgets.QPushButton("No")
         self.cancel_button.setObjectName('small')
 
         # Create layout and add widgets
-        layout = pqg.QVBoxLayout()
+        layout = QtWidgets.QVBoxLayout()
         layout.addWidget(self.question)
-        button_layout= pqg.QHBoxLayout()
+        button_layout= QtWidgets.QHBoxLayout()
         button_layout.addWidget(self.cancel_button)
         button_layout.addWidget(self.delete_button)
         layout.addLayout(button_layout)
@@ -2292,27 +2291,27 @@ class dialog_delete_model(pqg.QDialog):
         result = dialog.exec_()
         return (result)
 
-class dialog_geom_primitives(pqg.QDialog):
+class dialog_geom_primitives(QtWidgets.QDialog):
 
     def __init__(self, parent=None):
         super(dialog_geom_primitives, self).__init__(parent)
-        self.leftlist = pqg.QListWidget ()
+        self.leftlist = QtWidgets.QListWidget ()
         self.leftlist.insertItem (0, 'Line' )
         self.leftlist.insertItem (1, 'Plane' )
         self.leftlist.insertItem (2, 'Box' )
         self.leftlist.insertItem (3, 'Cylinder' )
 
-        self.stack1 = pqg.QWidget()
-        self.stack2 = pqg.QWidget()
-        self.stack3 = pqg.QWidget()
-        self.stack4 = pqg.QWidget()
+        self.stack1 = QtWidgets.QWidget()
+        self.stack2 = QtWidgets.QWidget()
+        self.stack3 = QtWidgets.QWidget()
+        self.stack4 = QtWidgets.QWidget()
 
         self.stack1UI()
         self.stack2UI()
         self.stack3UI()
         self.stack4UI()
 
-        self.Stack = pqg.QStackedWidget(self)
+        self.Stack = QtWidgets.QStackedWidget(self)
         self.Stack.addWidget(self.stack1)
         self.Stack.addWidget(self.stack2)
         self.Stack.addWidget(self.stack3)
@@ -2323,19 +2322,19 @@ class dialog_geom_primitives(pqg.QDialog):
             src = src.substitute(COLOR_PALETTE)
             self.setStyleSheet(src)
 
-        base_layout = pqg.QVBoxLayout(self)
+        base_layout = QtWidgets.QVBoxLayout(self)
 
-        layout = pqg.QHBoxLayout(self)
+        layout = QtWidgets.QHBoxLayout(self)
         layout.addWidget(self.leftlist)
         layout.addWidget(self.Stack)
 
         base_layout.addLayout(layout)
 
-        self.ok_button = pqg.QPushButton("Ok")
+        self.ok_button = QtWidgets.QPushButton("Ok")
         self.ok_button.setObjectName('small')
-        self.cancel_button = pqg.QPushButton("Cancel")
+        self.cancel_button = QtWidgets.QPushButton("Cancel")
         self.cancel_button.setObjectName('small')
-        button_layout= pqg.QHBoxLayout()
+        button_layout= QtWidgets.QHBoxLayout()
         button_layout.addWidget(self.ok_button)
         button_layout.addWidget(self.cancel_button)
 
@@ -2360,50 +2359,50 @@ class dialog_geom_primitives(pqg.QDialog):
         :return:
         """
 
-        self.line_title = pqg.QLabel("Create line")
+        self.line_title = QtWidgets.QLabel("Create line")
 
-        self.line_label_s = pqg.QLabel("Start point coordinates: [m]")
-        self.line_xs_str = pqg.QLabel("X")
-        self.line_xs_str.setAlignment(pqc.Qt.AlignHCenter | pqc.Qt.AlignVCenter)
-        self.line_xs = pqg.QDoubleSpinBox(self)
+        self.line_label_s = QtWidgets.QLabel("Start point coordinates: [m]")
+        self.line_xs_str = QtWidgets.QLabel("X")
+        self.line_xs_str.setAlignment(QtCore.Qt.AlignHCenter | QtCore.Qt.AlignVCenter)
+        self.line_xs = QtWidgets.QDoubleSpinBox(self)
         self.line_xs.setRange(-100000,100000)
 
-        self.line_ys_str = pqg.QLabel("Y")
-        self.line_ys_str.setAlignment(pqc.Qt.AlignHCenter | pqc.Qt.AlignVCenter)
-        self.line_ys = pqg.QDoubleSpinBox(self)
+        self.line_ys_str = QtWidgets.QLabel("Y")
+        self.line_ys_str.setAlignment(QtCore.Qt.AlignHCenter | QtCore.Qt.AlignVCenter)
+        self.line_ys = QtWidgets.QDoubleSpinBox(self)
         self.line_ys.setRange(-100000,100000)
 
-        self.line_zs_str = pqg.QLabel("Z")
-        self.line_zs_str.setAlignment(pqc.Qt.AlignHCenter | pqc.Qt.AlignVCenter)
-        self.line_zs = pqg.QDoubleSpinBox(self)
+        self.line_zs_str = QtWidgets.QLabel("Z")
+        self.line_zs_str.setAlignment(QtCore.Qt.AlignHCenter | QtCore.Qt.AlignVCenter)
+        self.line_zs = QtWidgets.QDoubleSpinBox(self)
         self.line_zs.setRange(-100000,100000)
 
-        self.line_label_e = pqg.QLabel("End point coordinates: [m]")
-        self.line_xe_str = pqg.QLabel("X")
-        self.line_xe_str.setAlignment(pqc.Qt.AlignHCenter | pqc.Qt.AlignVCenter)
-        self.line_xe = pqg.QDoubleSpinBox(self)
+        self.line_label_e = QtWidgets.QLabel("End point coordinates: [m]")
+        self.line_xe_str = QtWidgets.QLabel("X")
+        self.line_xe_str.setAlignment(QtCore.Qt.AlignHCenter | QtCore.Qt.AlignVCenter)
+        self.line_xe = QtWidgets.QDoubleSpinBox(self)
         self.line_xe.setRange(-100000,100000)
         self.line_xe.setValue(1)
 
-        self.line_ye_str = pqg.QLabel("Y")
-        self.line_ye_str.setAlignment(pqc.Qt.AlignHCenter | pqc.Qt.AlignVCenter)
-        self.line_ye = pqg.QDoubleSpinBox(self)
+        self.line_ye_str = QtWidgets.QLabel("Y")
+        self.line_ye_str.setAlignment(QtCore.Qt.AlignHCenter | QtCore.Qt.AlignVCenter)
+        self.line_ye = QtWidgets.QDoubleSpinBox(self)
         self.line_ye.setRange(-100000,100000)
         self.line_ye.setValue(0)
 
-        self.line_ze_str = pqg.QLabel("Z")
-        self.line_ze_str.setAlignment(pqc.Qt.AlignHCenter | pqc.Qt.AlignVCenter)
-        self.line_ze = pqg.QDoubleSpinBox(self)
+        self.line_ze_str = QtWidgets.QLabel("Z")
+        self.line_ze_str.setAlignment(QtCore.Qt.AlignHCenter | QtCore.Qt.AlignVCenter)
+        self.line_ze = QtWidgets.QDoubleSpinBox(self)
         self.line_ze.setRange(-100000,100000)
         self.line_ze.setValue(0)
 
-        self.line_start_num_str = pqg.QLabel("Start number:")
-        self.line_start_num = pqg.QDoubleSpinBox(self)
+        self.line_start_num_str = QtWidgets.QLabel("Start number:")
+        self.line_start_num = QtWidgets.QDoubleSpinBox(self)
         self.line_start_num.setDecimals(0)
         self.line_start_num.setRange(1,100000)
 
-        self.line_div_str = pqg.QLabel("Number of points:")
-        self.line_div = pqg.QDoubleSpinBox(self)
+        self.line_div_str = QtWidgets.QLabel("Number of points:")
+        self.line_div = QtWidgets.QDoubleSpinBox(self)
         self.line_div.setDecimals(0)
         self.line_div.setRange(2,1000)
 
@@ -2414,9 +2413,9 @@ class dialog_geom_primitives(pqg.QDialog):
         bottom=20
 
         # Create layout and add widgets
-        main_layout = pqg.QVBoxLayout()
+        main_layout = QtWidgets.QVBoxLayout()
 
-        layout = pqg.QGridLayout()
+        layout = QtWidgets.QGridLayout()
         layout.setContentsMargins(left, first_top, right, bottom)
         layout.addWidget(self.line_label_s,0,1)
         layout.addWidget(self.line_xs_str,1,0)
@@ -2426,7 +2425,7 @@ class dialog_geom_primitives(pqg.QDialog):
         layout.addWidget(self.line_ys,2,1)
         layout.addWidget(self.line_zs,2,2)
 
-        layout2 = pqg.QGridLayout()
+        layout2 = QtWidgets.QGridLayout()
         layout2.setContentsMargins(left, top, right, bottom)
         layout2.addWidget(self.line_label_e,0,1)
         layout2.addWidget(self.line_xe_str,1,0)
@@ -2451,54 +2450,54 @@ class dialog_geom_primitives(pqg.QDialog):
         Input data for creating plane
         :return:
         """
-        self.plane_title = pqg.QLabel("Create plane")
-        self.plane_orient_str= pqg.QLabel("Plane orientation:")
-        self._r_plane_group=pqg.QButtonGroup(self) # Number group
-        self._r_plane_xy=pqg.QRadioButton("XY")
+        self.plane_title = QtWidgets.QLabel("Create plane")
+        self.plane_orient_str= QtWidgets.QLabel("Plane orientation:")
+        self._r_plane_group=QtWidgets.QButtonGroup(self) # Number group
+        self._r_plane_xy=QtWidgets.QRadioButton("XY")
         self._r_plane_xy.setChecked(True)
         self._r_plane_group.addButton(self._r_plane_xy)
 
-        self._r_plane_yz=pqg.QRadioButton("YZ")
+        self._r_plane_yz=QtWidgets.QRadioButton("YZ")
         self._r_plane_group.addButton(self._r_plane_yz)
 
-        self._r_plane_zx=pqg.QRadioButton("ZX")
+        self._r_plane_zx=QtWidgets.QRadioButton("ZX")
         self._r_plane_group.addButton(self._r_plane_zx)
 
-        self.plane_len1_str = pqg.QLabel("Length along first direction: [m]")
-        self.plane_len1 = pqg.QDoubleSpinBox(self)
+        self.plane_len1_str = QtWidgets.QLabel("Length along first direction: [m]")
+        self.plane_len1 = QtWidgets.QDoubleSpinBox(self)
         self.plane_len1.setRange(0,100000)
         self.plane_len1.setValue(1)
 
-        self.plane_len2_str = pqg.QLabel("Length along second direction: [m]")
-        self.plane_len2 = pqg.QDoubleSpinBox(self)
+        self.plane_len2_str = QtWidgets.QLabel("Length along second direction: [m]")
+        self.plane_len2 = QtWidgets.QDoubleSpinBox(self)
         self.plane_len2.setRange(0,100000)
         self.plane_len2.setValue(1)
 
-        self.plane_div1_str = pqg.QLabel("Num. of points in first direction: ")
-        self.plane_div1 = pqg.QDoubleSpinBox(self)
+        self.plane_div1_str = QtWidgets.QLabel("Num. of points in first direction: ")
+        self.plane_div1 = QtWidgets.QDoubleSpinBox(self)
         self.plane_div1.setRange(2,1000)
         self.plane_div1.setDecimals(0)
 
-        self.plane_div2_str = pqg.QLabel("Num. of points in second direction: ")
-        self.plane_div2 = pqg.QDoubleSpinBox(self)
+        self.plane_div2_str = QtWidgets.QLabel("Num. of points in second direction: ")
+        self.plane_div2 = QtWidgets.QDoubleSpinBox(self)
         self.plane_div2.setRange(2,1000)
         self.plane_div2.setDecimals(0)
 
-        self.plane_x_off_str = pqg.QLabel("X axis offset: [m]")
-        self.plane_x_off = pqg.QDoubleSpinBox(self)
+        self.plane_x_off_str = QtWidgets.QLabel("X axis offset: [m]")
+        self.plane_x_off = QtWidgets.QDoubleSpinBox(self)
         self.plane_x_off.setRange(-100000,100000)
 
-        self.plane_y_off_str = pqg.QLabel("Y axis offset: [m]")
-        self.plane_y_off = pqg.QDoubleSpinBox(self)
+        self.plane_y_off_str = QtWidgets.QLabel("Y axis offset: [m]")
+        self.plane_y_off = QtWidgets.QDoubleSpinBox(self)
         self.plane_y_off.setRange(-100000,100000)
 
-        self.plane_z_off_str = pqg.QLabel("Z axis offset: [m]")
-        self.plane_z_off = pqg.QDoubleSpinBox(self)
+        self.plane_z_off_str = QtWidgets.QLabel("Z axis offset: [m]")
+        self.plane_z_off = QtWidgets.QDoubleSpinBox(self)
         self.plane_z_off.setRange(-100000,100000)
 
 
-        self.plane_start_num_str = pqg.QLabel("Start numbering with:")
-        self.plane_start_num = pqg.QDoubleSpinBox(self)
+        self.plane_start_num_str = QtWidgets.QLabel("Start numbering with:")
+        self.plane_start_num = QtWidgets.QDoubleSpinBox(self)
         self.plane_start_num.setDecimals(0)
         self.plane_start_num.setRange(1,100000)
 
@@ -2509,9 +2508,9 @@ class dialog_geom_primitives(pqg.QDialog):
         bottom=20
 
         # Create layout and add widgets
-        main_layout = pqg.QVBoxLayout()
+        main_layout = QtWidgets.QVBoxLayout()
 
-        layout=pqg.QGridLayout()
+        layout=QtWidgets.QGridLayout()
         layout.setContentsMargins(left, first_top, right, bottom)
         #layout.addWidget(self.plane_title,0,1)
         layout.addWidget(self.plane_orient_str,1,1)
@@ -2520,7 +2519,7 @@ class dialog_geom_primitives(pqg.QDialog):
         layout.addWidget(self._r_plane_zx,2,2)
 
 
-        layout2=pqg.QGridLayout()
+        layout2=QtWidgets.QGridLayout()
         layout2.setContentsMargins(left, top, right, bottom)
         layout2.addWidget(self.plane_len1_str,0,0)
         layout2.addWidget(self.plane_len1,1,0)
@@ -2532,7 +2531,7 @@ class dialog_geom_primitives(pqg.QDialog):
         layout2.addWidget(self.plane_div2,3,1)
 
 
-        layout3=pqg.QGridLayout()
+        layout3=QtWidgets.QGridLayout()
         layout3.setContentsMargins(left, top, right, bottom)
         layout3.addWidget(self.plane_x_off_str,0,0)
         layout3.addWidget(self.plane_x_off,1,0)
@@ -2556,71 +2555,71 @@ class dialog_geom_primitives(pqg.QDialog):
         Input data for creating box
         :return:
         """
-        self.box_title = pqg.QLabel("Create box")
+        self.box_title = QtWidgets.QLabel("Create box")
 
-        self.box_len_str = pqg.QLabel("Length: [m]")
-        self.box_len_str.setAlignment(pqc.Qt.AlignHCenter | pqc.Qt.AlignVCenter)
-        self.box_lenx_str = pqg.QLabel("X")
-        self.box_lenx_str.setAlignment(pqc.Qt.AlignHCenter | pqc.Qt.AlignVCenter)
-        self.box_leny_str = pqg.QLabel("Y")
-        self.box_leny_str.setAlignment(pqc.Qt.AlignHCenter | pqc.Qt.AlignVCenter)
-        self.box_lenz_str = pqg.QLabel("Z")
-        self.box_lenz_str.setAlignment(pqc.Qt.AlignHCenter | pqc.Qt.AlignVCenter)
+        self.box_len_str = QtWidgets.QLabel("Length: [m]")
+        self.box_len_str.setAlignment(QtCore.Qt.AlignHCenter | QtCore.Qt.AlignVCenter)
+        self.box_lenx_str = QtWidgets.QLabel("X")
+        self.box_lenx_str.setAlignment(QtCore.Qt.AlignHCenter | QtCore.Qt.AlignVCenter)
+        self.box_leny_str = QtWidgets.QLabel("Y")
+        self.box_leny_str.setAlignment(QtCore.Qt.AlignHCenter | QtCore.Qt.AlignVCenter)
+        self.box_lenz_str = QtWidgets.QLabel("Z")
+        self.box_lenz_str.setAlignment(QtCore.Qt.AlignHCenter | QtCore.Qt.AlignVCenter)
 
-        self.box_lenx = pqg.QDoubleSpinBox(self)
+        self.box_lenx = QtWidgets.QDoubleSpinBox(self)
         self.box_lenx.setRange(0,100000)
         self.box_lenx.setValue(1)
 
 
-        self.box_leny = pqg.QDoubleSpinBox(self)
+        self.box_leny = QtWidgets.QDoubleSpinBox(self)
         self.box_leny.setRange(0,100000)
         self.box_leny.setValue(1)
 
-        self.box_lenz = pqg.QDoubleSpinBox(self)
+        self.box_lenz = QtWidgets.QDoubleSpinBox(self)
         self.box_lenz.setRange(0,100000)
         self.box_lenz.setValue(1)
 
-        self.box_div_str = pqg.QLabel("Num. of points: ")
-        self.box_div_str.setAlignment(pqc.Qt.AlignHCenter | pqc.Qt.AlignVCenter)
-        self.box_divx_str = pqg.QLabel("X")
-        self.box_divx_str.setAlignment(pqc.Qt.AlignHCenter | pqc.Qt.AlignVCenter)
-        self.box_divy_str = pqg.QLabel("Y")
-        self.box_divy_str.setAlignment(pqc.Qt.AlignHCenter | pqc.Qt.AlignVCenter)
-        self.box_divz_str = pqg.QLabel("Z")
-        self.box_divz_str.setAlignment(pqc.Qt.AlignHCenter | pqc.Qt.AlignVCenter)
+        self.box_div_str = QtWidgets.QLabel("Num. of points: ")
+        self.box_div_str.setAlignment(QtCore.Qt.AlignHCenter | QtCore.Qt.AlignVCenter)
+        self.box_divx_str = QtWidgets.QLabel("X")
+        self.box_divx_str.setAlignment(QtCore.Qt.AlignHCenter | QtCore.Qt.AlignVCenter)
+        self.box_divy_str = QtWidgets.QLabel("Y")
+        self.box_divy_str.setAlignment(QtCore.Qt.AlignHCenter | QtCore.Qt.AlignVCenter)
+        self.box_divz_str = QtWidgets.QLabel("Z")
+        self.box_divz_str.setAlignment(QtCore.Qt.AlignHCenter | QtCore.Qt.AlignVCenter)
 
-        self.box_divx = pqg.QDoubleSpinBox(self)
+        self.box_divx = QtWidgets.QDoubleSpinBox(self)
         self.box_divx.setRange(2,1000)
         self.box_divx.setDecimals(0)
 
-        self.box_divy = pqg.QDoubleSpinBox(self)
+        self.box_divy = QtWidgets.QDoubleSpinBox(self)
         self.box_divy.setRange(2,1000)
         self.box_divy.setDecimals(0)
 
-        self.box_divz = pqg.QDoubleSpinBox(self)
+        self.box_divz = QtWidgets.QDoubleSpinBox(self)
         self.box_divz.setRange(2,1000)
         self.box_divz.setDecimals(0)
 
-        self.box_off_str = pqg.QLabel("Offset: [m]")
-        self.box_off_str.setAlignment(pqc.Qt.AlignHCenter | pqc.Qt.AlignVCenter)
-        self.box_offx_str = pqg.QLabel("X")
-        self.box_offx_str.setAlignment(pqc.Qt.AlignHCenter | pqc.Qt.AlignVCenter)
-        self.box_offy_str = pqg.QLabel("Y")
-        self.box_offy_str.setAlignment(pqc.Qt.AlignHCenter | pqc.Qt.AlignVCenter)
-        self.box_offz_str = pqg.QLabel("Z")
-        self.box_offz_str.setAlignment(pqc.Qt.AlignHCenter | pqc.Qt.AlignVCenter)
+        self.box_off_str = QtWidgets.QLabel("Offset: [m]")
+        self.box_off_str.setAlignment(QtCore.Qt.AlignHCenter | QtCore.Qt.AlignVCenter)
+        self.box_offx_str = QtWidgets.QLabel("X")
+        self.box_offx_str.setAlignment(QtCore.Qt.AlignHCenter | QtCore.Qt.AlignVCenter)
+        self.box_offy_str = QtWidgets.QLabel("Y")
+        self.box_offy_str.setAlignment(QtCore.Qt.AlignHCenter | QtCore.Qt.AlignVCenter)
+        self.box_offz_str = QtWidgets.QLabel("Z")
+        self.box_offz_str.setAlignment(QtCore.Qt.AlignHCenter | QtCore.Qt.AlignVCenter)
 
-        self.box_x_off = pqg.QDoubleSpinBox(self)
+        self.box_x_off = QtWidgets.QDoubleSpinBox(self)
         self.box_x_off.setRange(-100000,100000)
 
-        self.box_y_off = pqg.QDoubleSpinBox(self)
+        self.box_y_off = QtWidgets.QDoubleSpinBox(self)
         self.box_y_off.setRange(-100000,100000)
 
-        self.box_z_off = pqg.QDoubleSpinBox(self)
+        self.box_z_off = QtWidgets.QDoubleSpinBox(self)
         self.box_z_off.setRange(-100000,100000)
 
-        self.box_start_num_str = pqg.QLabel("Start numbering with:")
-        self.box_start_num = pqg.QDoubleSpinBox(self)
+        self.box_start_num_str = QtWidgets.QLabel("Start numbering with:")
+        self.box_start_num = QtWidgets.QDoubleSpinBox(self)
         self.box_start_num.setDecimals(0)
         self.box_start_num.setRange(1,100000)
 
@@ -2631,10 +2630,10 @@ class dialog_geom_primitives(pqg.QDialog):
         bottom=20
 
         # Create layout and add widgets
-        main_layout = pqg.QVBoxLayout()
+        main_layout = QtWidgets.QVBoxLayout()
         #layout.addWidget(self.box_title)
 
-        layout=pqg.QGridLayout()
+        layout=QtWidgets.QGridLayout()
         layout.setContentsMargins(left, first_top, right, bottom)
         layout.addWidget(self.box_len_str,0,1)
         layout.addWidget(self.box_lenx_str,1,0)
@@ -2644,7 +2643,7 @@ class dialog_geom_primitives(pqg.QDialog):
         layout.addWidget(self.box_leny,2,1)
         layout.addWidget(self.box_lenz,2,2)
 
-        layout2=pqg.QGridLayout()
+        layout2=QtWidgets.QGridLayout()
         layout2.setContentsMargins(left, top, right, bottom)
         layout2.addWidget(self.box_div_str,0,1)
         layout2.addWidget(self.box_divx_str,1,0)
@@ -2654,7 +2653,7 @@ class dialog_geom_primitives(pqg.QDialog):
         layout2.addWidget(self.box_divy,2,1)
         layout2.addWidget(self.box_divz,2,2)
 
-        layout3=pqg.QGridLayout()
+        layout3=QtWidgets.QGridLayout()
         layout3.setContentsMargins(left, top, right, bottom)
         layout3.addWidget(self.box_off_str,0,1)
         layout3.addWidget(self.box_offx_str,1,0)
@@ -2678,52 +2677,52 @@ class dialog_geom_primitives(pqg.QDialog):
         Input data for creating cylinder
         :return:
         """
-        self.title = pqg.QLabel("Create cylinder")
-        self.title.setAlignment(pqc.Qt.AlignHCenter | pqc.Qt.AlignVCenter)
+        self.title = QtWidgets.QLabel("Create cylinder")
+        self.title.setAlignment(QtCore.Qt.AlignHCenter | QtCore.Qt.AlignVCenter)
 
-        self.input_cyl_r_str = pqg.QLabel("Radius: [m]")
-        self.input_cyl_r_str.setAlignment(pqc.Qt.AlignHCenter | pqc.Qt.AlignVCenter)
-        self.input_cyl_r = pqg.QDoubleSpinBox(self)
+        self.input_cyl_r_str = QtWidgets.QLabel("Radius: [m]")
+        self.input_cyl_r_str.setAlignment(QtCore.Qt.AlignHCenter | QtCore.Qt.AlignVCenter)
+        self.input_cyl_r = QtWidgets.QDoubleSpinBox(self)
         self.input_cyl_r.setRange(0,100000)
         self.input_cyl_r.setValue(1)
 
-        self.input_cyl_h_str = pqg.QLabel("Height: [m]")
-        self.input_cyl_h_str.setAlignment(pqc.Qt.AlignHCenter | pqc.Qt.AlignVCenter)
-        self.input_cyl_h = pqg.QDoubleSpinBox(self)
+        self.input_cyl_h_str = QtWidgets.QLabel("Height: [m]")
+        self.input_cyl_h_str.setAlignment(QtCore.Qt.AlignHCenter | QtCore.Qt.AlignVCenter)
+        self.input_cyl_h = QtWidgets.QDoubleSpinBox(self)
         self.input_cyl_h.setRange(0,100000)
         self.input_cyl_h.setValue(1)
 
-        self.input_cyl_z_off_str = pqg.QLabel("Z axis offset: [m]")
-        self.input_cyl_z_off_str.setAlignment(pqc.Qt.AlignHCenter | pqc.Qt.AlignVCenter)
-        self.input_cyl_z_off = pqg.QDoubleSpinBox(self)
+        self.input_cyl_z_off_str = QtWidgets.QLabel("Z axis offset: [m]")
+        self.input_cyl_z_off_str.setAlignment(QtCore.Qt.AlignHCenter | QtCore.Qt.AlignVCenter)
+        self.input_cyl_z_off = QtWidgets.QDoubleSpinBox(self)
         self.input_cyl_z_off.setRange(-100000,100000)
 
-        self.input_start_num_str = pqg.QLabel("Start numbering with:")
-        self.input_start_num = pqg.QDoubleSpinBox(self)
+        self.input_start_num_str = QtWidgets.QLabel("Start numbering with:")
+        self.input_start_num = QtWidgets.QDoubleSpinBox(self)
         self.input_start_num.setDecimals(0)
         self.input_start_num.setRange(1,100000)
 
-        self.input_num_orient_str= pqg.QLabel("Numbering orientation:")
-        self._r_orient_group=pqg.QButtonGroup(self) # Number group
-        self._r_vert_orient=pqg.QRadioButton("Vertical")
+        self.input_num_orient_str= QtWidgets.QLabel("Numbering orientation:")
+        self._r_orient_group=QtWidgets.QButtonGroup(self) # Number group
+        self._r_vert_orient=QtWidgets.QRadioButton("Vertical")
         self._r_vert_orient.setChecked(True)
 
         self._r_orient_group.addButton(self._r_vert_orient)
-        self._r_horiz_orient=pqg.QRadioButton("Horizontal")
+        self._r_horiz_orient=QtWidgets.QRadioButton("Horizontal")
         self._r_orient_group.addButton(self._r_horiz_orient)
         self.input_num_orient=0
 
-        self.input_main_div_str = pqg.QLabel("Number of points:")
-        self.input_main_div_str.setAlignment(pqc.Qt.AlignHCenter | pqc.Qt.AlignVCenter)
-        self.input_height_div_str = pqg.QLabel("Along height:")
-        self.input_height_div_str.setAlignment(pqc.Qt.AlignHCenter | pqc.Qt.AlignVCenter)
-        self.input_height_div = pqg.QDoubleSpinBox(self)
+        self.input_main_div_str = QtWidgets.QLabel("Number of points:")
+        self.input_main_div_str.setAlignment(QtCore.Qt.AlignHCenter | QtCore.Qt.AlignVCenter)
+        self.input_height_div_str = QtWidgets.QLabel("Along height:")
+        self.input_height_div_str.setAlignment(QtCore.Qt.AlignHCenter | QtCore.Qt.AlignVCenter)
+        self.input_height_div = QtWidgets.QDoubleSpinBox(self)
         self.input_height_div.setDecimals(0)
         self.input_height_div.setRange(2,100)
 
-        self.input_circ_div_str = pqg.QLabel("Along circumference:")
-        self.input_circ_div_str.setAlignment(pqc.Qt.AlignHCenter | pqc.Qt.AlignVCenter)
-        self.input_circ_div = pqg.QDoubleSpinBox(self)
+        self.input_circ_div_str = QtWidgets.QLabel("Along circumference:")
+        self.input_circ_div_str.setAlignment(QtCore.Qt.AlignHCenter | QtCore.Qt.AlignVCenter)
+        self.input_circ_div = QtWidgets.QDoubleSpinBox(self)
         self.input_circ_div.setDecimals(0)
         self.input_circ_div.setRange(3,100)
 
@@ -2734,9 +2733,9 @@ class dialog_geom_primitives(pqg.QDialog):
         bottom=20
 
         # Create layout and add widgets
-        main_layout = pqg.QVBoxLayout()
+        main_layout = QtWidgets.QVBoxLayout()
 
-        layout=pqg.QGridLayout()
+        layout=QtWidgets.QGridLayout()
         layout.setContentsMargins(left, first_top, right, bottom)
         #layout.addWidget(self.title,0,1)
         layout.addWidget(self.input_cyl_r_str,1,0)
@@ -2746,7 +2745,7 @@ class dialog_geom_primitives(pqg.QDialog):
         layout.addWidget(self.input_cyl_h,2,1)
         layout.addWidget(self.input_cyl_z_off,2,2)
 
-        layout2=pqg.QGridLayout()
+        layout2=QtWidgets.QGridLayout()
         layout2.setContentsMargins(left, top, right, bottom)
         layout2.addWidget(self.input_main_div_str,0,0,1,2) # row, column, rowSpan, columnSpan
         layout2.addWidget(self.input_height_div_str,1,0)
@@ -2832,7 +2831,7 @@ class dialog_geom_primitives(pqg.QDialog):
 
 if __name__ == '__main__':
     import sys
-    app = pqg.QApplication(sys.argv)
+    app = QtWidgets.QApplication(sys.argv)
 
     main_window = GeometryWidget()
     main_window.setGeometry(100, 100, 640, 480)
