@@ -27,7 +27,7 @@ History: - may 2014: stabilisation, stabilisation_plot,
 """
 
 import numpy as np
-#import matplotlib.pyplot as plt
+import matplotlib.pyplot as plt
 import pyqtgraph as pg
 
 from OpenModal.analysis.get_simulated_sample import get_simulated_receptance
@@ -264,16 +264,16 @@ def test_stabilisation():
         df_Hz=1, f_start=0, f_end=5001, measured_points=8, show=False, real_mode=False)
 
     low_lim = 0
-    nf = (2*(len(f)-low_lim-1))
+    nf = (2 * (len(f) - 1))
     print(nf)
     while max(prime_factors(nf)) > 5:
         f = f[:-1]
         frf = frf[:, :-1]
-        nf = (2*(len(f)-low_lim-1))
+        nf = (2 * (len(f) - 1))
     print(nf)
 
     df = (f[1] - f[0])
-    nf = 2*(len(f)-low_lim-1)
+    nf = 2 * (len(f) - 1)
     ts = 1 / (nf * df)  # sampling period
 
     nmax = 30
