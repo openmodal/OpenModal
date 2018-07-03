@@ -141,12 +141,12 @@ def test_lsfd():
         df_Hz=1, f_start=0, f_end=5001, measured_points=8, show=False, real_mode=False)
 
     low_lim = 1500
-    nf = (2*(len(f)-low_lim-1))
+    nf = (2*(len(f)-1))
 
     while max(prime_factors(nf)) > 5:
         f = f[:-1]
         frf = frf[:, :-1]
-        nf = (2*(len(f)-low_lim-1))
+        nf = (2*(len(f)-1))
 
     df = (f[1] - f[0])
     nf = 2*(len(f)-1)
