@@ -47,16 +47,16 @@ EXCITATION_DEFAULTS['oma']['n_averages'] = 10
 # These are application-wide defaults.
 DEFAULTS = dict()
 DEFAULTS['excitation_type'] = 'impulse'
-DEFAULTS['channel_types'] = ['f'] + ['a']*13
+DEFAULTS['channel_types'] = ['f'] + ['a']*40
 # TODO: Implement auto! (MAX value taken)
 DEFAULTS['samples_per_channel'] = 10000
 DEFAULTS['nodes'] = [0,0]
-DEFAULTS['directions'] = ['+x']*13
+DEFAULTS['directions'] = ['+x']*40
 DEFAULTS['trigger_level'] = 5
 DEFAULTS['pre_trigger_samples'] = 30
 DEFAULTS['exc_channel'] = 0
-DEFAULTS['resp_channels'] = [1]*13
-DEFAULTS['channel_delay'] = [0.]*14
+DEFAULTS['resp_channels'] = [1]*40
+DEFAULTS['channel_delay'] = [0.]*40
 
 # Impulse excitation is the default choice.
 DEFAULTS['exc_window'] = EXCITATION_DEFAULTS['impulse']['exc_window']

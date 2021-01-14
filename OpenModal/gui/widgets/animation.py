@@ -1510,6 +1510,8 @@ class Model():
 
 
         #get element ids
+        elem['node_id']=elem['node_id'].astype(int)
+        modal_data.tables['geometry']['node_nums'] = modal_data.tables['geometry']['node_nums'].astype(int)
         new=pd.merge(elem,modal_data.tables['geometry'][combined_mask2],how='left',left_on='node_id',right_on='node_nums')
         new.sort_values(['element_id','node_pos'],inplace=True)
 

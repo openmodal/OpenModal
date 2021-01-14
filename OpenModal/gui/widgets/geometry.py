@@ -1132,13 +1132,13 @@ class GeometryWidget(AnimWidgBase):
         len2_arr = np.linspace(0, len2, div2)
         if plane_orient=='XY':
             xx, yy = np.meshgrid(len1_arr, len2_arr)
-            zz=np.zeros((maximum_number_of_nodes))
+            zz=np.zeros((int(maximum_number_of_nodes)))
         if plane_orient=='YZ':
             yy, zz = np.meshgrid(len1_arr, len2_arr)
-            xx=np.zeros((maximum_number_of_nodes))
+            xx=np.zeros((int(maximum_number_of_nodes)))
         if plane_orient=='ZX':
             zz, xx = np.meshgrid(len1_arr, len2_arr)
-            yy=np.zeros((maximum_number_of_nodes))
+            yy=np.zeros((int(maximum_number_of_nodes)))
 
         #realign index in order to prevent double node names (geometry data frame starts with 1 by default)
         #node_index=node_nums-1
@@ -1316,9 +1316,9 @@ class GeometryWidget(AnimWidgBase):
         leny=float(box_data['leny'])
         lenz=float(box_data['lenz'])
 
-        divx=float(box_data['divx'])
-        divy=float(box_data['divy'])
-        divz=float(box_data['divz'])
+        divx=int(box_data['divx'])
+        divy=int(box_data['divy'])
+        divz=int(box_data['divz'])
 
         x_offset=float(box_data['x_offset'])
         y_offset=float(box_data['y_offset'])
@@ -1587,8 +1587,8 @@ class GeometryWidget(AnimWidgBase):
         start_num=cylinder_data['start_num']
         num_orient=cylinder_data['num_orient']
         z_offset=cylinder_data['z_offset']
-        height_div=float(cylinder_data['height_div'])
-        circ_div=float(cylinder_data['circ_div'])
+        height_div=int(cylinder_data['height_div'])
+        circ_div=int(cylinder_data['circ_div'])
 
         for model_id in self.activated_models:
 

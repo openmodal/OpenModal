@@ -165,7 +165,14 @@ class MeasurementWidget(prototype.SubWidget):
         # TODO: Make this into a function. Create in in templates or somewhere
         self.colors = ['#f39c12', '#d35400', '#c0392b', '#16a085', '#27ae60',
                        '#2980b9', '#8e44ad', '#f39c12', '#d35400', '#c0392b',
-                       '#16a085', '#27ae60', '#2980b9', '#8e44ad']
+                       '#16a085', '#27ae60', '#2980b9', '#8e44ad',
+                       '#f39c12', '#d35400', '#c0392b', '#16a085', '#27ae60',
+                       '#2980b9', '#8e44ad', '#f39c12', '#d35400', '#c0392b',
+                       '#16a085', '#27ae60', '#2980b9', '#8e44ad',
+                       '#f39c12', '#d35400', '#c0392b', '#16a085', '#27ae60',
+                       '#2980b9', '#8e44ad', '#f39c12', '#d35400', '#c0392b',
+                       '#16a085', '#27ae60', '#2980b9', '#8e44ad'
+                       ]
 
 
         self.stop_routine = lambda: None
@@ -364,6 +371,16 @@ class MeasurementWidget(prototype.SubWidget):
         self.follow_geometry_check = QtWidgets.QCheckBox()
         node_number_layout.addWidget(follow_geometry_label, 4, 0)
         node_number_layout.addWidget(self.follow_geometry_check, 4, 2, QtCore.Qt.AlignCenter)
+
+        acc_axis_label = QtWidgets.QLabel('Number of accelerometer axis:')
+        self.acc_axis_spin = QtWidgets.QSpinBox()
+        node_number_layout.addWidget(acc_axis_label, 5, 0)
+        node_number_layout.addWidget(self.acc_axis_spin, 5, 2, QtCore.Qt.AlignCenter)
+        self.acc_axis_spin.setValue(3)
+        self.acc_axis_spin.setMaximumWidth(60)
+        self.acc_axis_spin.setMaximum(3)
+        self.acc_axis_spin.setMinimum(1)
+
 
 
         # model_button_layout.addWidget(model_label)
@@ -793,8 +810,8 @@ class MeasurementWidget(prototype.SubWidget):
 
         self.fig_h_mag.clear()
         self.fig_h_phi.clear()
-        if hasattr(self, 'view_legend_mag'):
-            self.view_legend_mag.scene().removeItem(self.view_legend_mag)
+        #if hasattr(self, 'view_legend_mag'):
+        #    self.view_legend_mag.scene().removeItem(self.view_legend_mag)
         self.view_legend_mag = self.fig_h_mag.addLegend()
 
         exc_curve = self.fig_exc.plot(pen=pg.mkPen({'color':'#bdc3c7'}))
@@ -810,7 +827,7 @@ class MeasurementWidget(prototype.SubWidget):
         self.fig_exc_zoom_pen = self.fig_exc_zoom.plot()
         self.fig_exc_frq_pen = self.fig_exc_frq.plot()
 
-        self.legend.scene().removeItem(self.legend)
+        #self.legend.scene().removeItem(self.legend)
         self.legend = self.fig_resp.addLegend()
 
         # TODO: Before running the measurement check if everything is set. Make a funkction check_run and put it in __init__.
@@ -1185,7 +1202,7 @@ class MeasurementWidget(prototype.SubWidget):
                                                                denominator='excitation force', zero_padding=self.zero_padding, td_x_axis=self.x_axis,
                                                                td_excitation=frf.exc_archive,
                                                                td_response=frf.resp_archive)
-                        if self.rsp_dir == 3:
+                        if self.rsp_dir == self.acc_axis_spin.value():
                             self.rsp_dir = 1
                             self.rsp_node += 1
                         else:
@@ -1206,7 +1223,7 @@ class MeasurementWidget(prototype.SubWidget):
                                                    abscissa='frequency', ordinate='acceleration',
                                                    denominator='excitation force', zero_padding=self.settings['zero_padding'])
 
-                    if rsp_dir == 3:
+                    if rsp_dir == self.acc_axis_spin.value():
                         rsp_dir = 1
                         rsp_node += 1
                     else:
@@ -1218,7 +1235,7 @@ class MeasurementWidget(prototype.SubWidget):
                                                    abscissa='frequency', ordinate='acceleration',
                                                    denominator='excitation force', zero_padding=self.settings['zero_padding'])
 
-                    if rsp_dir == 3:
+                    if rsp_dir == self.acc_axis_spin.value():
                         rsp_dir = 1
                         rsp_node += 1
                     else:

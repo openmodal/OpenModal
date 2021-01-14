@@ -26,6 +26,7 @@ Info:
     @author: janko.slavic@fs.uni-lj.si, martin.cesnik@fs.uni-lj.si 2011-2014
 """
 from PyDAQmx import *
+from PyDAQmx.DAQmxTypes import *
 import numpy as np
 import time
 from math import floor, acos
@@ -101,7 +102,7 @@ class DAQTask(Task):
         self.number_of_ch = _number_of_ch.value
 
         # channel names
-        buffer_size = 100
+        buffer_size = 500
         channels = ctypes.create_string_buffer(buffer_size)
         self.GetTaskChannels(channels, buffer_size)
         self.channel_list = list(map(bytes.strip, channels.value.split(b',')))
@@ -139,7 +140,7 @@ class DAQTask(Task):
         """
         # allocate data variable
         le = self.samples_per_ch * self.number_of_ch
-        data = np.zeros(le, dtype=numpy.float64)
+        data = np.zeros(le, dtype=np.float64)
         samples_per_ch = int32()
         #acquire
         self.ReadAnalogF64(DAQmx_Val_Auto, self.time_out, DAQmx_Val_GroupByChannel, data, le, byref(samples_per_ch),
@@ -423,7 +424,8 @@ def acquire_N_samples_example(show=False):
 def acquire_cont_example(show=False):
     import matplotlib.pyplot as plt
 
-    t = DAQTask(b'input continuous simulated')  # Set Acquisition Mode to: "Continuous Samples"
+    #t = DAQTask(b'input continuous simulated')  # Set Acquisition Mode to: "Continuous Samples"
+    t = DAQTask(b'OM_24ch')  # Set Acquisition Mode to: "Continuous Samples"
     print('Number of channels %d ' % t.number_of_ch)
     print('Sample click rate %d ' % t.sample_rate)
     t.acquire()
