@@ -70,7 +70,7 @@ def lsfd(lambdak, f, frf):
     hri = hri.reshape(ni*no, 2*n)
 
     # Compute the modal constants (residuals) and upper and lower residuals
-    uv, _, _, _ = np.linalg.lstsq(bcri.T,hri.T)
+    uv, _, _, _ = np.linalg.lstsq(bcri.T,hri.T,rcond=None)
 
     # Reshape 2D results to 3D
     uv = uv.T.reshape(ni, no, 2*nmodes+4)

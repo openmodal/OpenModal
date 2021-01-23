@@ -500,8 +500,8 @@ class MeasurementWidget(prototype.SubWidget):
         self.fig_h_mag.clear()
         self.fig_h_phi.clear()
 
-        if hasattr(self, 'view_legend_mag'):
-            self.view_legend_mag.scene().removeItem(self.view_legend_mag)
+        #if hasattr(self, 'view_legend_mag'):
+        #    self.view_legend_mag.scene().removeItem(self.view_legend_mag)
         self.view_legend_mag = self.fig_h_mag.addLegend()
 
         for i, row_ in enumerate(rows):

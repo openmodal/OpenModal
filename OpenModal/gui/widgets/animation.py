@@ -133,7 +133,7 @@ class TableModel(QtCore.QAbstractTableModel):
 
 
         try:
-            self.datatable.ix[row,col]=float(value)
+            self.datatable.loc[row,col]=float(value)
         except:
             #TODO: check input data
             print('only floats allowed')
@@ -924,7 +924,7 @@ class AnimationWidget(AnimWidgBase):
 
         # clear 2D view
         self.plot_area.clear()
-        self.plot_area.legend.scene().removeItem(self.plot_area.legend)
+        #self.plot_area.legend.scene().removeItem(self.plot_area.legend)
 
         # reset 2D view
         self.plot_area.legend = self.plot_area.addLegend()
@@ -1072,10 +1072,10 @@ class Model():
 
         rgba_color = pg.colorTuple(color)
         model_mask =self.modal_data.tables['geometry']['model_id'] == self.model_id
-        self.modal_data.tables['geometry'].ix[model_mask,'clr_r']=rgba_color[0]/ 255.  # rbg values 0-1
-        self.modal_data.tables['geometry'].ix[model_mask,'clr_g']=rgba_color[1]/ 255.  # rbg values 0-1
-        self.modal_data.tables['geometry'].ix[model_mask,'clr_b']=rgba_color[2]/ 255.  # rbg values 0-1
-        self.modal_data.tables['geometry'].ix[model_mask,'clr_a']=rgba_color[3]/ 255.  # alpha values 0-1
+        self.modal_data.tables['geometry'].loc[model_mask,'clr_r']=rgba_color[0]/ 255.  # rbg values 0-1
+        self.modal_data.tables['geometry'].loc[model_mask,'clr_g']=rgba_color[1]/ 255.  # rbg values 0-1
+        self.modal_data.tables['geometry'].loc[model_mask,'clr_b']=rgba_color[2]/ 255.  # rbg values 0-1
+        self.modal_data.tables['geometry'].loc[model_mask,'clr_a']=rgba_color[3]/ 255.  # alpha values 0-1
 
     def set_elem_color(self,color,elem_type):
         #TODO: set color for lines and triangles seperately
@@ -1089,10 +1089,10 @@ class Model():
         model_mask =self.modal_data.tables['elements_index']['model_id'] == self.model_id
         type_mask =self.modal_data.tables['elements_index']['element_descriptor'] == elem_type
         combined=model_mask & type_mask
-        self.modal_data.tables['elements_index'].ix[combined,'clr_r']=rgba_color[0]/ 255.  # rbg values 0-1
-        self.modal_data.tables['elements_index'].ix[combined,'clr_g']=rgba_color[1]/ 255.  # rbg values 0-1
-        self.modal_data.tables['elements_index'].ix[combined,'clr_b']=rgba_color[2]/ 255.  # rbg values 0-1
-        self.modal_data.tables['elements_index'].ix[combined,'clr_a']=rgba_color[3]/ 255.  # alpha values 0-1
+        self.modal_data.tables['elements_index'].loc[combined,'clr_r']=rgba_color[0]/ 255.  # rbg values 0-1
+        self.modal_data.tables['elements_index'].loc[combined,'clr_g']=rgba_color[1]/ 255.  # rbg values 0-1
+        self.modal_data.tables['elements_index'].loc[combined,'clr_b']=rgba_color[2]/ 255.  # rbg values 0-1
+        self.modal_data.tables['elements_index'].loc[combined,'clr_a']=rgba_color[3]/ 255.  # alpha values 0-1
 
     def get_def_scale(self):
         """
@@ -1369,7 +1369,7 @@ class Model():
 
             analysis_data = self.modal_data.tables['analysis_values'].set_index(['model_id','analysis_id', 'mode_n'])
 
-            selected_data = analysis_data.ix[int(self.model_id)].ix[int(self.selected_mode_ana_id)].ix[int(self.selected_mode)]
+            selected_data = analysis_data.loc[int(self.model_id)].loc[int(self.selected_mode_ana_id)].loc[int(self.selected_mode)]
             final = pd.merge(geom, selected_data, how='left', on='node_nums')
 
             # Replace nans with zeros for nodes which do not have measurement data or response dir is not available
@@ -1909,7 +1909,7 @@ class Model():
         # node_labels_data = modal_data.tables['geometry'][['node_nums', 'x', 'y', 'z']][
         #     model_mask].sort_index().values
 
-        node_labels_data = modal_data.tables['geometry'].ix[model_mask,['node_nums', 'x', 'y', 'z']].sort_index().values
+        node_labels_data = modal_data.tables['geometry'].loc[model_mask,['node_nums', 'x', 'y', 'z']].sort_index().values
 
         node_labels_data[:, 1] = node_labels_data[:, 1] + self.offset['x'] + label_offset
         node_labels_data[:, 2] = node_labels_data[:, 2] + self.offset['y'] + label_offset
@@ -1945,9 +1945,9 @@ class Model():
         else:
             color_chg = 256. / num_of_meas * 3
 
-            start_col = np.zeros(np.round(num_of_meas / 3))
+            start_col = np.zeros(int(np.ceil(num_of_meas / 3)))
             start_col.fill(255)
-            end_col = np.zeros(np.round(num_of_meas / 3))
+            end_col = np.zeros(int(np.ceil(num_of_meas / 3)))
 
             red_chg = np.arange(0, 255, color_chg)
             green_chg = np.arange(0, 255, color_chg)
@@ -1969,7 +1969,7 @@ class Model():
         # if all FRFs must be plotted
 
         for j in measurements:
-            data = grouped.ix[self.model_id].ix[j]
+            data = grouped.loc[self.model_id].loc[j]
             itm_name = 'model_id: ' + str(self.model_id) + ' measurement_id: ' + str(int(j))
             #itm = pg.PlotCurveItem(data['frq'].values, np.imag(data['amp']), pen=pens[m], name=itm_name) #original
             itm = CustomPlotCurveItem(data['frq'].values, np.imag(data['amp']), pen=pens[m], name=itm_name)
@@ -2014,7 +2014,7 @@ class Model():
                                pen=pg.mkPen(color=color, width=1), name=itm_name)
         itm.setClickable(True,width=1)
         plotitems[itm_name] = itm
-        self.view_2d.setLabel('left', 'Amplitude [dB]')
+        self.view_2d.setLabel('left', 'Amplitude [dB ref 1]')
 
         return plotitems
 

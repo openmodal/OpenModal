@@ -558,7 +558,7 @@ class DataFrameModel(QtCore.QAbstractTableModel):
 
         if not index.isValid():
             return QVariant()
-        return QVariant(str(self.df.ix[index.row(), index.column()]))
+        return QVariant(str(self.df.iloc[index.row(), index.column()]))
 
     def rowCount(self, index=QtCore.QModelIndex()):
         """

@@ -880,14 +880,14 @@ class AnimWidgBase(prot.SubWidget):
             columns=['lcs_x1', 'lcs_x2', 'lcs_x3', 'lcs_y1', 'lcs_y2', 'lcs_y3', 'lcs_z1', 'lcs_z2', 'lcs_z3'])
 
 
-        eul_ang = self.modaldata.tables['geometry'].ix[:, ['thz', 'thy', 'thx']].values * np.pi / 180
+        eul_ang = self.modaldata.tables['geometry'].loc[:, ['thz', 'thy', 'thx']].values * np.pi / 180
 
         for rot in [0,1,2]:
 
             for i in range(num_of_nodes):
 
                 #eul_ang = self.modal_data.tables['geometry'][['thz', 'thy', 'thx']].iloc[i].values*np.pi/180
-                #eul_ang =self.modal_data.tables['geometry'].ix[i,['thz', 'thy', 'thx']].values*np.pi/180
+                #eul_ang =self.modal_data.tables['geometry'].loc[i,['thz', 'thy', 'thx']].values*np.pi/180
 
                 if rot==0:
                     rotation_matrix = zyx_euler_to_rotation_matrix([eul_ang[i,rot],0,0])
@@ -946,12 +946,12 @@ class AnimWidgBase(prot.SubWidget):
             columns=['lcs_x1', 'lcs_x2', 'lcs_x3', 'lcs_y1', 'lcs_y2', 'lcs_y3', 'lcs_z1', 'lcs_z2', 'lcs_z3'])
 
 
-        eul_ang = self.modaldata.tables['geometry'].ix[:, ['thz', 'thy', 'thx']].values * np.pi / 180
+        eul_ang = self.modaldata.tables['geometry'].loc[:, ['thz', 'thy', 'thx']].values * np.pi / 180
 
         for i in range(num_of_nodes):
 
             #eul_ang = self.modal_data.tables['geometry'][['thz', 'thy', 'thx']].iloc[i].values*np.pi/180
-            #eul_ang =self.modal_data.tables['geometry'].ix[i,['thz', 'thy', 'thx']].values*np.pi/180
+            #eul_ang =self.modal_data.tables['geometry'].loc[i,['thz', 'thy', 'thx']].values*np.pi/180
 
             rotation_matrix = zyx_euler_to_rotation_matrix(eul_ang[i,:])
 
@@ -1175,7 +1175,7 @@ class AnimWidgBase(prot.SubWidget):
             if model_obj.activated:
 
                 # add offset to max coordinate location
-                max_dist_ = np.max(np.abs(geo_data.ix[model_id][['x', 'y', 'z']].max().values)) + \
+                max_dist_ = np.max(np.abs(geo_data.loc[model_id][['x', 'y', 'z']].max().values)) + \
                             np.max(np.abs([model_obj.offset['x'], model_obj.offset['y'], model_obj.offset['z']]))
                 if max_dist_ >= max_dist:
                     max_dist = max_dist_

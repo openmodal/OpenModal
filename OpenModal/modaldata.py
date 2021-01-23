@@ -877,7 +877,7 @@ class ModalDataUff(object):
         # TODO: Leave this for the end, when all models are scaned? Or maybe not!!
         if cspresent:
             dlist = pd.merge(dlist, self.localeul, on=['node_nums', 'model_id'])[['model_id', 'uffid', 'node_nums', 'x', 'y', 'z',
-                                                                                                  'thx', 'thy', 'thz']].sort(['uffid'])
+                                                                                                  'thx', 'thy', 'thz']].sort_values(['uffid'])
 #             self.geometry = pd.merge(self.geometry, self.localeul, on='node_nums')[['uffid', 'nodenums', 'x', 'y', 'z',
 #                                                                            'thx', 'thy', 'thz']].sort(['mnum'])
         else:
@@ -1031,7 +1031,8 @@ class ModalDataUff(object):
         for mnum in mnums:
             sdata = self.uff_object.read_sets(mnum)
             
-            elements = isplit(list(sdata['lines']), [0.0])
+            #elements = isplit(list(sdata['lines']), [0.0])
+            elements = isplit(list(sdata['nodes']), [0.0])
             
             for element in elements:
                 tmp_df = pd.DataFrame(columns=cols)

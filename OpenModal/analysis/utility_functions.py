@@ -63,7 +63,8 @@ def complex_freq_to_freq_and_damp(sr):
     """
 
     fr = np.abs(sr)
-    xir = -sr.real/fr
+    xir = -np.real(sr)/fr
+    #xir = -sr.real / fr
     fr /= (2 * np.pi)
 
     return fr, xir

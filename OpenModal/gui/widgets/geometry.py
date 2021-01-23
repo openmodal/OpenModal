@@ -164,24 +164,24 @@ class GeometryWidget(AnimWidgBase):
             del self.selection_ind[loc]
             del self.selection[loc]
             #if ind already in selection -> set default color
-            self.modaldata.tables['geometry'].ix[ind, 'clr_r']=self.selection_color[0]
-            self.modaldata.tables['geometry'].ix[ind, 'clr_g']=self.selection_color[1]
-            self.modaldata.tables['geometry'].ix[ind, 'clr_b']=self.selection_color[2]
-            self.modaldata.tables['geometry'].ix[ind, 'clr_a']=self.selection_color[3]
+            self.modaldata.tables['geometry'].loc[ind, 'clr_r']=self.selection_color[0]
+            self.modaldata.tables['geometry'].loc[ind, 'clr_g']=self.selection_color[1]
+            self.modaldata.tables['geometry'].loc[ind, 'clr_b']=self.selection_color[2]
+            self.modaldata.tables['geometry'].loc[ind, 'clr_a']=self.selection_color[3]
 
         else:
             #index not yet selected -> add it to selection
             self.selection.append(nodes.iloc[test][['node_nums','x','y','z','model_id','color']].values[0])
             self.selection_ind.append(ind)
-            self.selection_color=[self.modaldata.tables['geometry'].ix[ind, 'clr_r'].values[0],
-                                  self.modaldata.tables['geometry'].ix[ind, 'clr_g'].values[0],
-                                  self.modaldata.tables['geometry'].ix[ind, 'clr_b'].values[0],
-                                  self.modaldata.tables['geometry'].ix[ind, 'clr_a'].values[0]]
+            self.selection_color=[self.modaldata.tables['geometry'].loc[ind, 'clr_r'].values[0],
+                                  self.modaldata.tables['geometry'].loc[ind, 'clr_g'].values[0],
+                                  self.modaldata.tables['geometry'].loc[ind, 'clr_b'].values[0],
+                                  self.modaldata.tables['geometry'].loc[ind, 'clr_a'].values[0]]
 
-            self.modaldata.tables['geometry'].ix[ind, 'clr_r']=1
-            self.modaldata.tables['geometry'].ix[ind, 'clr_g']=0
-            self.modaldata.tables['geometry'].ix[ind, 'clr_b']=0
-            self.modaldata.tables['geometry'].ix[ind, 'clr_a']=1
+            self.modaldata.tables['geometry'].loc[ind, 'clr_r']=1
+            self.modaldata.tables['geometry'].loc[ind, 'clr_g']=0
+            self.modaldata.tables['geometry'].loc[ind, 'clr_b']=0
+            self.modaldata.tables['geometry'].loc[ind, 'clr_a']=1
 
     def handle_node_clicked(self):
         '''
@@ -206,7 +206,7 @@ class GeometryWidget(AnimWidgBase):
         nodes_index=nodes.index.values
 
         ind=-1
-        node_data=nodes.ix[:,['x','y','z']].values
+        node_data=nodes.loc[:,['x','y','z']].values
 
         # CHECK if nodes are near clicked point
         start_point=self.model_view.ray[0] #get ray data from 3d view widget
@@ -246,10 +246,10 @@ class GeometryWidget(AnimWidgBase):
         """
         self.selection=[]
         for ind in self.selection_ind:
-            self.modaldata.tables['geometry'].ix[ind, 'clr_r']=self.selection_color[0]
-            self.modaldata.tables['geometry'].ix[ind, 'clr_g']=self.selection_color[1]
-            self.modaldata.tables['geometry'].ix[ind, 'clr_b']=self.selection_color[2]
-            self.modaldata.tables['geometry'].ix[ind, 'clr_a']=self.selection_color[3]
+            self.modaldata.tables['geometry'].loc[ind, 'clr_r']=self.selection_color[0]
+            self.modaldata.tables['geometry'].loc[ind, 'clr_g']=self.selection_color[1]
+            self.modaldata.tables['geometry'].loc[ind, 'clr_b']=self.selection_color[2]
+            self.modaldata.tables['geometry'].loc[ind, 'clr_a']=self.selection_color[3]
         self.selection_ind=[]
         self.selection_color=[]
 
@@ -366,8 +366,8 @@ class GeometryWidget(AnimWidgBase):
                     rows.append(curr_row+cell.row())
                     cols.append(cells[0].model().datatable.columns[cell.column()])
 
-                geom_table_model.datatable.ix[rows,cols]=np.nan
-                geom_table_model.dataIn.ix[rows,cols]=np.nan # this is necessary as update method does not work with NANs
+                geom_table_model.datatable.loc[rows,cols]=np.nan
+                geom_table_model.dataIn.loc[rows,cols]=np.nan # this is necessary as update method does not work with NANs
 
 
                 geom_table_model.dataIn.update(geom_table_model.datatable)
@@ -458,8 +458,8 @@ class GeometryWidget(AnimWidgBase):
             # expand table if number of rows in clipboard is larger than current table size
             for model_id in self.activated_models:
                 #get node index corresponding with existing geomtry table
-                model_mask=self.modaldata.tables['geometry'].ix[:,'model_id']==model_id
-                node_index=self.modaldata.tables['geometry'].ix[model_mask].index
+                model_mask=self.modaldata.tables['geometry'].loc[:,'model_id']==model_id
+                node_index=self.modaldata.tables['geometry'].loc[model_mask].index
 
                 if (curr_row+num_of_rows)>len(node_index):
                     # add rows for selected model
@@ -856,10 +856,10 @@ class GeometryWidget(AnimWidgBase):
         #restore color
         element_id_mask=self.modaldata.tables['elements_index']['element_id'].isin(elem_ids)
 
-        self.modaldata.tables['elements_index'].ix[element_id_mask, 'clr_r']=self.selected_elem_col[0]  # rbg values 0-1
-        self.modaldata.tables['elements_index'].ix[element_id_mask, 'clr_g']=self.selected_elem_col[1]  # rbg values 0-1
-        self.modaldata.tables['elements_index'].ix[element_id_mask, 'clr_b']=self.selected_elem_col[2]  # rbg values 0-1
-        self.modaldata.tables['elements_index'].ix[element_id_mask, 'clr_a']=self.selected_elem_col[3]  # alpha values 0-1
+        self.modaldata.tables['elements_index'].loc[element_id_mask, 'clr_r']=self.selected_elem_col[0]  # rbg values 0-1
+        self.modaldata.tables['elements_index'].loc[element_id_mask, 'clr_g']=self.selected_elem_col[1]  # rbg values 0-1
+        self.modaldata.tables['elements_index'].loc[element_id_mask, 'clr_b']=self.selected_elem_col[2]  # rbg values 0-1
+        self.modaldata.tables['elements_index'].loc[element_id_mask, 'clr_a']=self.selected_elem_col[3]  # alpha values 0-1
 
     def change_elem_color(self,elem_ids,selection_color):
         #change color of selected elements
@@ -868,10 +868,10 @@ class GeometryWidget(AnimWidgBase):
         #store current element color
         self.selected_elem_col= self.modaldata.tables['elements_index'][element_id_mask][['clr_r', 'clr_g', 'clr_b', 'clr_a']].values[0, :]
 
-        self.modaldata.tables['elements_index'].ix[element_id_mask, 'clr_r']= selection_color[0] / 255.  # rbg values 0-1
-        self.modaldata.tables['elements_index'].ix[element_id_mask, 'clr_g']= selection_color[1] / 255.  # rbg values 0-1
-        self.modaldata.tables['elements_index'].ix[element_id_mask, 'clr_b']= selection_color[2] / 255.  # rbg values 0-1
-        self.modaldata.tables['elements_index'].ix[element_id_mask, 'clr_a']= selection_color[3] / 255.  # alpha values 0-1
+        self.modaldata.tables['elements_index'].loc[element_id_mask, 'clr_r']= selection_color[0] / 255.  # rbg values 0-1
+        self.modaldata.tables['elements_index'].loc[element_id_mask, 'clr_g']= selection_color[1] / 255.  # rbg values 0-1
+        self.modaldata.tables['elements_index'].loc[element_id_mask, 'clr_b']= selection_color[2] / 255.  # rbg values 0-1
+        self.modaldata.tables['elements_index'].loc[element_id_mask, 'clr_a']= selection_color[3] / 255.  # alpha values 0-1
 
     def handle_elem_select(self,deselect=False):
         """
@@ -961,20 +961,20 @@ class GeometryWidget(AnimWidgBase):
             #node_index=node_nums-1
 
             #get node index corresponding with existing geomtry table
-            model_mask=self.modaldata.tables['geometry'].ix[:,'model_id']==model_id
-            node_mask=self.modaldata.tables['geometry'].ix[:,'node_nums'].isin(node_nums)
+            model_mask=self.modaldata.tables['geometry'].loc[:,'model_id']==model_id
+            node_mask=self.modaldata.tables['geometry'].loc[:,'node_nums'].isin(node_nums)
             final_mask=model_mask & node_mask
-            node_index=self.modaldata.tables['geometry'].ix[final_mask].index
+            node_index=self.modaldata.tables['geometry'].loc[final_mask].index
 
             if len(node_nums)>len(node_index):
                 # add rows for selected model
                 rows_to_add=len(node_nums)-len(node_index)
                 self.add_geom_rows(rows_to_add=rows_to_add)
                 # get index
-                model_mask=self.modaldata.tables['geometry'].ix[:,'model_id']==model_id
-                node_mask=self.modaldata.tables['geometry'].ix[:,'node_nums'].isin(node_nums)
+                model_mask=self.modaldata.tables['geometry'].loc[:,'model_id']==model_id
+                node_mask=self.modaldata.tables['geometry'].loc[:,'node_nums'].isin(node_nums)
                 final_mask=model_mask*node_mask
-                node_index=self.modaldata.tables['geometry'].ix[final_mask].index
+                node_index=self.modaldata.tables['geometry'].loc[final_mask].index
 
             #create node data
             df=pd.DataFrame(index=node_index, columns=self.modaldata.tables['geometry'].columns)
@@ -1087,7 +1087,7 @@ class GeometryWidget(AnimWidgBase):
         for model_id in self.activated_models:
 
             #get node index corresponding with existing geomtry table
-            model_mask=self.modaldata.tables['geometry'].ix[:,'model_id']==model_id
+            model_mask=self.modaldata.tables['geometry'].loc[:,'model_id']==model_id
 
             if len(self.modaldata.tables['geometry'][model_mask].index)==0:
                 ind=0
@@ -1095,7 +1095,7 @@ class GeometryWidget(AnimWidgBase):
 
             else:
                 ind= self.modaldata.tables['geometry'][model_mask].index.max() + 1
-                node_num = self.modaldata.tables['geometry'].ix[model_mask,'node_nums'].max() + 1
+                node_num = self.modaldata.tables['geometry'].loc[model_mask,'node_nums'].max() + 1
 
             node_nums=np.arange(node_num,node_num+rows_to_add)
             node_index=np.arange(ind,ind+rows_to_add)
@@ -1144,20 +1144,20 @@ class GeometryWidget(AnimWidgBase):
         #node_index=node_nums-1
 
         #get node index corresponding with existing geomtry table
-        model_mask=self.modaldata.tables['geometry'].ix[:,'model_id']==model_id
-        node_mask=self.modaldata.tables['geometry'].ix[:,'node_nums'].isin(node_nums)
+        model_mask=self.modaldata.tables['geometry'].loc[:,'model_id']==model_id
+        node_mask=self.modaldata.tables['geometry'].loc[:,'node_nums'].isin(node_nums)
         final_mask=model_mask*node_mask
-        node_index=self.modaldata.tables['geometry'].ix[final_mask].index
+        node_index=self.modaldata.tables['geometry'].loc[final_mask].index
 
         if len(node_nums)>len(node_index):
             # add rows for selected model
             rows_to_add=len(node_nums)-len(node_index)
             self.add_geom_rows(rows_to_add=rows_to_add)
             # get index
-            model_mask=self.modaldata.tables['geometry'].ix[:,'model_id']==model_id
-            node_mask=self.modaldata.tables['geometry'].ix[:,'node_nums'].isin(node_nums)
+            model_mask=self.modaldata.tables['geometry'].loc[:,'model_id']==model_id
+            node_mask=self.modaldata.tables['geometry'].loc[:,'node_nums'].isin(node_nums)
             final_mask=model_mask*node_mask
-            node_index=self.modaldata.tables['geometry'].ix[final_mask].index
+            node_index=self.modaldata.tables['geometry'].loc[final_mask].index
 
         #create node data
         df=pd.DataFrame(index=node_index, columns=self.modaldata.tables['geometry'].columns)
@@ -1396,20 +1396,20 @@ class GeometryWidget(AnimWidgBase):
             #node_index=node_nums-1
 
             #get node index corresponding with existing geomtry table
-            model_mask=self.modaldata.tables['geometry'].ix[:,'model_id']==model_id
-            node_mask=self.modaldata.tables['geometry'].ix[:,'node_nums'].isin(node_nums)
+            model_mask=self.modaldata.tables['geometry'].loc[:,'model_id']==model_id
+            node_mask=self.modaldata.tables['geometry'].loc[:,'node_nums'].isin(node_nums)
             final_mask=model_mask*node_mask
-            node_index=self.modaldata.tables['geometry'].ix[final_mask].index
+            node_index=self.modaldata.tables['geometry'].loc[final_mask].index
 
             if len(node_nums)>len(node_index):
                 # add rows for selected model
                 rows_to_add=len(node_nums)-len(node_index)
                 self.add_geom_rows(rows_to_add=rows_to_add)
                 # get index
-                model_mask=self.modaldata.tables['geometry'].ix[:,'model_id']==model_id
-                node_mask=self.modaldata.tables['geometry'].ix[:,'node_nums'].isin(node_nums)
+                model_mask=self.modaldata.tables['geometry'].loc[:,'model_id']==model_id
+                node_mask=self.modaldata.tables['geometry'].loc[:,'node_nums'].isin(node_nums)
                 final_mask=model_mask*node_mask
-                node_index=self.modaldata.tables['geometry'].ix[final_mask].index
+                node_index=self.modaldata.tables['geometry'].loc[final_mask].index
 
             #create node data
             df=pd.DataFrame(index=node_index, columns=self.modaldata.tables['geometry'].columns)
@@ -1620,20 +1620,20 @@ class GeometryWidget(AnimWidgBase):
             #node_index=node_nums-1
 
             #get node index corresponding with existing geomtry table
-            model_mask=self.modaldata.tables['geometry'].ix[:,'model_id']==model_id
-            node_mask=self.modaldata.tables['geometry'].ix[:,'node_nums'].isin(node_nums)
+            model_mask=self.modaldata.tables['geometry'].loc[:,'model_id']==model_id
+            node_mask=self.modaldata.tables['geometry'].loc[:,'node_nums'].isin(node_nums)
             final_mask=model_mask*node_mask
-            node_index=self.modaldata.tables['geometry'].ix[final_mask].index
+            node_index=self.modaldata.tables['geometry'].loc[final_mask].index
 
             if len(node_nums)>len(node_index):
                 # add rows for selected model
                 rows_to_add=len(node_nums)-len(node_index)
                 self.add_geom_rows(rows_to_add=rows_to_add)
                 # get index
-                model_mask=self.modaldata.tables['geometry'].ix[:,'model_id']==model_id
-                node_mask=self.modaldata.tables['geometry'].ix[:,'node_nums'].isin(node_nums)
+                model_mask=self.modaldata.tables['geometry'].loc[:,'model_id']==model_id
+                node_mask=self.modaldata.tables['geometry'].loc[:,'node_nums'].isin(node_nums)
                 final_mask=model_mask*node_mask
-                node_index=self.modaldata.tables['geometry'].ix[final_mask].index
+                node_index=self.modaldata.tables['geometry'].loc[final_mask].index
 
             #create node data
             df=pd.DataFrame(index=node_index, columns=self.modaldata.tables['geometry'].columns)
@@ -2045,7 +2045,7 @@ class GeometryWidget(AnimWidgBase):
             if not self.modaldata.tables['info'][self.modaldata.tables['info']['model_id'] == model_id].empty:
                 params[value]['children'].append({'name': 'Info', 'type': 'group', 'expanded': False, 'children': [
                     {'name': 'Model name:', 'type': 'str', 'value': model_name},
-                    #{'name': 'Date created:', 'type': 'str', 'value': info_data.ix[model_id].ix['date_db_created'].value},
+                    #{'name': 'Date created:', 'type': 'str', 'value': info_data.loc[model_id].loc['date_db_created'].value},
                 ]})
             uff_tree_index = uff_tree_index + 1
 
@@ -2110,35 +2110,35 @@ class GeometryWidget(AnimWidgBase):
         if self.gcs_type==1:
             #calculate x,y from r,phi
             nan_mask = self.modaldata.tables['geometry'][['node_nums', 'r', 'phi', 'z', 'cyl_thz', 'thy', 'thx' , 'model_id']].notnull().all(axis=1)
-            self.modaldata.tables['geometry'].ix[nan_mask, 'x']= \
-                self.modaldata.tables['geometry'].ix[nan_mask, 'r'] * \
-                np.cos(self.modaldata.tables['geometry'].ix[nan_mask, 'phi'].astype(np.float64) * np.pi / 180)
-            self.modaldata.tables['geometry'].ix[nan_mask, 'y']= \
-                self.modaldata.tables['geometry'].ix[nan_mask, 'r'] * \
-                np.sin(self.modaldata.tables['geometry'].ix[nan_mask, 'phi'].astype(np.float64) * np.pi / 180)
-            self.modaldata.tables['geometry'].ix[nan_mask, 'thz']= \
-                self.modaldata.tables['geometry'].ix[nan_mask, 'cyl_thz'] + \
-                self.modaldata.tables['geometry'].ix[nan_mask, 'phi']
+            self.modaldata.tables['geometry'].loc[nan_mask, 'x']= \
+                self.modaldata.tables['geometry'].loc[nan_mask, 'r'] * \
+                np.cos(self.modaldata.tables['geometry'].loc[nan_mask, 'phi'].astype(np.float64) * np.pi / 180)
+            self.modaldata.tables['geometry'].loc[nan_mask, 'y']= \
+                self.modaldata.tables['geometry'].loc[nan_mask, 'r'] * \
+                np.sin(self.modaldata.tables['geometry'].loc[nan_mask, 'phi'].astype(np.float64) * np.pi / 180)
+            self.modaldata.tables['geometry'].loc[nan_mask, 'thz']= \
+                self.modaldata.tables['geometry'].loc[nan_mask, 'cyl_thz'] + \
+                self.modaldata.tables['geometry'].loc[nan_mask, 'phi']
 
         if self.gcs_type==0:
             #calculate r,phi from x,y
             nan_mask = self.modaldata.tables['geometry'][['node_nums', 'x', 'y', 'z', 'thz', 'thy', 'thx', 'model_id']].notnull().all(axis=1)
-            self.modaldata.tables['geometry'].ix[nan_mask, 'r']=\
-                np.sqrt((self.modaldata.tables['geometry'].ix[nan_mask, 'x'] ** 2 +
-                         self.modaldata.tables['geometry'].ix[nan_mask, 'y'] ** 2).astype(np.float64))
-            self.modaldata.tables['geometry'].ix[nan_mask, 'phi']=\
-                np.arcsin((self.modaldata.tables['geometry'].ix[nan_mask, 'y'].astype(np.float64) /
-                           self.modaldata.tables['geometry'].ix[nan_mask, 'r'].astype(np.float64)))
+            self.modaldata.tables['geometry'].loc[nan_mask, 'r']=\
+                np.sqrt((self.modaldata.tables['geometry'].loc[nan_mask, 'x'] ** 2 +
+                         self.modaldata.tables['geometry'].loc[nan_mask, 'y'] ** 2).astype(np.float64))
+            self.modaldata.tables['geometry'].loc[nan_mask, 'phi']=\
+                np.arcsin((self.modaldata.tables['geometry'].loc[nan_mask, 'y'].astype(np.float64) /
+                           self.modaldata.tables['geometry'].loc[nan_mask, 'r'].astype(np.float64)))
 
             #change NaNs to zero due to division with zeros
             # this is also necessary so that cyl_thz is changed to 0 for later subtraction
-            aux_df=self.modaldata.tables['geometry'].ix[nan_mask,['r','phi','cyl_thz']]
+            aux_df=self.modaldata.tables['geometry'].loc[nan_mask,['r','phi','cyl_thz']]
             aux_df.fillna(0,inplace=True)
             self.modaldata.tables['geometry'].update(aux_df, overwrite=False)
 
-            self.modaldata.tables['geometry'].ix[nan_mask, 'cyl_thz']= \
-                self.modaldata.tables['geometry'].ix[nan_mask, 'thz'] - \
-                self.modaldata.tables['geometry'].ix[nan_mask, 'phi']
+            self.modaldata.tables['geometry'].loc[nan_mask, 'cyl_thz']= \
+                self.modaldata.tables['geometry'].loc[nan_mask, 'thz'] - \
+                self.modaldata.tables['geometry'].loc[nan_mask, 'phi']
 
         self.calc_node_lcs()
         self.plot_activated_models()
