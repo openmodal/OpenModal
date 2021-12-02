@@ -1,7 +1,7 @@
 # OpenModal
 OpenModal is an open source experimental modal analysis software written in Python.
 
-Note: OM is not actively developed; you might want to check out a similar project without full UI: https://github.com/ladisk/pyEMA.
+Note: OM is not actively developed; you might want to check out a similar project without a full UI: https://github.com/ladisk/pyEMA.
 
 OpenModal combines geometry builder, measurement, identification and animation module to aid in experimental analysis of the dynamic properties of structures. It is written in Python and published under the GPL license.
 
